@@ -6,7 +6,7 @@ import com.example.forzenbook.data.database.LoginDao
 import com.example.forzenbook.data.database.LoginDatabase
 import com.example.forzenbook.data.network.LoginService
 import com.example.forzenbook.data.repository.LoginRepository
-import com.example.forzenbook.data.repository.mocks.MockGetsToken
+import com.example.forzenbook.data.repository.LoginRepositoryImpl
 import com.example.forzenbook.domain.usecase.login.LoginGetTokenUseCase
 import com.example.forzenbook.domain.usecase.mocks.MockLoginGetTokenUseCaseSuccess
 import dagger.Module
@@ -33,6 +33,7 @@ object LoginModule {
 
     @Provides
     fun providesLoginService(@Named(REPO_NAME) retrofit: Retrofit): LoginService {
+        //return MockLoginServiceNullToken()
         return retrofit.create(LoginService::class.java)
     }
 
@@ -52,13 +53,15 @@ object LoginModule {
         loginDao: LoginDao,
         loginService: LoginService
     ): LoginRepository {
-        return MockGetsToken(loginDao, loginService)
-        //return LoginRepositoryImpl(loginDao, loginService)
+        //return MockGetsToken(loginDao, loginService)
+        return LoginRepositoryImpl(loginDao, loginService)
     }
 
     @Provides
     fun providesLoginGetTokenUseCase(loginRepository: LoginRepository): LoginGetTokenUseCase {
+        //return MockLoginGetTokenUseCaseFails()
         return MockLoginGetTokenUseCaseSuccess(loginRepository)
+        //return LoginGetTokenUseCaseImpl(loginRepository)
     }
 
     private const val LOGIN_BASE_URL = "https://forzen.dev/"

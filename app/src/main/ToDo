@@ -1,9 +1,13 @@
 Yellow of lion: #ffe226
 RGB : R 255 G 226 B 38
 
-Theme
-    Colors:
-    Yellow background (yellow of the lion logo thing)
-    Montserrat Text font
-    Text fields adjust white or black based on light / dark mode
-    Black Buttons
+Mocks
+    better mocking for login when end point interactions become clearer
+        similar for the other two
+
+Add prompting for what errors the user is getting
+
+For the softinput mode thing up top
+This constant was deprecated in API level 30.
+Call Window#setDecorFitsSystemWindows(boolean)  with false
+and install an OnApplyWindowInsetsListener  on your root content view that fits insets of type Type#ime()

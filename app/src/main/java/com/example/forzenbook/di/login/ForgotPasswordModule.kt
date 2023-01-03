@@ -5,6 +5,7 @@ import com.example.forzenbook.data.repository.ForgotPasswordRepository
 import com.example.forzenbook.data.repository.mocks.MockForgotPasswordRepositoryImplSucceeds
 import com.example.forzenbook.domain.usecase.login.ForgotPasswordResetUseCase
 import com.example.forzenbook.domain.usecase.login.ForgotPasswordResetUseCaseImpl
+import com.example.forzenbook.domain.usecase.mocks.MockForgotPasswordResetUseCaseFails
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,6 +29,7 @@ object ForgotPasswordModule {
 
     @Provides
     fun providesForgotPasswordService(@Named(REPO_NAME) retrofit: Retrofit): ForgotPasswordService {
+        //return MockForgotPasswordServiceError()
         return retrofit.create(ForgotPasswordService::class.java)
     }
 
@@ -36,10 +38,12 @@ object ForgotPasswordModule {
         passwordService: ForgotPasswordService
     ): ForgotPasswordRepository {
         return MockForgotPasswordRepositoryImplSucceeds(passwordService)
+        //return ForgotPasswordRepositoryImpl(passwordService)
     }
 
     @Provides
     fun providesForgotPasswordResetUseCase(repository: ForgotPasswordRepository): ForgotPasswordResetUseCase {
+        //return MockForgotPasswordResetUseCaseFails()
         return ForgotPasswordResetUseCaseImpl(repository)
     }
 

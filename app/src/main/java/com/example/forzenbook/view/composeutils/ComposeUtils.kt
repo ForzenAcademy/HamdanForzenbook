@@ -1,9 +1,13 @@
 package com.example.forzenbook.view.composeutils
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,20 +17,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.forzenbook.R
+import com.example.forzenbook.theme.ForzenbookTheme
+import com.example.forzenbook.theme.IconSizeValues
+import com.example.forzenbook.theme.PaddingValues
+import com.example.forzenbook.theme.TextSizeValues
+import com.example.forzenbook.view.LocalNavController
 
 object ComposeUtils {
-    val COLOR_LION_YELLOW = Color(0xffffe226)
     const val APP_NAME = "forzenbook"
-    val tempPadding = 8.dp
-    val COLOR_BLACK = Color(0xff000000)
 }
 
 @Composable
 fun LoginTitleSection(title: String) {
-    Text(text = title, fontSize = 40.sp, modifier = Modifier.padding(12.dp))
+    Text(
+        text = title,
+        fontSize = ForzenbookTheme.typography.h1.fontSize,
+        modifier = Modifier.padding(PaddingValues.smallPad_3)
+    )
 }
 
 fun validateEmail(email: String): Boolean {
@@ -44,14 +52,18 @@ fun InputField(
     onNext: KeyboardActionScope.() -> Unit = {},
     onDone: KeyboardActionScope.() -> Unit = {},
     colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(
-        backgroundColor = Color.White
+        backgroundColor = ForzenbookTheme.colors.colors.secondaryVariant,
+        focusedLabelColor = ForzenbookTheme.colors.colors.onBackground,
+        placeholderColor = ForzenbookTheme.colors.colors.onBackground,
+        textColor = ForzenbookTheme.colors.colors.onBackground,
+        unfocusedLabelColor = ForzenbookTheme.colors.colors.onBackground
     ),
     enabled: Boolean = true,
 ) {
     TextField(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 40.dp, vertical = ComposeUtils.tempPadding),
+            .padding(horizontal = PaddingValues.largePad_4, vertical = PaddingValues.smallPad_2),
         label = { Text(text = label) },
         value = value,
         onValueChange = onValueChange,
@@ -72,7 +84,7 @@ fun InputField(
 fun SubmitButton(onSubmission: () -> Unit, label: String, enabled: Boolean) {
     Button(
         modifier = Modifier
-            .padding(horizontal = 40.dp)
+            .padding(horizontal = PaddingValues.largePad_4)
             .fillMaxWidth(),
         onClick = {
             onSubmission()
@@ -81,20 +93,20 @@ fun SubmitButton(onSubmission: () -> Unit, label: String, enabled: Boolean) {
             Text(
                 text = label,
                 modifier = Modifier,
-                color = if (enabled) Color.White else Color.LightGray,
-                fontSize = 20.sp
+                color = if (enabled) ForzenbookTheme.colors.colors.onPrimary else ForzenbookTheme.colors.colors.onSurface,
+                fontSize = TextSizeValues.med_1
             )
         },
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color.Black,
-            disabledBackgroundColor = Color.DarkGray
+            backgroundColor = ForzenbookTheme.colors.colors.primary,
+            disabledBackgroundColor = ForzenbookTheme.colors.colors.surface
         ),
         enabled = enabled
     )
 }
 
 @Composable
-fun DimBackgroundLoad(){
+fun DimBackgroundLoad() {
     Surface(
         color = Color.Black.copy(alpha = 0.5f),
         modifier = Modifier
@@ -112,11 +124,11 @@ fun DimBackgroundLoad(){
 }
 
 @Composable
-fun ErrorWithIcon(errorText:String,buttonText:String){
+fun ErrorWithIcon(errorText: String, buttonText: String, onSubmission: () -> Unit) {
     Box(contentAlignment = Alignment.Center) {
         Icon(
-            modifier = Modifier.size(200.dp),
-            tint = Color.Red,
+            modifier = Modifier.size(IconSizeValues.giga_1),
+            tint = ForzenbookTheme.colors.colors.onError,
             painter = painterResource(id = R.drawable.ic_baseline_error_24),
             contentDescription = null
         )
@@ -124,19 +136,70 @@ fun ErrorWithIcon(errorText:String,buttonText:String){
     Text(
         text = errorText,
         textAlign = TextAlign.Center,
-        fontSize = 20.sp
+        fontSize = TextSizeValues.med_1
     )
-
-    Spacer(modifier = Modifier.height(20.dp))
-
+    Spacer(modifier = Modifier.height(PaddingValues.medPad_2))
     Button(onClick = {
+        onSubmission()
     }
     ) {
         Text(
             modifier = Modifier
-                .padding(horizontal = 40.dp, vertical = 20.dp),
+                .padding(horizontal = PaddingValues.largePad_4, vertical = PaddingValues.medPad_2),
             text = buttonText,
-            fontSize = 30.sp
+            fontSize = ForzenbookTheme.typography.button.fontSize
         )
+    }
+}
+
+@Composable
+fun LoginBackgroundColumn(content: @Composable () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(ForzenbookTheme.colors.colors.background)
+            .verticalScroll(rememberScrollState())
+            .imePadding(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        content()
+    }
+}
+
+@Composable
+fun LoginTopBar(topText: String) {
+    TopAppBar(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = PaddingValues.smallPad_3),
+        backgroundColor = ForzenbookTheme.colors.colors.background
+    ) {
+        val navController = LocalNavController.current
+        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_round_arrow_back_ios_24),
+                contentDescription = "back arrow",
+                modifier = Modifier
+                    .size(IconSizeValues.small_2)
+                    .clickable {
+                        navController?.navigateUp()
+                    },
+                tint = ForzenbookTheme.colors.colors.onBackground
+            )
+        }
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = topText,
+                fontSize = ForzenbookTheme.typography.h3.fontSize,
+                textAlign = TextAlign.Center,
+                color = ForzenbookTheme.colors.colors.onBackground
+            )
+        }
+        Column(modifier = Modifier.weight(1f)) {
+        }
     }
 }

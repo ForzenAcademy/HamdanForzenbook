@@ -4,7 +4,7 @@ import android.util.Log
 import com.example.forzenbook.data.database.LoginDao
 import com.example.forzenbook.data.database.LoginEntity
 
-class MockDatabaseGetsToken : LoginDao {
+class MockLoginDatabaseGetsToken : LoginDao {
     override suspend fun insert(loginEntity: LoginEntity) {
         Log.v("Hamdan", "Inserted it haha")
     }

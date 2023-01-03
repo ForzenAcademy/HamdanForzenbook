@@ -2,18 +2,13 @@ package com.example.forzenbook.view.login
 
 import android.app.DatePickerDialog
 import android.text.TextUtils
-import android.util.Log
 import android.widget.DatePicker
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -21,70 +16,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.forzenbook.R
-import com.example.forzenbook.view.LocalNavController
+import com.example.forzenbook.theme.ForzenbookTheme
+import com.example.forzenbook.theme.IconSizeValues
 import com.example.forzenbook.view.composeutils.*
-import com.example.forzenbook.view.composeutils.ComposeUtils.COLOR_BLACK
-import com.example.forzenbook.view.composeutils.ComposeUtils.COLOR_LION_YELLOW
-import com.example.forzenbook.view.composeutils.ComposeUtils.tempPadding
 import com.example.forzenbook.viewmodels.LoginViewModel
 import java.util.*
 
 @Composable
 fun CreateAccountContent(
     state: LoginViewModel.CreateAccountState,
+    onErrorSubmit: () -> Unit,
     onTextChange: (String, String, String, String, String, String, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean) -> Unit,
     onSubmission: () -> Unit
 ) {
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(COLOR_LION_YELLOW)
-            .verticalScroll(rememberScrollState())
-            .imePadding(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        TopAppBar(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 12.dp),
-            backgroundColor = COLOR_LION_YELLOW
-        ) {
-            val navController = LocalNavController.current
-            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_round_arrow_back_ios_24),
-                    contentDescription = "back arrow",
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clickable {
-                            navController?.navigateUp()
-                        },
-                    tint = COLOR_BLACK
-                )
-            }
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Create Account", fontSize = 20.sp, textAlign = TextAlign.Center,
-                    color = COLOR_BLACK
-                )
-            }
-            Column(modifier = Modifier.weight(1f)) {
-            }
-        }
+    LoginBackgroundColumn {
+        LoginTopBar(topText = "Create Account")
 
         when (state) {
-            is LoginViewModel.CreateAccountState.Error -> ErrorContent()
+            is LoginViewModel.CreateAccountState.Error -> ErrorContent(onErrorSubmit)
             is LoginViewModel.CreateAccountState.Loading -> {}
             is LoginViewModel.CreateAccountState.UserInputting -> UserInputtingContent(
                 state.firstName,
@@ -111,10 +62,11 @@ fun CreateAccountContent(
 
 
 @Composable
-private fun ErrorContent() {
+private fun ErrorContent(onErrorSubmit: () -> Unit) {
     ErrorWithIcon(
         errorText = "There was an error when\ntrying to send a request for account creation",
-        buttonText = "Ok"
+        buttonText = "Ok",
+        onSubmission = onErrorSubmit
     )
 }
 
@@ -227,25 +179,27 @@ private fun UserInputtingContent(
         readOnly = true,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 40.dp, vertical = tempPadding)
+            .padding(
+                horizontal = com.example.forzenbook.theme.PaddingValues.largePad_4,
+                vertical = com.example.forzenbook.theme.PaddingValues.smallPad_2
+            )
             .clickable {
                 datePicker.show()
-                Log.v("Hamdan", birthDate)
             },
         trailingIcon = {
             Icon(
                 imageVector = Icons.Default.DateRange,
                 contentDescription = null,
                 modifier = Modifier
-                    .size(20.dp)
+                    .size(IconSizeValues.small_1)
             )
         },
         enabled = false,
         colors = TextFieldDefaults.outlinedTextFieldColors(
             backgroundColor = Color.White,
-            disabledTextColor = MaterialTheme.colors.onSurface,
-            disabledPlaceholderColor = MaterialTheme.colors.primary,
-            disabledLabelColor = MaterialTheme.colors.secondary,
+            disabledTextColor = ForzenbookTheme.colors.colors.onBackground,
+            disabledPlaceholderColor = ForzenbookTheme.colors.colors.onBackground,
+            disabledLabelColor = ForzenbookTheme.colors.colors.onBackground,
             //For Icons
             disabledLeadingIconColor = MaterialTheme.colors.primary,
             disabledTrailingIconColor = MaterialTheme.colors.secondary
@@ -296,7 +250,7 @@ private fun UserInputtingContent(
     if (locationError && location != "") {
         Text(text = "Locations cannot be longer than 64 characters")
     }
-    Spacer(modifier = Modifier.height(12.dp))
+    Spacer(modifier = Modifier.height(com.example.forzenbook.theme.PaddingValues.smallPad_3))
     SubmitButton(
         onSubmission = onSubmission,
         label = "Create Account",

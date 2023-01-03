@@ -5,6 +5,7 @@ import com.example.forzenbook.data.repository.CreateAccountRepository
 import com.example.forzenbook.data.repository.mocks.MockCreateAccountRepositoryImplSucceeds
 import com.example.forzenbook.domain.usecase.login.CreateAccountRequestUseCase
 import com.example.forzenbook.domain.usecase.login.CreateAccountRequestUseCaseImpl
+import com.example.forzenbook.domain.usecase.mocks.MockCreateAccountRequestUseCaseFails
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,6 +29,7 @@ object CreateAccountModule {
 
     @Provides
     fun providesCreateAccountService(@Named(REPO_NAME) retrofit: Retrofit): CreateAccountService {
+        //return MockCreateAccountServiceError()
         return retrofit.create(CreateAccountService::class.java)
     }
 
@@ -35,11 +37,14 @@ object CreateAccountModule {
     fun providesCreateAccountRepository(
         accountRequestService: CreateAccountService
     ): CreateAccountRepository {
+
+        //return CreateAccountRepositoryImpl(accountRequestService) //can't really use this mock yet, need more info on the api
         return MockCreateAccountRepositoryImplSucceeds(accountRequestService)
     }
 
     @Provides
     fun providesCreateAccountRequestUseCase(repository: CreateAccountRepository): CreateAccountRequestUseCase {
+        //return MockCreateAccountRequestUseCaseFails()
         return CreateAccountRequestUseCaseImpl(repository)
     }
 

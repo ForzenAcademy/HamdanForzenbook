@@ -123,6 +123,18 @@ class LoginViewModel @Inject constructor(
         )
     }
 
+    fun resetCreateAccountState() {
+        createAccountState.value = CreateAccountState.UserInputting()
+    }
+
+    fun resetLoginState() {
+        loginState.value = LoginState.UserInputting()
+    }
+
+    fun resetForgotPasswordState() {
+        forgotPasswordState.value = ForgotPasswordState.UserInputting()
+    }
+
     fun submitLogin() {
         viewModelScope.launch {
             if (loginState.value is LoginState.UserInputting) {
@@ -134,11 +146,21 @@ class LoginViewModel @Inject constructor(
                     loginState.value =
                         LoginState.Loading(email, password, emailError, passwordError)
                     delay(1000)
-                    val token = getTokenUseCase(email, password)?.token
-                    //This should instead be a function that if the token is not null we go to the logged in state further down the pipe
-                    loginState.value =
-                        LoginState.UserInputting(email, password, emailError, passwordError)
-                    Log.v("Hamdan", "We got the token it is: $token")
+                    val token: String? = try {
+                        getTokenUseCase(email, password)?.token
+                    } catch (e: Exception) {
+                        null
+                    }
+                    //we will want to replace this if section potentially
+                    if (token == null) {
+                        loginState.value = LoginState.Error
+                        //we may also want to show user the error
+                    } else {
+                        loginState.value =
+                            LoginState.UserInputting(email, password, emailError, passwordError)
+                        Log.v("Hamdan", "We got the token it is: $token")
+                    }
+
                 }
             } else {
                 //throw an error here
@@ -155,17 +177,23 @@ class LoginViewModel @Inject constructor(
                     (forgotPasswordState.value as ForgotPasswordState.UserInputting).emailError
                 forgotPasswordState.value = ForgotPasswordState.Loading(email, emailError)
                 delay(1000)
-                val code = forgotPasswordResetUseCase(email)
+                val code = try {
+                    forgotPasswordResetUseCase(email)
+                } catch (e: Exception) {
+                    0
+                }
                 if (code in 200 until 300) {
                     Log.v("Hamdan", "Succesful reset")
                     //notify user and gray out reset pass till ready again
                     forgotPasswordState.value = ForgotPasswordState.Success
                     delay(3000)
                     forgotPasswordState.value = ForgotPasswordState.UserInputting(email, emailError)
-                    //Replace this when above is implemented or is being implemented
-                } else {
-                    Log.v("Hamdan", "Something went wrong")
+                    //ToDo Replace this when above is implemented or is being implemented
+                } else if (code < 100) {
                     forgotPasswordState.value = ForgotPasswordState.Error
+                } else {
+                    forgotPasswordState.value = ForgotPasswordState.Error
+                    //ToDo prompt with some statement of what the error is
                 }
             }
         }
@@ -183,20 +211,27 @@ class LoginViewModel @Inject constructor(
                     val location: String = it.location
                     createAccountState.value = CreateAccountState.Loading
                     delay(1000)
-                    val code = createAccountRequestUseCase(
-                        firstName,
-                        lastName,
-                        birthDay,
-                        email,
-                        password,
-                        location
-                    )
+                    val code = try {
+                        createAccountRequestUseCase(
+                            firstName,
+                            lastName,
+                            birthDay,
+                            email,
+                            password,
+                            location
+                        )
+                    } catch (e: Exception) {
+                        0
+                    }
                     if (code in 200..299) {
                         //send to login page
                         createAccountState.value = CreateAccountState.UserInputting()
                         onAccountCreateSuccess()
+                    } else if (code < 100) {
+                        createAccountState.value = CreateAccountState.Error
                     } else {
                         createAccountState.value = CreateAccountState.Error
+                        //maybe we want to prompt them with a dialog on what error was?
                     }
                 }
             }

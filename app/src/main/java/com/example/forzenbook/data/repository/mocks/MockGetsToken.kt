@@ -9,7 +9,7 @@ class MockGetsToken(
     private val loginDao: LoginDao,
     private val loginService: LoginService
 ) : LoginRepository {
-    override suspend fun getToken(): LoginData? {
+    override suspend fun getToken(email: String, password: String): LoginData? {
         return LoginData("it worked")
     }
 }
