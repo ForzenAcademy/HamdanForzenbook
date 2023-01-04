@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.forzenbook'
+    namespace 'com.hamdan.forzenbook'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.forzenbook"
+        applicationId "com.hamdan.forzenbook"
         minSdk 26
         targetSdk 33
         versionCode 1
