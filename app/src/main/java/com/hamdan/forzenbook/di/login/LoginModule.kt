@@ -2,6 +2,7 @@ package com.hamdan.forzenbook.di.login
 
 import android.content.Context
 import androidx.room.Room
+import com.google.gson.GsonBuilder
 import com.hamdan.forzenbook.data.database.LoginDao
 import com.hamdan.forzenbook.data.database.LoginDatabase
 import com.hamdan.forzenbook.data.network.LoginService
@@ -9,9 +10,9 @@ import com.hamdan.forzenbook.data.repository.LoginRepository
 import com.hamdan.forzenbook.data.repository.LoginRepositoryImpl
 import com.hamdan.forzenbook.di.login.ModuleSharedValues.LOGIN_BASE_URL
 import com.hamdan.forzenbook.domain.usecase.login.LoginGetTokenUseCase
+import com.hamdan.forzenbook.domain.usecase.login.LoginGetTokenUseCaseImpl
 import com.hamdan.forzenbook.domain.usecase.login.LoginRequestValidationUseCase
 import com.hamdan.forzenbook.domain.usecase.login.LoginRequestValidationUseCaseImpl
-import com.hamdan.forzenbook.domain.usecase.mocks.MockLoginGetTokenUseCaseSuccess
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,9 +29,13 @@ object LoginModule {
     @Provides
     @Named(MODULE_NAME)
     fun providesLoginRetrofit(): Retrofit {
+        // TODO remove this GsonBuilder when backend updates database to avoid sending malformed JSON
+        val gson = GsonBuilder()
+            .setLenient()
+            .create()
         return Retrofit.Builder()
             .baseUrl(LOGIN_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }
 
@@ -63,8 +68,8 @@ object LoginModule {
     @Provides
     fun providesLoginGetTokenUseCase(loginRepository: LoginRepository): LoginGetTokenUseCase {
         // return MockLoginGetTokenUseCaseFails()
-        return MockLoginGetTokenUseCaseSuccess(loginRepository)
-        // return LoginGetTokenUseCaseImpl(loginRepository)
+        // return MockLoginGetTokenUseCaseSuccess(loginRepository)
+        return LoginGetTokenUseCaseImpl(loginRepository)
     }
 
     @Provides

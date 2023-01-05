@@ -7,5 +7,6 @@ interface CreateAccountRequestUseCase {
         birthDay: String,
         email: String,
         location: String
-    ): Int
+    ): CreateAccountResult
+
 }

@@ -7,5 +7,5 @@ interface CreateAccountRepository {
         birthDay: String,
         email: String,
         location: String,
-    ): Int
+    )
 }

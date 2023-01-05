@@ -2,7 +2,7 @@ package com.hamdan.forzenbook.di.login
 
 import com.hamdan.forzenbook.data.network.CreateAccountService
 import com.hamdan.forzenbook.data.repository.CreateAccountRepository
-import com.hamdan.forzenbook.data.repository.mocks.MockCreateAccountRepositoryImplSucceeds
+import com.hamdan.forzenbook.data.repository.CreateAccountRepositoryImpl
 import com.hamdan.forzenbook.di.login.ModuleSharedValues.LOGIN_BASE_URL
 import com.hamdan.forzenbook.domain.usecase.login.CreateAccountRequestUseCase
 import com.hamdan.forzenbook.domain.usecase.login.CreateAccountRequestUseCaseImpl
@@ -37,8 +37,8 @@ object CreateAccountModule {
     fun providesCreateAccountRepository(
         accountRequestService: CreateAccountService
     ): CreateAccountRepository {
-        // return CreateAccountRepositoryImpl(accountRequestService) //can't really use this mock yet, need more info on the api
-        return MockCreateAccountRepositoryImplSucceeds(accountRequestService)
+        return CreateAccountRepositoryImpl(accountRequestService)
+        // return MockCreateAccountRepositoryImplSucceeds(accountRequestService)
     }
 
     @Provides

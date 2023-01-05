@@ -1,11 +1,12 @@
 package com.hamdan.forzenbook.viewmodels
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hamdan.forzenbook.R
 import com.hamdan.forzenbook.domain.usecase.login.CreateAccountRequestUseCase
+import com.hamdan.forzenbook.domain.usecase.login.CreateAccountResult
 import com.hamdan.forzenbook.domain.usecase.login.LoginGetTokenUseCase
 import com.hamdan.forzenbook.domain.usecase.login.LoginRequestValidationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,134 +20,149 @@ class LoginViewModel @Inject constructor(
     private val requestValidationCode: LoginRequestValidationUseCase,
     private val createAccountRequestUseCase: CreateAccountRequestUseCase
 ) : ViewModel() {
+    data class LoginState(
+        val email: Entry = Entry("", true),
+        val code: Entry = Entry("", true),
+        val showInfoDialog: Boolean = false,
+        val inputtingCode: Boolean = false,
+        val isLoading: Boolean = false,
+        val hasError: Boolean = false,
+    )
 
-    sealed interface LoginState {
-        object Error : LoginState
-
-        data class Loading(
-            val email: String = "",
-            val emailError: Boolean = true,
-        ) : LoginState
-
-        data class UserInputting(
-            val email: String = "",
-            val emailError: Boolean = true,
-        ) : LoginState
-    }
-
-    sealed interface CreateAccountState {
-        object Loading : CreateAccountState
-        object Error : CreateAccountState
-
-        data class UserInputting(
-            val firstName: String = "",
-            val lastName: String = "",
-            val birthDay: String = "",
-            val email: String = "",
-            val location: String = "",
-            val firstError: Boolean = true,
-            val lastError: Boolean = true,
-            val birthError: Boolean = true,
-            val emailError: Boolean = true,
-            val locationError: Boolean = true,
-        ) : CreateAccountState
-    }
+    data class CreateAccountState(
+        val errorId: Int? = null,
+        val firstName: Entry = Entry("", true),
+        val lastName: Entry = Entry("", true),
+        val birthDay: Entry = Entry("", true),
+        val email: Entry = Entry("", true),
+        val location: Entry = Entry("", true),
+        val isLoading: Boolean = false,
+    )
 
     private var _createAccountState: MutableState<CreateAccountState> =
-        mutableStateOf(CreateAccountState.UserInputting())
+        mutableStateOf(CreateAccountState())
     val createAccountState: MutableState<CreateAccountState>
         get() = _createAccountState
 
     private var _loginState: MutableState<LoginState> =
-        mutableStateOf(LoginState.UserInputting())
+        // TODO remove this when Database for login token is setup (FA-84)
+        mutableStateOf(LoginState(email = Entry("Hamdan.mobeen@Gmail.com", false)))
     val loginState: MutableState<LoginState>
         get() = _loginState
 
     lateinit var onAccountCreateSuccess: () -> Unit
 
     fun updateLoginTexts(
-        email: String,
-        emailError: Boolean,
+        email: Entry,
+        code: Entry,
+        isInputtingCode: Boolean,
     ) {
-        loginState.value = LoginState.UserInputting(email, emailError)
-    }
-
-    fun updateCreateAccountTextAndErrors(
-        firstName: String,
-        lastName: String,
-        birthDay: String,
-        email: String,
-        location: String,
-        firstError: Boolean,
-        lastError: Boolean,
-        birthError: Boolean,
-        emailError: Boolean,
-        locationError: Boolean,
-    ) {
-        createAccountState.value = CreateAccountState.UserInputting(
-            firstName, lastName, birthDay, email, location,
-            firstError, lastError, birthError, emailError, locationError
+        loginState.value = loginState.value.copy(
+            email = email,
+            code = code,
+            inputtingCode = isInputtingCode,
         )
     }
 
-    fun resetCreateAccountState() {
-        createAccountState.value = CreateAccountState.UserInputting()
+    fun updateCreateAccountTextAndErrors(
+        firstName: Entry,
+        lastName: Entry,
+        birthDay: Entry,
+        email: Entry,
+        location: Entry,
+    ) {
+        createAccountState.value = createAccountState.value.copy(
+            firstName = firstName,
+            lastName = lastName,
+            birthDay = birthDay,
+            email = email,
+            location = location,
+        )
     }
 
-    fun resetLoginState() {
-        loginState.value = LoginState.UserInputting()
+    private fun createAccountNormalView() {
+        createAccountState.value = createAccountState.value.copy(errorId = null)
     }
 
-    fun submitLogin() {
-        // TODO Implement the revision for this when the POST call is setup in FA-80
-//        viewModelScope.launch {
-//            if (loginState.value is LoginState.UserInputting) {
-//                (loginState.value as LoginState.UserInputting).let {
-//                    val email = it.email
-//                    val emailError = it.emailError
-//                    loginState.value =
-//                        LoginState.Loading(email, emailError)
-//                    delay(1000)
-//                    val token: String? = try {
-//                        getTokenUseCase(email)?.token
-//                    } catch (e: Exception) {
-//                        null
-//                    }
-//                    //we will want to replace this if section potentially
-//                    if (token == null) {
-//                        loginState.value = LoginState.Error
-//                        //we may also want to show user the error
-//                    } else {
-//                        loginState.value =
-//                            LoginState.UserInputting(email, emailError)
-//                        Log.v("Hamdan", "We got the token it is: $token")
-//                    }
-//
-//                }
-//            } else {
-//                //throw an error here
-//                Log.v("Hamdan", "There was a major issue")
-//            }
-//        }
+    fun createAccountDismissErrorClicked() {
+        createAccountNormalView()
+    }
+
+    private fun loginNormalView() {
+        loginState.value =
+            loginState.value.copy(hasError = false, showInfoDialog = false, isLoading = false)
+    }
+
+    fun loginDismissErrorClicked() {
+        loginNormalView()
+    }
+
+    fun loginDismissInfoClicked() {
+        loginNormalView()
+    }
+
+    private fun submitLogin() {
+        viewModelScope.launch {
+            loginState.value.let {
+                val email = it.email
+                val code = it.code
+                loginState.value =
+                    loginState.value.copy(
+                        email = email,
+                        code = code,
+                        inputtingCode = true,
+                        isLoading = true,
+                        hasError = false,
+                    )
+                // TODO remove delay when login flow fully complete with UI (FA-80 maybe)
+                delay(1000)
+                try {
+                    getTokenUseCase(email.text, code.text)
+                    // TODO here they would be considered succesful
+                    // send off to where the user needs to see next, that location will retrieve token from DB
+                    loginState.value = loginState.value.copy(
+                        email = Entry(text = "", error = false),
+                        code = Entry(text = "", error = false),
+                        showInfoDialog = false,
+                        inputtingCode = false,
+                        isLoading = false,
+                        hasError = false
+                    )
+                    // for now we will show a reseted page
+                } catch (e: Exception) {
+                    loginState.value = loginState.value.copy(
+                        email = email,
+                        code = code,
+                        inputtingCode = true,
+                        isLoading = false,
+                        hasError = true,
+                    )
+                }
+
+            }
+        }
     }
 
     private fun requestLoginValidationCode() {
         viewModelScope.launch {
-            if (loginState.value is LoginState.UserInputting) {
-                (loginState.value as LoginState.UserInputting).let {
-                    val email = it.email
-                    val emailError = it.emailError
-                    loginState.value = LoginState.Loading(email, emailError)
-                    // TODO remove delay when login flow fully complete (FA-80 maybe)
-                    delay(1000)
-                    val code = try {
-                        requestValidationCode(email)
-                    } catch (e: Exception) {
-                        // TODO implement Validation Code rather than response code in FA-80
-                        0
-                    }
-                    Log.v("Hamdan", code.toString())
-                    loginState.value = LoginState.UserInputting(email, emailError)
+            loginState.value.let {
+                loginState.value = loginState.value.copy(
+                    isLoading = true,
+                )
+                // TODO remove delay when login flow fully complete with UI (FA-80 maybe)
+                delay(1000)
+                try {
+                    requestValidationCode(it.email.text)
+                    loginState.value = loginState.value.copy(
+                        inputtingCode = true,
+                        showInfoDialog = true,
+                    )
+                } catch (e: Exception) {
+                    loginState.value = loginState.value.copy(
+                        inputtingCode = false,
+                        isLoading = false,
+                        hasError = true,
+                    )
                 }
             }
         }
@@ -154,47 +170,52 @@ class LoginViewModel @Inject constructor(
 
     fun createAccount() {
         viewModelScope.launch {
-            if (createAccountState.value is CreateAccountState.UserInputting) {
-                (createAccountState.value as CreateAccountState.UserInputting).let {
-                    val firstName: String = it.firstName
-                    val lastName: String = it.lastName
-                    val birthDay: String = it.birthDay
-                    val email: String = it.email
-                    val location: String = it.location
-                    createAccountState.value = CreateAccountState.Loading
-                    // TODO remove delay when login flow fully complete (FA-80 maybe)
-                    delay(1000)
-                    val code = try {
-                        createAccountRequestUseCase(
-                            firstName,
-                            lastName,
-                            birthDay,
-                            email,
-                            location
-                        )
-                    } catch (e: Exception) {
-                        // TODO implement enum rather than int in FA-80
-                        0
-                    }
-                    if (code in 200..299) {
-                        // TODO implement enum rather than int in FA-80
+            createAccountState.value.let {
+                createAccountState.value = createAccountState.value.copy(
+                    isLoading = true,
+                )
+                // TODO remove delay when login flow fully complete (FA-80 maybe)
+                delay(1000)
+                val result = createAccountRequestUseCase(
+                    firstName = it.firstName.text,
+                    lastName = it.lastName.text,
+                    birthDay = it.birthDay.text,
+                    email = it.email.text,
+                    location = it.location.text,
+                )
+                when (result) {
+                    CreateAccountResult.CREATE_SUCCESS -> {
+                        createAccountState.value = createAccountState.value.copy()
                         // send to login page
-                        createAccountState.value = CreateAccountState.UserInputting()
                         onAccountCreateSuccess()
-                    } else if (code < 100) {
-                        // TODO implement enum rather than int in FA-80
-                        createAccountState.value = CreateAccountState.Error
-                    } else {
-                        // TODO implement enum rather than int in FA-80
-                        createAccountState.value = CreateAccountState.Error
-                        // maybe we want to prompt them with a dialog on what error was?
+                    }
+                    CreateAccountResult.CREATE_EXISTS -> {
+                        createAccountState.value = createAccountState.value.copy(
+                            errorId = R.string.create_account_error_user_exists,
+                            isLoading = false,
+                        )
+                    }
+                    CreateAccountResult.CREATE_FAILURE -> {
+                        createAccountState.value = createAccountState.value.copy(
+                            errorId = R.string.create_account_error_generic,
+                            isLoading = false,
+                        )
                     }
                 }
             }
         }
     }
 
-    fun requestCodeClicked() {
-        requestLoginValidationCode()
+    fun loginClicked() {
+        if (loginState.value.inputtingCode) {
+            submitLogin()
+        } else {
+            requestLoginValidationCode()
+        }
     }
 }
+
+data class Entry(
+    val text: String,
+    val error: Boolean
+)
