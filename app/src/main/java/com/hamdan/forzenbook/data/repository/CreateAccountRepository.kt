@@ -7,7 +7,6 @@ interface CreateAccountRepository {
         lastName: String,
         birthDay: String,
         email: String,
-        password: String,
         location: String,
     ): Int
 

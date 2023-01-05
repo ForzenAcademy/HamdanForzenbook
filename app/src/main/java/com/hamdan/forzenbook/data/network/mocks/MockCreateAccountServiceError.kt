@@ -9,7 +9,6 @@ class MockCreateAccountServiceError:CreateAccountService {
         lastName: String,
         birthDay: String,
         email: String,
-        password: String,
         location: String
     ): Response<Any> {
         throw RuntimeException("There was an issue!")

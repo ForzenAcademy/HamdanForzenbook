@@ -10,9 +10,8 @@ class CreateAccountRequestUseCaseImpl(
             lastName: String,
             birthDay: String,
             email: String,
-            password: String,
             location: String
         ): Int {
-            return repository.createUser(firstName, lastName, birthDay, email, password, location)
+            return repository.createUser(firstName, lastName, birthDay, email, location)
         }
 }

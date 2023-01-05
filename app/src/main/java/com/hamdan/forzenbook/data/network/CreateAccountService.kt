@@ -10,7 +10,6 @@ interface CreateAccountService {
         lastName: String,
         birthDay: String,
         email: String,
-        password: String,
         location: String
     ): Response<Any>
     //apparently we will want to use @Body (probably for hte parameters)

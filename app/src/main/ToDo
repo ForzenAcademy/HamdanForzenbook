@@ -11,17 +11,13 @@ Mocks
 
 Add a retry button
 
-add padding around the reset password and create account
+add padding around the create account
 
 adjust the sizes based on phone size
 
 maybe elipsize text if needed when it gets too large
 
-Dialog that tells them more on the forgot password
-
 Show user US format date
-
-Create account password needs obfuscation
 
 Create account show regular page and spinner up top
 
@@ -46,7 +42,6 @@ and install an OnApplyWindowInsetsListener  on your root content view that fits 
 
 REVAMP
 
-No password, remove forgot password
     when there is a call to login
     it will send an email to the user and give them a login token
     they will get the token and use the token to login with

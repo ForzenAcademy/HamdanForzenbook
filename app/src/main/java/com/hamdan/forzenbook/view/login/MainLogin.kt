@@ -15,8 +15,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.unit.dp
 import com.hamdan.forzenbook.R
 import com.hamdan.forzenbook.theme.IconSizeValues
 import com.hamdan.forzenbook.theme.PaddingValues
@@ -30,7 +28,7 @@ import com.hamdan.forzenbook.viewmodels.LoginViewModel
 fun MainLoginContent(
     state: LoginViewModel.LoginState,
     onErrorSubmit: () -> Unit,
-    onTextChange: (String, String, Boolean, Boolean) -> Unit,
+    onTextChange: (String, Boolean) -> Unit,
     onSubmission: () -> Unit
 ) {
     LoginBackgroundColumn {
@@ -45,24 +43,24 @@ fun MainLoginContent(
                 ErrorContent(onErrorSubmit)
             }
             is LoginViewModel.LoginState.Loading -> {
-                UserInputtingContent(
-                    state.email,
-                    state.password,
-                    state.emailError,
-                    state.passwordError,
-                    onTextChange,
-                    onSubmission
-                )
+                state.apply {
+                    UserInputtingContent(
+                        email,
+                        emailError,
+                        onTextChange,
+                        onSubmission
+                    )
+                }
             }
             is LoginViewModel.LoginState.UserInputting -> {
-                UserInputtingContent(
-                    state.email,
-                    state.password,
-                    state.emailError,
-                    state.passwordError,
-                    onTextChange,
-                    onSubmission
-                )
+                state.apply {
+                    UserInputtingContent(
+                        email,
+                        emailError,
+                        onTextChange,
+                        onSubmission
+                    )
+                }
             }
         }
     }
@@ -84,16 +82,12 @@ private fun ErrorContent(onErrorSubmit: () -> Unit) {
 @Composable
 private fun UserInputtingContent(
     stateEmail: String,
-    statePassword: String,
     stateEmailError: Boolean,
-    statePasswordError: Boolean,
-    onTextChange: (String, String, Boolean, Boolean) -> Unit,
+    onTextChange: (String, Boolean) -> Unit,
     onSubmission: () -> Unit
 ) {
     var email: String = stateEmail
-    var password: String = statePassword
     var emailError = stateEmailError
-    var passwordError = statePasswordError
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     InputField(
@@ -102,43 +96,21 @@ private fun UserInputtingContent(
             email = it
             emailError =
                 ((email.length > 30) || (!TextUtils.isEmpty(email) && !validateEmail(email)))
-            onTextChange(email, password, emailError, passwordError)
+            onTextChange(email, emailError)
         },
         imeAction = ImeAction.Next, onNext = { focusManager.moveFocus(FocusDirection.Down) }
     )
     if (emailError && email != "") {
         Text(text = "Invalid email or email length longer than 30 characters")
     }
-    InputField(
-        label = "Password", value = password,
-        onValueChange = {
-
-            password = it
-            passwordError = password.length > 30
-            onTextChange(email, password, emailError, passwordError)
-        },
-        visualTransformation = PasswordVisualTransformation(), imeAction = ImeAction.Done,
-        onDone = {
-            keyboardController?.hide()
-            if (!(emailError || passwordError)) {
-                onSubmission()
-            }
-        },
-    )
-    if (passwordError && password != "") {
-        Text(text = "Passwords cannot be longer than 30 characters")
-    }
     Spacer(modifier = Modifier.height(PaddingValues.medPad_2))
     SubmitButton(
         onSubmission = onSubmission,
         label = "Login",
-        enabled = !(emailError || passwordError)
+        enabled = !(emailError)
     )
     Spacer(modifier = Modifier.height(PaddingValues.medPad_2))
     val navController = LocalNavController.current
-    Text(text = "Forgot Password", modifier = Modifier.clickable {
-        navController?.navigate(NavigationDestinations.FORGOT_PASSWORD)
-    })
     Text(text = "Create Account", modifier = Modifier.clickable {
         navController?.navigate(NavigationDestinations.CREATE_ACCOUNT)
     })

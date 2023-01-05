@@ -12,11 +12,10 @@ class CreateAccountRepositoryImpl(
         lastName: String,
         birthDay: String,
         email: String,
-        password: String,
         location: String
     ): Int {
         return try {
-            service.createUser(firstName, lastName, birthDay, email, password, location)
+            service.createUser(firstName, lastName, birthDay, email, location)
                 .code()
         } catch (e: Exception) {
             Log.v("Hamdan", "There was an unidentifiable issue when creating the account")

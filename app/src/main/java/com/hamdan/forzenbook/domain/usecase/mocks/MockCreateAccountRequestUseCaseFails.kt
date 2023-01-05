@@ -8,7 +8,6 @@ class MockCreateAccountRequestUseCaseFails : CreateAccountRequestUseCase {
         lastName: String,
         birthDay: String,
         email: String,
-        password: String,
         location: String
     ): Int {
         throw RuntimeException("Something went wrong requesting Account creation")
