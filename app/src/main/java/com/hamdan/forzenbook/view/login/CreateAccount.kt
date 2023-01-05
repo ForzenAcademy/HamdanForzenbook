@@ -28,32 +28,38 @@ import java.util.*
 fun CreateAccountContent(
     state: LoginViewModel.CreateAccountState,
     onErrorSubmit: () -> Unit,
-    onTextChange: (String, String, String, String, String, String, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean) -> Unit,
+    onTextChange: (String, String, String, String, String, Boolean, Boolean, Boolean, Boolean, Boolean) -> Unit,
     onSubmission: () -> Unit
 ) {
     LoginBackgroundColumn {
         LoginTopBar(topText = "Create Account")
 
+
         when (state) {
             is LoginViewModel.CreateAccountState.Error -> ErrorContent(onErrorSubmit)
             is LoginViewModel.CreateAccountState.Loading -> {}
-            is LoginViewModel.CreateAccountState.UserInputting -> UserInputtingContent(
-                state.firstName,
-                state.lastName,
-                state.birthDay,
-                state.email,
-                state.password,
-                state.location,
-                state.firstError,
-                state.lastError,
-                state.birthError,
-                state.emailError,
-                state.passwordError,
-                state.locationError,
-                onTextChange,
-                onSubmission
-            )
+            is LoginViewModel.CreateAccountState.UserInputting -> {
+                state.apply {
+                    UserInputtingContent(
+                        firstName,
+                        lastName,
+                        birthDay,
+                        email,
+                        location,
+                        firstError,
+                        lastError,
+                        birthError,
+                        emailError,
+                        locationError,
+                        onTextChange,
+                        onSubmission
+                    )
+                }
+
+            }
         }
+
+
     }
     if (state is LoginViewModel.CreateAccountState.Loading) {
         DimBackgroundLoad()
@@ -77,15 +83,13 @@ private fun UserInputtingContent(
     stateLastName: String,
     stateBirthDate: String,
     stateEmail: String,
-    statePassword: String,
     stateLocation: String,
     stateFirstError: Boolean = true,
     stateLastError: Boolean = true,
     stateBirthError: Boolean = true,
     stateEmailError: Boolean = true,
-    statePasswordError: Boolean = true,
     stateLocationError: Boolean = true,
-    onTextChange: (String, String, String, String, String, String, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean) -> Unit,
+    onTextChange: (String, String, String, String, String, Boolean, Boolean, Boolean, Boolean, Boolean) -> Unit,
     onSubmission: () -> Unit
 ) {
 
@@ -98,8 +102,6 @@ private fun UserInputtingContent(
     var birthError = stateBirthError
     var email = stateEmail
     var emailError = stateEmailError
-    var password = statePassword
-    var passwordError = statePasswordError
     var location = stateLocation
     var locationError = stateLocationError
 
@@ -138,13 +140,11 @@ private fun UserInputtingContent(
                     lastName,
                     birthDate,
                     email,
-                    password,
                     location,
                     firstNameError,
                     lastNameError,
                     birthError,
                     emailError,
-                    passwordError,
                     locationError
                 )
             }, selectedYear,
@@ -155,8 +155,8 @@ private fun UserInputtingContent(
         firstName = it
         firstNameError = firstName.length > 20
         onTextChange(
-            firstName, lastName, birthDate, email, password, location,
-            firstNameError, lastNameError, birthError, emailError, passwordError, locationError
+            firstName, lastName, birthDate, email, location,
+            firstNameError, lastNameError, birthError, emailError, locationError
         )
     }, imeAction = ImeAction.Next, onNext = { focusManager.moveFocus(FocusDirection.Down) })
     if (firstNameError && firstName != "") {
@@ -166,8 +166,8 @@ private fun UserInputtingContent(
         lastName = it
         lastNameError = lastName.length > 20
         onTextChange(
-            firstName, lastName, birthDate, email, password, location,
-            firstNameError, lastNameError, birthError, emailError, passwordError, locationError
+            firstName, lastName, birthDate, email, location,
+            firstNameError, lastNameError, birthError, emailError, locationError
         )
     }, imeAction = ImeAction.Next, onNext = { focusManager.moveFocus(FocusDirection.Down) })
     if (lastNameError && lastName != "") {
@@ -214,36 +214,24 @@ private fun UserInputtingContent(
         emailError =
             ((email.length > 30) || (!TextUtils.isEmpty(email) && !validateEmail(email)))
         onTextChange(
-            firstName, lastName, birthDate, email, password, location,
-            firstNameError, lastNameError, birthError, emailError, passwordError, locationError
+            firstName, lastName, birthDate, email, location,
+            firstNameError, lastNameError, birthError, emailError, locationError
         )
     }, imeAction = ImeAction.Next, onNext = { focusManager.moveFocus(FocusDirection.Down) })
     if (emailError && email != "") {
         Text(text = "Invalid email or email length longer than 30 characters")
     }
-    InputField(label = "Password", value = password, onValueChange = {
-        password = it
-        passwordError = password.length > 30
-        onTextChange(
-            firstName, lastName, birthDate, email, password, location,
-            firstNameError, lastNameError, birthError, emailError, passwordError, locationError
-        )
-
-    }, imeAction = ImeAction.Next, onNext = { focusManager.moveFocus(FocusDirection.Down) })
-    if (passwordError && password != "") {
-        Text(text = "Passwords cannot be longer than 30 characters")
-    }
     InputField(label = "Location", value = location, onValueChange = {
         location = it
         locationError = location.length > 64
         onTextChange(
-            firstName, lastName, birthDate, email, password, location,
-            firstNameError, lastNameError, birthError, emailError, passwordError, locationError
+            firstName, lastName, birthDate, email, location,
+            firstNameError, lastNameError, birthError, emailError, locationError
         )
     }, imeAction = ImeAction.Done, onDone = {
 
         keyboardController?.hide()
-        if (!(emailError || birthError || locationError || lastNameError || firstNameError || passwordError)) {
+        if (!(emailError || birthError || locationError || lastNameError || firstNameError)) {
             onSubmission()
         }
     })
@@ -254,7 +242,7 @@ private fun UserInputtingContent(
     SubmitButton(
         onSubmission = onSubmission,
         label = "Create Account",
-        enabled = !(passwordError || emailError || birthError || locationError || firstNameError || lastNameError)
+        enabled = !(emailError || birthError || locationError || firstNameError || lastNameError)
     )
     Spacer(modifier = Modifier.height(60.dp))
 

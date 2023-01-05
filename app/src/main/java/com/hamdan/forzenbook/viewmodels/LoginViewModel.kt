@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.domain.usecase.login.CreateAccountRequestUseCase
-import com.hamdan.forzenbook.domain.usecase.login.ForgotPasswordResetUseCase
 import com.hamdan.forzenbook.domain.usecase.login.LoginGetTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -16,7 +15,6 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val getTokenUseCase: LoginGetTokenUseCase,
-    private val forgotPasswordResetUseCase: ForgotPasswordResetUseCase,
     private val createAccountRequestUseCase: CreateAccountRequestUseCase
 ) : ViewModel() {
 
@@ -25,16 +23,12 @@ class LoginViewModel @Inject constructor(
 
         data class Loading(
             val email: String = "",
-            val password: String = "",
             val emailError: Boolean = true,
-            val passwordError: Boolean = true
         ) : LoginState
 
         data class UserInputting(
             val email: String = "",
-            val password: String = "",
             val emailError: Boolean = true,
-            val passwordError: Boolean = true
         ) : LoginState
     }
 
@@ -47,36 +41,14 @@ class LoginViewModel @Inject constructor(
             val lastName: String = "",
             val birthDay: String = "",
             val email: String = "",
-            val password: String = "",
             val location: String = "",
             val firstError: Boolean = true,
             val lastError: Boolean = true,
             val birthError: Boolean = true,
             val emailError: Boolean = true,
-            val passwordError: Boolean = true,
             val locationError: Boolean = true,
         ) : CreateAccountState
     }
-
-    sealed interface ForgotPasswordState {
-        object Error : ForgotPasswordState
-        object Success : ForgotPasswordState
-
-        data class Loading(
-            val email: String = "",
-            val emailError: Boolean = true,
-        ) : ForgotPasswordState
-
-        data class UserInputting(
-            val email: String = "",
-            val emailError: Boolean = true,
-        ) : ForgotPasswordState
-    }
-
-    private var _forgotPasswordState: MutableState<ForgotPasswordState> =
-        mutableStateOf(ForgotPasswordState.UserInputting())
-    val forgotPasswordState: MutableState<ForgotPasswordState>
-        get() = _forgotPasswordState
 
     private var _createAccountState: MutableState<CreateAccountState> =
         mutableStateOf(CreateAccountState.UserInputting())
@@ -92,15 +64,9 @@ class LoginViewModel @Inject constructor(
 
     fun updateLoginTexts(
         email: String,
-        password: String,
         emailError: Boolean,
-        passwordError: Boolean
     ) {
-        loginState.value = LoginState.UserInputting(email, password, emailError, passwordError)
-    }
-
-    fun updateForgotPasswordText(email: String, emailError: Boolean) {
-        forgotPasswordState.value = ForgotPasswordState.UserInputting(email, emailError)
+        loginState.value = LoginState.UserInputting(email, emailError)
     }
 
     fun updateCreateAccountTextAndErrors(
@@ -108,18 +74,16 @@ class LoginViewModel @Inject constructor(
         lastName: String,
         birthDay: String,
         email: String,
-        password: String,
         location: String,
         firstError: Boolean,
         lastError: Boolean,
         birthError: Boolean,
         emailError: Boolean,
-        passwordError: Boolean,
         locationError: Boolean,
     ) {
         createAccountState.value = CreateAccountState.UserInputting(
-            firstName, lastName, birthDay, email, password, location,
-            firstError, lastError, birthError, emailError, passwordError, locationError
+            firstName, lastName, birthDay, email, location,
+            firstError, lastError, birthError, emailError, locationError
         )
     }
 
@@ -131,23 +95,17 @@ class LoginViewModel @Inject constructor(
         loginState.value = LoginState.UserInputting()
     }
 
-    fun resetForgotPasswordState() {
-        forgotPasswordState.value = ForgotPasswordState.UserInputting()
-    }
-
     fun submitLogin() {
         viewModelScope.launch {
             if (loginState.value is LoginState.UserInputting) {
                 (loginState.value as LoginState.UserInputting).let {
                     val email = it.email
-                    val password = it.password
                     val emailError = it.emailError
-                    val passwordError = it.passwordError
                     loginState.value =
-                        LoginState.Loading(email, password, emailError, passwordError)
+                        LoginState.Loading(email, emailError)
                     delay(1000)
                     val token: String? = try {
-                        getTokenUseCase(email, password)?.token
+                        getTokenUseCase(email)?.token
                     } catch (e: Exception) {
                         null
                     }
@@ -157,7 +115,7 @@ class LoginViewModel @Inject constructor(
                         //we may also want to show user the error
                     } else {
                         loginState.value =
-                            LoginState.UserInputting(email, password, emailError, passwordError)
+                            LoginState.UserInputting(email, emailError)
                         Log.v("Hamdan", "We got the token it is: $token")
                     }
 
@@ -165,36 +123,6 @@ class LoginViewModel @Inject constructor(
             } else {
                 //throw an error here
                 Log.v("Hamdan", "There was a major issue")
-            }
-        }
-    }
-
-    fun requestReset() {
-        viewModelScope.launch {
-            if (forgotPasswordState.value is ForgotPasswordState.UserInputting) {
-                val email = (forgotPasswordState.value as ForgotPasswordState.UserInputting).email
-                val emailError =
-                    (forgotPasswordState.value as ForgotPasswordState.UserInputting).emailError
-                forgotPasswordState.value = ForgotPasswordState.Loading(email, emailError)
-                delay(1000)
-                val code = try {
-                    forgotPasswordResetUseCase(email)
-                } catch (e: Exception) {
-                    0
-                }
-                if (code in 200 until 300) {
-                    Log.v("Hamdan", "Succesful reset")
-                    //notify user and gray out reset pass till ready again
-                    forgotPasswordState.value = ForgotPasswordState.Success
-                    delay(3000)
-                    forgotPasswordState.value = ForgotPasswordState.UserInputting(email, emailError)
-                    //ToDo Replace this when above is implemented or is being implemented
-                } else if (code < 100) {
-                    forgotPasswordState.value = ForgotPasswordState.Error
-                } else {
-                    forgotPasswordState.value = ForgotPasswordState.Error
-                    //ToDo prompt with some statement of what the error is
-                }
             }
         }
     }
@@ -207,7 +135,6 @@ class LoginViewModel @Inject constructor(
                     val lastName: String = it.lastName
                     val birthDay: String = it.birthDay
                     val email: String = it.email
-                    val password: String = it.password
                     val location: String = it.location
                     createAccountState.value = CreateAccountState.Loading
                     delay(1000)
@@ -217,7 +144,6 @@ class LoginViewModel @Inject constructor(
                             lastName,
                             birthDay,
                             email,
-                            password,
                             location
                         )
                     } catch (e: Exception) {
@@ -237,6 +163,4 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
-
-
 }

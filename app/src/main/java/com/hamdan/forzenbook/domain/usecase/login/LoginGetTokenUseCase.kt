@@ -4,6 +4,6 @@ import com.hamdan.forzenbook.data.repository.LoginData
 
 interface LoginGetTokenUseCase {
 
-    suspend operator fun invoke(email:String,password:String): LoginData?
+    suspend operator fun invoke(email:String): LoginData?
 
 }

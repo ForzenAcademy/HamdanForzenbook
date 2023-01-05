@@ -12,7 +12,6 @@ class MockCreateAccountRepositoryImplSucceeds(
         lastName: String,
         birthDay: String,
         email: String,
-        password: String,
         location: String
     ): Int {
         return 200
