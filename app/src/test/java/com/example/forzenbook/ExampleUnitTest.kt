@@ -1,4 +1,4 @@
-package com.example.forzenbook
+package com.hamdan.forzenbook
 
 import org.junit.Test
 
@@ -11,70 +11,70 @@ class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
         /*
-        2d array
-        Given a 5x5 2d list, make a function that returns true if "FILES"
-        can be made in the grid using Boggle rules
+            Write a function that takes in a list of ints and an int N.
+            Return a list of Pairs of Ints from the list (no duplicates) that add together to equal N.
+    } ?: Log.v("Hamdan", "no path")
          */
-        /*
-        Find a starting point of F,
-        check all tiles around that point for the next letter
-         */
-        val word = "FILES"
-        val board = listOf(
-            listOf("F", "I", "L", "E", "S"),
-            listOf("I", "L", "E", "S", "F"),
-            listOf("L", "E", "S", "F", "I"),
-            listOf("E", "S", "F", "I", "L"),
-            listOf("S", "F", "I", "L", "E")
-        )
-        val visited = mutableListOf<Pair<Int, Int>>()
-        var x = false
-        val dimen = board.size
-        for (i in board.indices) {
-            for (k in board.indices) {
-                if (board[i][k] == word[0].toString()) {
-                    visited.add(Pair(i, k))
-                    x = explore(board, visited, i, k, word.substring(1))
-                }
-            }
-        }
+
+        val list = listOf(1, 3, 7, 8, 2, 4, 6, 9, 1, 2)
+        val N = 4
+
+        val pairs = list.distinct().mapNotNull { numOne ->
+            if (numOne < N) {
+                list.mapNotNull {
+                    if (it + numOne == N) {
+                        Pair(it, numOne)
+                    } else null
+                }.distinct()
+            } else null
+        }.distinct()
+
+        val pog = list.mapNotNull { numOne ->
+            if (list.find { numOne + it == N } != null) {
+                Pair(numOne, list.find { numOne + it == N })
+            } else null
+        }.distinct()
+        print("Over Here\n")
+        print(pairs.toString())
+        print("\nOver Here\n")
+
+        print("Over Here\n")
+        print(pog.toString())
+        print("\nOver Here\n")
     }
 }
 
-fun explore(
-    board: List<List<String>>,
-    visited: MutableList<Pair<Int, Int>>,
-    i: Int,
-    k: Int,
-    word: String
-): Boolean {
-    if (word.length == 1) return true
-
-    if (i + 1 < board.size - 1 && k + 1 < board.size - 1 && !visited.contains(Pair(i + 1, k + 1))) {
-        if (board[i + 1][k + 1] == word[0].toString()) {
-            visited.add(Pair(i + 1, k + 1))
-            explore(board, visited, i + 1, k + 1, word.substring(1))
-        }
-    }
-    if (i + 1 < board.size - 1&& !visited.contains(Pair(i + 1, k))) {
-        visited.add(Pair(i + 1, k + 1))
-        explore(board, visited, i + 1, k + 1, word.substring(1))
-    }
-    if (k + 1 < board.size - 1&& !visited.contains(Pair(i, k + 1))) {
-        visited.add(Pair(i + 1, k + 1))
-        explore(board, visited, i + 1, k + 1, word.substring(1))
-    }
-    if (i - 1 > 0 && k - 1 > 0&& !visited.contains(Pair(i - 1, k - 1))) {
-        visited.add(Pair(i + 1, k + 1))
-        explore(board, visited, i + 1, k + 1, word.substring(1))
-    }
-    if (i - 1 > 0&& !visited.contains(Pair(i - 1, k))) {
-        visited.add(Pair(i + 1, k + 1))
-        explore(board, visited, i + 1, k + 1, word.substring(1))
-    }
-    if (k - 1 > 0&& !visited.contains(Pair(i, k - 1))) {
-        visited.add(Pair(i + 1, k + 1))
-        explore(board, visited, i + 1, k + 1, word.substring(1))
-    }
-    return false
+fun viableCombos(numbers:List<Int>, resultant:Int): List<Pair<Int, Int?>> {
+    return numbers.mapNotNull { numOne ->
+        if (numbers.find { numOne + it == resultant } != null) {
+            Pair(numOne, numbers.find { numOne + it == resultant })
+        } else null
+    }.distinct()
 }
+
+//fun traverse(
+//    board: List<List<String>>,
+//    x: Int,
+//    y: Int,
+//    route: MutableList<Pair<Int, Int>>
+//): MutableList<Pair<Int, Int>>? {
+//
+//    if (board.getOrNull(x + 1)?.getOrNull(y) == "O") {
+//        val n = mutableListOf<Pair<Int, Int>>()
+//        route.forEach { n.add(it) }
+//        n.add(Pair<x+1,y>)
+//        traverse(board, x + 1, y, n)
+//    }
+//    if (board.getOrNull(x)?.getOrNull(y + 1) == "O") {
+//        val n = mutableListOf<Pair<Int, Int>>()
+//        route.forEach { n.add(it) }
+//        traverse(board, x, y + 1, n)
+//    }
+//
+//    return if (route.size == (board.size + board[0].size - 1)) {
+//        route
+//    } else {
+//        null
+//    }
+//
+//}
