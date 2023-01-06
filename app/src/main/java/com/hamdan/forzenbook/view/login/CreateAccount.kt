@@ -4,8 +4,16 @@ import android.app.DatePickerDialog
 import android.text.TextUtils
 import android.widget.DatePicker
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.runtime.Composable
@@ -16,13 +24,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.hamdan.forzenbook.R
 import com.hamdan.forzenbook.theme.ForzenbookTheme
 import com.hamdan.forzenbook.theme.IconSizeValues
-import com.hamdan.forzenbook.view.composeutils.*
+import com.hamdan.forzenbook.view.composeutils.DimBackgroundLoad
+import com.hamdan.forzenbook.view.composeutils.ErrorWithIcon
+import com.hamdan.forzenbook.view.composeutils.InputField
+import com.hamdan.forzenbook.view.composeutils.LoginBackgroundColumn
+import com.hamdan.forzenbook.view.composeutils.LoginTopBar
+import com.hamdan.forzenbook.view.composeutils.SubmitButton
+import com.hamdan.forzenbook.view.composeutils.validateEmail
+import com.hamdan.forzenbook.view.login.LoginSharedConstants.EMAIL_LENGTH_LIMIT
 import com.hamdan.forzenbook.viewmodels.LoginViewModel
-import java.util.*
+import java.util.Calendar
+
+private const val AGE_MINIMUM = 13
+private const val NAME_LENGTH_LIMIT = 20
+private const val LOCATION_LENGTH_LIMIT = 64
+private const val EXPECTED_ARRAY_SIZE = 3
 
 @Composable
 fun CreateAccountContent(
@@ -32,9 +54,7 @@ fun CreateAccountContent(
     onSubmission: () -> Unit
 ) {
     LoginBackgroundColumn {
-        LoginTopBar(topText = "Create Account")
-
-
+        LoginTopBar(topText = stringResource(R.string.top_bar_text_create_account))
         when (state) {
             is LoginViewModel.CreateAccountState.Error -> ErrorContent(onErrorSubmit)
             is LoginViewModel.CreateAccountState.Loading -> {}
@@ -55,23 +75,19 @@ fun CreateAccountContent(
                         onSubmission
                     )
                 }
-
             }
         }
-
-
     }
     if (state is LoginViewModel.CreateAccountState.Loading) {
         DimBackgroundLoad()
     }
 }
 
-
 @Composable
 private fun ErrorContent(onErrorSubmit: () -> Unit) {
     ErrorWithIcon(
-        errorText = "There was an error when\ntrying to send a request for account creation",
-        buttonText = "Ok",
+        errorText = stringResource(R.string.error_create_account),
+        buttonText = stringResource(R.string.create_account_confirm_error),
         onSubmission = onErrorSubmit
     )
 }
@@ -92,8 +108,6 @@ private fun UserInputtingContent(
     onTextChange: (String, String, String, String, String, Boolean, Boolean, Boolean, Boolean, Boolean) -> Unit,
     onSubmission: () -> Unit
 ) {
-
-    //ASK NIC IS THERE A BETTER WAY TO DO THIS? Other than using a lambda for a new set of booleans in the state object
     var firstName = stateFirstName
     var firstNameError = stateFirstError
     var lastName = stateLastName
@@ -127,54 +141,77 @@ private fun UserInputtingContent(
         DatePickerDialog(
             context,
             { _: DatePicker, Year: Int, Month: Int, DayOfMonth: Int ->
-                birthDate = "$Year-${Month}-$DayOfMonth"
+                birthDate = "$Year-$Month-$DayOfMonth"
                 val split = birthDate.split("-")
-                val year = split[0].toInt()
-                val month = split[1].toInt()
-                val day = split[2].toInt()
-                birthError = ((currentYear - year < 13) ||
-                        ((currentYear - year == 13 && currentMonth - month < 0)) ||
-                        ((currentYear - year == 13 && currentMonth - month == 0 && currentDay - day < 0)))
-                onTextChange(
-                    firstName,
-                    lastName,
-                    birthDate,
-                    email,
-                    location,
-                    firstNameError,
-                    lastNameError,
-                    birthError,
-                    emailError,
-                    locationError
-                )
-            }, selectedYear,
+                if (split.size == EXPECTED_ARRAY_SIZE) {
+                    val year = split[0].toIntOrNull()
+                    val month = split[1].toIntOrNull()
+                    val day = split[2].toIntOrNull()
+                    year?.let {
+                        month?.let {
+                            day?.let {
+                                birthError = (
+                                    (currentYear - year < AGE_MINIMUM) ||
+                                        ((currentYear - year == AGE_MINIMUM && currentMonth - month < 0)) ||
+                                        ((currentYear - year == AGE_MINIMUM && currentMonth - month == 0 && currentDay - day < 0))
+                                    )
+                                onTextChange(
+                                    firstName,
+                                    lastName,
+                                    birthDate,
+                                    email,
+                                    location,
+                                    firstNameError,
+                                    lastNameError,
+                                    birthError,
+                                    emailError,
+                                    locationError
+                                )
+                            }
+                        }
+                    }
+                }
+            },
+            selectedYear,
             selectedMonth,
             selectedDay
         )
-    InputField(label = "First Name", value = firstName, onValueChange = {
-        firstName = it
-        firstNameError = firstName.length > 20
-        onTextChange(
-            firstName, lastName, birthDate, email, location,
-            firstNameError, lastNameError, birthError, emailError, locationError
-        )
-    }, imeAction = ImeAction.Next, onNext = { focusManager.moveFocus(FocusDirection.Down) })
+    InputField(
+        label = stringResource(R.string.create_account_first_name_prompt),
+        value = firstName,
+        onValueChange = {
+            firstName = it
+            firstNameError = firstName.length > NAME_LENGTH_LIMIT
+            onTextChange(
+                firstName, lastName, birthDate, email, location,
+                firstNameError, lastNameError, birthError, emailError, locationError
+            )
+        },
+        imeAction = ImeAction.Next,
+        onNext = { focusManager.moveFocus(FocusDirection.Down) }
+    )
     if (firstNameError && firstName != "") {
-        Text(text = "First Names can only be 20 characters or less")
+        Text(text = stringResource(R.string.create_account_first_name_error))
     }
-    InputField(label = "Last Name", value = lastName, onValueChange = {
-        lastName = it
-        lastNameError = lastName.length > 20
-        onTextChange(
-            firstName, lastName, birthDate, email, location,
-            firstNameError, lastNameError, birthError, emailError, locationError
-        )
-    }, imeAction = ImeAction.Next, onNext = { focusManager.moveFocus(FocusDirection.Down) })
+    InputField(
+        label = stringResource(R.string.create_account_last_name_prompt),
+        value = lastName,
+        onValueChange = {
+            lastName = it
+            lastNameError = lastName.length > NAME_LENGTH_LIMIT
+            onTextChange(
+                firstName, lastName, birthDate, email, location,
+                firstNameError, lastNameError, birthError, emailError, locationError
+            )
+        },
+        imeAction = ImeAction.Next,
+        onNext = { focusManager.moveFocus(FocusDirection.Down) }
+    )
     if (lastNameError && lastName != "") {
-        Text(text = "Last Names can only be 20 characters or less")
+        Text(text = stringResource(R.string.create_account_last_name_error))
     }
     TextField(
-        value = if (birthDate == "") "Birth Date" else birthDate,
+        value = if (birthDate == "") stringResource(R.string.create_account_birth_date_prompt) else birthDate,
         onValueChange = {},
         readOnly = true,
         modifier = Modifier
@@ -200,50 +237,61 @@ private fun UserInputtingContent(
             disabledTextColor = ForzenbookTheme.colors.colors.onBackground,
             disabledPlaceholderColor = ForzenbookTheme.colors.colors.onBackground,
             disabledLabelColor = ForzenbookTheme.colors.colors.onBackground,
-            //For Icons
+            // For Icons
             disabledLeadingIconColor = MaterialTheme.colors.primary,
             disabledTrailingIconColor = MaterialTheme.colors.secondary
         ),
         singleLine = true
     )
     if (birthError && birthDate != "") {
-        Text(text = "Invalid birth date, must be 13 or older")
+        Text(text = stringResource(R.string.create_account_birth_date_error))
     }
-    InputField(label = "Email", value = email, onValueChange = {
-        email = it
-        emailError =
-            ((email.length > 30) || (!TextUtils.isEmpty(email) && !validateEmail(email)))
-        onTextChange(
-            firstName, lastName, birthDate, email, location,
-            firstNameError, lastNameError, birthError, emailError, locationError
-        )
-    }, imeAction = ImeAction.Next, onNext = { focusManager.moveFocus(FocusDirection.Down) })
+    InputField(
+        label = stringResource(R.string.create_account_email_prompt),
+        value = email,
+        onValueChange = {
+            email = it
+            emailError =
+                email.length > EMAIL_LENGTH_LIMIT || !TextUtils.isEmpty(email) &&
+                !validateEmail(email)
+            onTextChange(
+                firstName, lastName, birthDate, email, location,
+                firstNameError, lastNameError, birthError, emailError, locationError
+            )
+        },
+        imeAction = ImeAction.Next,
+        onNext = { focusManager.moveFocus(FocusDirection.Down) }
+    )
     if (emailError && email != "") {
-        Text(text = "Invalid email or email length longer than 30 characters")
+        Text(text = stringResource(R.string.create_account_email_error))
     }
-    InputField(label = "Location", value = location, onValueChange = {
-        location = it
-        locationError = location.length > 64
-        onTextChange(
-            firstName, lastName, birthDate, email, location,
-            firstNameError, lastNameError, birthError, emailError, locationError
-        )
-    }, imeAction = ImeAction.Done, onDone = {
-
-        keyboardController?.hide()
-        if (!(emailError || birthError || locationError || lastNameError || firstNameError)) {
-            onSubmission()
+    InputField(
+        label = stringResource(R.string.create_account_location_prompt),
+        value = location,
+        onValueChange = {
+            location = it
+            locationError = location.length > LOCATION_LENGTH_LIMIT
+            onTextChange(
+                firstName, lastName, birthDate, email, location,
+                firstNameError, lastNameError, birthError, emailError, locationError
+            )
+        },
+        imeAction = ImeAction.Done,
+        onDone = {
+            keyboardController?.hide()
+            if (!(emailError || birthError || locationError || lastNameError || firstNameError)) {
+                onSubmission()
+            }
         }
-    })
+    )
     if (locationError && location != "") {
-        Text(text = "Locations cannot be longer than 64 characters")
+        Text(text = stringResource(R.string.create_account_location_error))
     }
     Spacer(modifier = Modifier.height(com.hamdan.forzenbook.theme.PaddingValues.smallPad_3))
     SubmitButton(
         onSubmission = onSubmission,
-        label = "Create Account",
+        label = stringResource(R.string.create_account_submit),
         enabled = !(emailError || birthError || locationError || firstNameError || lastNameError)
     )
     Spacer(modifier = Modifier.height(60.dp))
-
 }

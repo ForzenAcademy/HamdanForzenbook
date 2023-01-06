@@ -3,9 +3,6 @@ package com.hamdan.forzenbook.view
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.util.Log
-import androidx.core.content.ContextCompat.getSystemService
-
 
 fun isOnline(context: Context): Boolean {
     val connectivityManager =

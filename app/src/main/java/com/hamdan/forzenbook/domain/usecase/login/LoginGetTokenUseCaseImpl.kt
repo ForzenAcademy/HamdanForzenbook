@@ -6,7 +6,7 @@ import com.hamdan.forzenbook.data.repository.LoginRepository
 class LoginGetTokenUseCaseImpl(
     val repository: LoginRepository
 ) : LoginGetTokenUseCase {
-    override suspend fun invoke(email: String): LoginData? {
-        return repository.getToken(email)
+    override suspend fun invoke(email: String, code: String): LoginData? {
+        return LoginData(repository.getToken(email, code)?.token)
     }
 }

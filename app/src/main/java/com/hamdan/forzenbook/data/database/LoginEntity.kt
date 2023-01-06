@@ -15,7 +15,7 @@ data class LoginEntity(
 
     companion object {
         const val TABLE_NAME = "login"
-        const val DATABASE_ID = "login_database_id" //TABLE_NAME + "_database_id"
-        const val TOKEN = "login_token"//TABLE_NAME + "_token"
+        const val DATABASE_ID = "login_database_id" // TABLE_NAME + "_database_id"
+        const val TOKEN = "login_token" // TABLE_NAME + "_token"
     }
 }

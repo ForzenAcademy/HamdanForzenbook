@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.domain.usecase.login.CreateAccountRequestUseCase
 import com.hamdan.forzenbook.domain.usecase.login.LoginGetTokenUseCase
+import com.hamdan.forzenbook.domain.usecase.login.LoginRequestValidationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -15,6 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val getTokenUseCase: LoginGetTokenUseCase,
+    private val requestValidationCode: LoginRequestValidationUseCase,
     private val createAccountRequestUseCase: CreateAccountRequestUseCase
 ) : ViewModel() {
 
@@ -96,33 +98,56 @@ class LoginViewModel @Inject constructor(
     }
 
     fun submitLogin() {
+        // TODO Implement the revision for this when the POST call is setup in FA-80
+//        viewModelScope.launch {
+//            if (loginState.value is LoginState.UserInputting) {
+//                (loginState.value as LoginState.UserInputting).let {
+//                    val email = it.email
+//                    val emailError = it.emailError
+//                    loginState.value =
+//                        LoginState.Loading(email, emailError)
+//                    delay(1000)
+//                    val token: String? = try {
+//                        getTokenUseCase(email)?.token
+//                    } catch (e: Exception) {
+//                        null
+//                    }
+//                    //we will want to replace this if section potentially
+//                    if (token == null) {
+//                        loginState.value = LoginState.Error
+//                        //we may also want to show user the error
+//                    } else {
+//                        loginState.value =
+//                            LoginState.UserInputting(email, emailError)
+//                        Log.v("Hamdan", "We got the token it is: $token")
+//                    }
+//
+//                }
+//            } else {
+//                //throw an error here
+//                Log.v("Hamdan", "There was a major issue")
+//            }
+//        }
+    }
+
+    private fun requestLoginValidationCode() {
         viewModelScope.launch {
             if (loginState.value is LoginState.UserInputting) {
                 (loginState.value as LoginState.UserInputting).let {
                     val email = it.email
                     val emailError = it.emailError
-                    loginState.value =
-                        LoginState.Loading(email, emailError)
+                    loginState.value = LoginState.Loading(email, emailError)
+                    // TODO remove delay when login flow fully complete (FA-80 maybe)
                     delay(1000)
-                    val token: String? = try {
-                        getTokenUseCase(email)?.token
+                    val code = try {
+                        requestValidationCode(email)
                     } catch (e: Exception) {
-                        null
+                        // TODO implement Validation Code rather than response code in FA-80
+                        0
                     }
-                    //we will want to replace this if section potentially
-                    if (token == null) {
-                        loginState.value = LoginState.Error
-                        //we may also want to show user the error
-                    } else {
-                        loginState.value =
-                            LoginState.UserInputting(email, emailError)
-                        Log.v("Hamdan", "We got the token it is: $token")
-                    }
-
+                    Log.v("Hamdan", code.toString())
+                    loginState.value = LoginState.UserInputting(email, emailError)
                 }
-            } else {
-                //throw an error here
-                Log.v("Hamdan", "There was a major issue")
             }
         }
     }
@@ -137,6 +162,7 @@ class LoginViewModel @Inject constructor(
                     val email: String = it.email
                     val location: String = it.location
                     createAccountState.value = CreateAccountState.Loading
+                    // TODO remove delay when login flow fully complete (FA-80 maybe)
                     delay(1000)
                     val code = try {
                         createAccountRequestUseCase(
@@ -147,20 +173,28 @@ class LoginViewModel @Inject constructor(
                             location
                         )
                     } catch (e: Exception) {
+                        // TODO implement enum rather than int in FA-80
                         0
                     }
                     if (code in 200..299) {
-                        //send to login page
+                        // TODO implement enum rather than int in FA-80
+                        // send to login page
                         createAccountState.value = CreateAccountState.UserInputting()
                         onAccountCreateSuccess()
                     } else if (code < 100) {
+                        // TODO implement enum rather than int in FA-80
                         createAccountState.value = CreateAccountState.Error
                     } else {
+                        // TODO implement enum rather than int in FA-80
                         createAccountState.value = CreateAccountState.Error
-                        //maybe we want to prompt them with a dialog on what error was?
+                        // maybe we want to prompt them with a dialog on what error was?
                     }
                 }
             }
         }
+    }
+
+    fun requestCodeClicked() {
+        requestLoginValidationCode()
     }
 }

@@ -7,7 +7,7 @@ import com.hamdan.forzenbook.domain.usecase.login.LoginGetTokenUseCase
 class MockLoginGetTokenUseCaseSuccess(
     val repository: LoginRepository
 ) : LoginGetTokenUseCase {
-    override suspend fun invoke(email: String): LoginData? {
+    override suspend fun invoke(email: String, code: String): LoginData? {
         return LoginData("it worked")
     }
 }
