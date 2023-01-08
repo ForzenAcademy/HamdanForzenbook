@@ -14,14 +14,21 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import com.hamdan.forzenbook.R
 import com.hamdan.forzenbook.theme.IconSizeValues
 import com.hamdan.forzenbook.theme.PaddingValues
 import com.hamdan.forzenbook.view.LocalNavController
 import com.hamdan.forzenbook.view.NavigationDestinations
-import com.hamdan.forzenbook.view.composeutils.*
 import com.hamdan.forzenbook.view.composeutils.ComposeUtils.APP_NAME
+import com.hamdan.forzenbook.view.composeutils.DimBackgroundLoad
+import com.hamdan.forzenbook.view.composeutils.ErrorWithIcon
+import com.hamdan.forzenbook.view.composeutils.InputField
+import com.hamdan.forzenbook.view.composeutils.LoginBackgroundColumn
+import com.hamdan.forzenbook.view.composeutils.LoginTitleSection
+import com.hamdan.forzenbook.view.composeutils.SubmitButton
+import com.hamdan.forzenbook.view.composeutils.validateEmail
 import com.hamdan.forzenbook.viewmodels.LoginViewModel
 
 @Composable
@@ -37,7 +44,7 @@ fun MainLoginContent(
             painter = painterResource(id = R.drawable.logo_render_full_notext),
             contentDescription = "Yellow lion"
         )
-        LoginTitleSection(APP_NAME)//
+        LoginTitleSection(APP_NAME)
         when (state) {
             is LoginViewModel.LoginState.Error -> {
                 ErrorContent(onErrorSubmit)
@@ -72,8 +79,8 @@ fun MainLoginContent(
 @Composable
 private fun ErrorContent(onErrorSubmit: () -> Unit) {
     ErrorWithIcon(
-        errorText = "There was an error trying to login",
-        buttonText = "Ok",
+        errorText = stringResource(R.string.login_error),
+        buttonText = stringResource(R.string.login_confirm_error),
         onSubmission = onErrorSubmit
     )
 }
@@ -91,7 +98,7 @@ private fun UserInputtingContent(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     InputField(
-        label = "Email", value = email,
+        label = stringResource(R.string.login_email_prompt), value = email,
         onValueChange = {
             email = it
             emailError =
@@ -101,22 +108,20 @@ private fun UserInputtingContent(
         imeAction = ImeAction.Next, onNext = { focusManager.moveFocus(FocusDirection.Down) }
     )
     if (emailError && email != "") {
-        Text(text = "Invalid email or email length longer than 30 characters")
+        Text(text = stringResource(R.string.login_email_error))
     }
     Spacer(modifier = Modifier.height(PaddingValues.medPad_2))
     SubmitButton(
         onSubmission = onSubmission,
-        label = "Login",
+        label = stringResource(R.string.login_button_text),
         enabled = !(emailError)
     )
     Spacer(modifier = Modifier.height(PaddingValues.medPad_2))
     val navController = LocalNavController.current
-    Text(text = "Create Account", modifier = Modifier.clickable {
-        navController?.navigate(NavigationDestinations.CREATE_ACCOUNT)
-    })
+    Text(
+        text = stringResource(R.string.login_create_account_text),
+        modifier = Modifier.clickable {
+            navController?.navigate(NavigationDestinations.CREATE_ACCOUNT)
+        }
+    )
 }
-
-
-
-
-

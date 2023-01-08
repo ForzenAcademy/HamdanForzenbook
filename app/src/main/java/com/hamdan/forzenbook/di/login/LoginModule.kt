@@ -7,7 +7,10 @@ import com.hamdan.forzenbook.data.database.LoginDatabase
 import com.hamdan.forzenbook.data.network.LoginService
 import com.hamdan.forzenbook.data.repository.LoginRepository
 import com.hamdan.forzenbook.data.repository.LoginRepositoryImpl
+import com.hamdan.forzenbook.di.login.ModuleSharedValues.LOGIN_BASE_URL
 import com.hamdan.forzenbook.domain.usecase.login.LoginGetTokenUseCase
+import com.hamdan.forzenbook.domain.usecase.login.LoginRequestValidationUseCase
+import com.hamdan.forzenbook.domain.usecase.login.LoginRequestValidationUseCaseImpl
 import com.hamdan.forzenbook.domain.usecase.mocks.MockLoginGetTokenUseCaseSuccess
 import dagger.Module
 import dagger.Provides
@@ -23,7 +26,7 @@ import javax.inject.Named
 object LoginModule {
 
     @Provides
-    @Named(REPO_NAME)
+    @Named(MODULE_NAME)
     fun providesLoginRetrofit(): Retrofit {
         return Retrofit.Builder()
             .baseUrl(LOGIN_BASE_URL)
@@ -32,8 +35,8 @@ object LoginModule {
     }
 
     @Provides
-    fun providesLoginService(@Named(REPO_NAME) retrofit: Retrofit): LoginService {
-        //return MockLoginServiceNullToken()
+    fun providesLoginService(@Named(MODULE_NAME) retrofit: Retrofit): LoginService {
+        // return MockLoginServiceNullToken()
         return retrofit.create(LoginService::class.java)
     }
 
@@ -53,17 +56,21 @@ object LoginModule {
         loginDao: LoginDao,
         loginService: LoginService
     ): LoginRepository {
-        //return MockGetsToken(loginDao, loginService)
+        // return MockGetsToken(loginDao, loginService)
         return LoginRepositoryImpl(loginDao, loginService)
     }
 
     @Provides
     fun providesLoginGetTokenUseCase(loginRepository: LoginRepository): LoginGetTokenUseCase {
-        //return MockLoginGetTokenUseCaseFails()
+        // return MockLoginGetTokenUseCaseFails()
         return MockLoginGetTokenUseCaseSuccess(loginRepository)
-        //return LoginGetTokenUseCaseImpl(loginRepository)
+        // return LoginGetTokenUseCaseImpl(loginRepository)
     }
 
-    private const val LOGIN_BASE_URL = "https://forzen.dev/"
-    private const val REPO_NAME = "login"
+    @Provides
+    fun providesLoginRequestValidationUseCase(loginRepository: LoginRepository): LoginRequestValidationUseCase {
+        return LoginRequestValidationUseCaseImpl(loginRepository)
+    }
+
+    private const val MODULE_NAME = "login"
 }

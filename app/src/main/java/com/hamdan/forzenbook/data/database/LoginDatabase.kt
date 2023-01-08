@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 abstract class LoginDatabase : RoomDatabase() {
     abstract fun loginDao(): LoginDao
 
-    companion object{
+    companion object {
         const val NAME = "login_db"
     }
 }

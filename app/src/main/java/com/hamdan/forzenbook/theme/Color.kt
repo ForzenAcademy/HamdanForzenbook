@@ -7,4 +7,3 @@ val WHITE = Color.White
 val BLACK = Color.Black
 val GRAY = Color.LightGray
 val DARK_GRAY = Color.DarkGray
-

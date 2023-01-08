@@ -6,7 +6,6 @@ import com.hamdan.forzenbook.data.network.CreateAccountService
 class CreateAccountRepositoryImpl(
     private val service: CreateAccountService
 ) : CreateAccountRepository {
-
     override suspend fun createUser(
         firstName: String,
         lastName: String,
@@ -23,3 +22,4 @@ class CreateAccountRepositoryImpl(
         }
     }
 }
+

@@ -22,7 +22,7 @@ class LoginActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         setContent {
             ForzenBookTheme {
                 val navController = rememberNavController()
@@ -33,7 +33,8 @@ class LoginActivity : ComponentActivity() {
                     ) {
                         composable(NavigationDestinations.LOGIN_PAGE) {
                             MainLoginContent(
-                                loginViewModel.loginState.value, {
+                                loginViewModel.loginState.value,
+                                {
                                     loginViewModel.resetLoginState()
                                 },
                                 { email, emailError ->
@@ -43,15 +44,16 @@ class LoginActivity : ComponentActivity() {
                                     )
                                 }
                             ) {
-                                loginViewModel.submitLogin()
+                                loginViewModel.requestCodeClicked()
                             }
                         }
                         composable(NavigationDestinations.CREATE_ACCOUNT) {
-                            CreateAccountContent(loginViewModel.createAccountState.value, {
-                                loginViewModel.resetCreateAccountState()
-                            },
-                                { first, last, birth, email, location,
-                                  firstError, lastError, birthError, emailError, locationError ->
+                            CreateAccountContent(
+                                loginViewModel.createAccountState.value,
+                                {
+                                    loginViewModel.resetCreateAccountState()
+                                },
+                                { first, last, birth, email, location, firstError, lastError, birthError, emailError, locationError ->
                                     loginViewModel.updateCreateAccountTextAndErrors(
                                         first,
                                         last,
@@ -64,7 +66,8 @@ class LoginActivity : ComponentActivity() {
                                         emailError,
                                         locationError
                                     )
-                                }) {
+                                }
+                            ) {
                                 loginViewModel.createAccount()
                             }
                         }
@@ -77,4 +80,3 @@ class LoginActivity : ComponentActivity() {
         }
     }
 }
-

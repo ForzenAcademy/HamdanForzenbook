@@ -48,7 +48,11 @@ data class ReplacementTypography(
      */
     val h4: TextStyle
 )
-
+/*
+TODO fit in dimens and play around with a nexus S with text scaling increased
+    to make things more accurate refer to the discussion in the chat with Nic
+    anything under 11pt violates ADA guidelines
+ */
 
 @SuppressLint("ConflictingOnColor")
 @Composable

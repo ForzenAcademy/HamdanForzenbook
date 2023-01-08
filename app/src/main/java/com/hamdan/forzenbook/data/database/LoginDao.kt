@@ -17,6 +17,4 @@ interface LoginDao {
         """
     )
     suspend fun getToken(): LoginEntity?
-
-
 }

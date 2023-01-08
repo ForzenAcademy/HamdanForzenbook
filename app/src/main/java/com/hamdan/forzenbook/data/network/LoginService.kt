@@ -1,12 +1,16 @@
 package com.hamdan.forzenbook.data.network
 
 import retrofit2.Response
-import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface LoginService {
-    @POST("api/login")
-    suspend fun getToken(): Response<LoginResponse>
-    //apparently we will want to use @Body (probably for hte parameters)
+
+    @GET(NetworkResources.LOGIN)
+    suspend fun requestValidation(
+        @Query(NetworkResources.EMAIL) email: String
+    ): Response<Void>
+
+    // TODO Implement Getting the Token
+    // @POST
 }
