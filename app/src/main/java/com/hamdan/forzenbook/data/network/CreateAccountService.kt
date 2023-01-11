@@ -1,17 +1,28 @@
 package com.hamdan.forzenbook.data.network
 
-import com.hamdan.forzenbook.data.network.NetworkResources.CREATE_USER
 import retrofit2.Response
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
+import java.sql.Date
 
 interface CreateAccountService {
-    @POST(CREATE_USER) // ToDo(need to add the email to this path, ask nic what the post should look like for this)
+    @FormUrlEncoded
+    @POST(CREATE_USER)
     suspend fun createUser(
-        firstName: String,
-        lastName: String,
-        birthDay: String,
-        email: String,
-        location: String
-    ): Response<Any>
-    // apparently we will want to use @Body (probably for hte parameters)
+        @Field(EMAIL) email: String,
+        @Field(BIRTH_DATE) birthDate: Date,
+        @Field(FIRST_NAME) firstName: String,
+        @Field(LAST_NAME) lastName: String,
+        @Field(LOCATION) location: String
+    ): Response<Void>
+
+    companion object {
+        private const val EMAIL = "email"
+        private const val BIRTH_DATE = "birth_date"
+        private const val FIRST_NAME = "first_name"
+        private const val LAST_NAME = "last_name"
+        private const val LOCATION = "location"
+        private const val CREATE_USER = "user/"
+    }
 }

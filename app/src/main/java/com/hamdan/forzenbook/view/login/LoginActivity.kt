@@ -33,38 +33,37 @@ class LoginActivity : ComponentActivity() {
                     ) {
                         composable(NavigationDestinations.LOGIN_PAGE) {
                             MainLoginContent(
-                                loginViewModel.loginState.value,
-                                {
-                                    loginViewModel.resetLoginState()
+                                state = loginViewModel.loginState.value,
+                                onInfoDismiss = {
+                                    loginViewModel.loginDismissInfoClicked()
                                 },
-                                { email, emailError ->
+                                onErrorDismiss = {
+                                    loginViewModel.loginDismissErrorClicked()
+                                },
+                                onTextChange = { email, code, isInputting ->
                                     loginViewModel.updateLoginTexts(
                                         email,
-                                        emailError,
+                                        code,
+                                        isInputting
                                     )
                                 }
                             ) {
-                                loginViewModel.requestCodeClicked()
+                                loginViewModel.loginClicked()
                             }
                         }
                         composable(NavigationDestinations.CREATE_ACCOUNT) {
                             CreateAccountContent(
-                                loginViewModel.createAccountState.value,
-                                {
-                                    loginViewModel.resetCreateAccountState()
+                                state = loginViewModel.createAccountState.value,
+                                onErrorDismiss = {
+                                    loginViewModel.createAccountDismissErrorClicked()
                                 },
-                                { first, last, birth, email, location, firstError, lastError, birthError, emailError, locationError ->
+                                onTextChange = { firstName, lastName, birthDate, email, location ->
                                     loginViewModel.updateCreateAccountTextAndErrors(
-                                        first,
-                                        last,
-                                        birth,
+                                        firstName,
+                                        lastName,
+                                        birthDate,
                                         email,
                                         location,
-                                        firstError,
-                                        lastError,
-                                        birthError,
-                                        emailError,
-                                        locationError
                                     )
                                 }
                             ) {

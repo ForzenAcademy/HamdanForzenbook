@@ -2,15 +2,16 @@ package com.hamdan.forzenbook.data.network.mocks
 
 import com.hamdan.forzenbook.data.network.CreateAccountService
 import retrofit2.Response
+import java.sql.Date
 
-class MockCreateAccountServiceError:CreateAccountService {
+class MockCreateAccountServiceError : CreateAccountService {
     override suspend fun createUser(
+        email: String,
+        birthDate: Date,
         firstName: String,
         lastName: String,
-        birthDay: String,
-        email: String,
         location: String
-    ): Response<Any> {
+    ): Response<Void> {
         throw RuntimeException("There was an issue!")
     }
 }

@@ -1,7 +1,7 @@
 package com.hamdan.forzenbook.data.repository
 
-import android.util.Log
 import com.hamdan.forzenbook.data.network.CreateAccountService
+import java.sql.Date
 
 class CreateAccountRepositoryImpl(
     private val service: CreateAccountService
@@ -12,14 +12,19 @@ class CreateAccountRepositoryImpl(
         birthDay: String,
         email: String,
         location: String
-    ): Int {
-        return try {
-            service.createUser(firstName, lastName, birthDay, email, location)
-                .code()
-        } catch (e: Exception) {
-            Log.v("Hamdan", "There was an unidentifiable issue when creating the account")
-            0
+    ) {
+        val response = service.createUser(
+            email, Date.valueOf(birthDay), firstName, lastName, location
+        )
+        if (!response.isSuccessful) {
+            if (response.code() == USER_EXISTS) throw(AccountException("User Already Exists"))
+            else throw(Exception("Unknown Error"))
         }
+    }
+
+    companion object {
+        private const val USER_EXISTS = 409
     }
 }
 
+class AccountException(message: String) : Exception(message)

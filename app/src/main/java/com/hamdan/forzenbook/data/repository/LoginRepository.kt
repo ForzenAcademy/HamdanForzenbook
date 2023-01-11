@@ -1,10 +1,9 @@
 package com.hamdan.forzenbook.data.repository
 
+import com.hamdan.forzenbook.data.network.LoginResponse
+
 interface LoginRepository {
+    suspend fun requestValidation(email: String)
 
-    suspend fun requestValidation(email: String): Boolean
-
-    suspend fun getToken(email: String, code: String): LoginData?
-    // TODO Implement Getting the Token
-
+    suspend fun getToken(email: String, code: String): LoginResponse?
 }

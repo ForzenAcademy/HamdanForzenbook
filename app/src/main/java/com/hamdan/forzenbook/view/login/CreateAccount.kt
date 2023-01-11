@@ -5,12 +5,15 @@ import android.text.TextUtils
 import android.widget.DatePicker
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -30,94 +33,75 @@ import androidx.compose.ui.unit.dp
 import com.hamdan.forzenbook.R
 import com.hamdan.forzenbook.theme.ForzenbookTheme
 import com.hamdan.forzenbook.theme.IconSizeValues
+import com.hamdan.forzenbook.theme.PaddingValues
 import com.hamdan.forzenbook.view.composeutils.DimBackgroundLoad
-import com.hamdan.forzenbook.view.composeutils.ErrorWithIcon
 import com.hamdan.forzenbook.view.composeutils.InputField
 import com.hamdan.forzenbook.view.composeutils.LoginBackgroundColumn
 import com.hamdan.forzenbook.view.composeutils.LoginTopBar
 import com.hamdan.forzenbook.view.composeutils.SubmitButton
 import com.hamdan.forzenbook.view.composeutils.validateEmail
 import com.hamdan.forzenbook.view.login.LoginSharedConstants.EMAIL_LENGTH_LIMIT
+import com.hamdan.forzenbook.viewmodels.Entry
 import com.hamdan.forzenbook.viewmodels.LoginViewModel
 import java.util.Calendar
 
 private const val AGE_MINIMUM = 13
 private const val NAME_LENGTH_LIMIT = 20
 private const val LOCATION_LENGTH_LIMIT = 64
-private const val EXPECTED_ARRAY_SIZE = 3
 
 @Composable
 fun CreateAccountContent(
     state: LoginViewModel.CreateAccountState,
-    onErrorSubmit: () -> Unit,
-    onTextChange: (String, String, String, String, String, Boolean, Boolean, Boolean, Boolean, Boolean) -> Unit,
+    onErrorDismiss: () -> Unit,
+    onTextChange: (Entry, Entry, Entry, Entry, Entry) -> Unit,
     onSubmission: () -> Unit
 ) {
-    LoginBackgroundColumn {
-        LoginTopBar(topText = stringResource(R.string.top_bar_text_create_account))
-        when (state) {
-            is LoginViewModel.CreateAccountState.Error -> ErrorContent(onErrorSubmit)
-            is LoginViewModel.CreateAccountState.Loading -> {}
-            is LoginViewModel.CreateAccountState.UserInputting -> {
-                state.apply {
-                    UserInputtingContent(
-                        firstName,
-                        lastName,
-                        birthDay,
-                        email,
-                        location,
-                        firstError,
-                        lastError,
-                        birthError,
-                        emailError,
-                        locationError,
-                        onTextChange,
-                        onSubmission
-                    )
-                }
-            }
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = { LoginTopBar(topText = stringResource(R.string.top_bar_text_create_account)) },
+    ) { padding ->
+        LoginBackgroundColumn(modifier = Modifier.padding(padding)) {
+            Content(
+                stateError = state.errorId,
+                stateFirstName = state.firstName,
+                stateLastName = state.lastName,
+                stateBirthDate = state.birthDay,
+                stateEmail = state.email,
+                stateLocation = state.location,
+                onTextChange = onTextChange,
+                onSubmission = onSubmission,
+                onErrorDismiss = onErrorDismiss,
+            )
+        }
+        if (state.isLoading) {
+            DimBackgroundLoad()
         }
     }
-    if (state is LoginViewModel.CreateAccountState.Loading) {
-        DimBackgroundLoad()
-    }
-}
-
-@Composable
-private fun ErrorContent(onErrorSubmit: () -> Unit) {
-    ErrorWithIcon(
-        errorText = stringResource(R.string.error_create_account),
-        buttonText = stringResource(R.string.create_account_confirm_error),
-        onSubmission = onErrorSubmit
-    )
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun UserInputtingContent(
-    stateFirstName: String,
-    stateLastName: String,
-    stateBirthDate: String,
-    stateEmail: String,
-    stateLocation: String,
-    stateFirstError: Boolean = true,
-    stateLastError: Boolean = true,
-    stateBirthError: Boolean = true,
-    stateEmailError: Boolean = true,
-    stateLocationError: Boolean = true,
-    onTextChange: (String, String, String, String, String, Boolean, Boolean, Boolean, Boolean, Boolean) -> Unit,
-    onSubmission: () -> Unit
+private fun Content(
+    stateError: Int?,
+    stateFirstName: Entry,
+    stateLastName: Entry,
+    stateBirthDate: Entry,
+    stateEmail: Entry,
+    stateLocation: Entry,
+    onTextChange: (Entry, Entry, Entry, Entry, Entry) -> Unit,
+    onSubmission: () -> Unit,
+    onErrorDismiss: () -> Unit,
 ) {
-    var firstName = stateFirstName
-    var firstNameError = stateFirstError
-    var lastName = stateLastName
-    var lastNameError = stateLastError
-    var birthDate = stateBirthDate
-    var birthError = stateBirthError
-    var email = stateEmail
-    var emailError = stateEmailError
-    var location = stateLocation
-    var locationError = stateLocationError
+    var firstName = stateFirstName.text
+    var firstNameError = stateFirstName.error
+    var lastName = stateLastName.text
+    var lastNameError = stateLastName.error
+    var birthDate = stateBirthDate.text
+    var birthError = stateBirthDate.error
+    var email = stateEmail.text
+    var emailError = stateEmail.error
+    var location = stateLocation.text
+    var locationError = stateLocation.error
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -130,47 +114,31 @@ private fun UserInputtingContent(
     var selectedYear: Int = currentYear
     var selectedMonth: Int = currentMonth
     var selectedDay: Int = currentDay
-    if (birthDate != "") {
+    if (birthDate.isNotEmpty()) {
         val split = birthDate.split("-")
         selectedYear = split[0].toInt()
         selectedMonth = split[1].toInt()
         selectedDay = split[2].toInt()
     }
-
     val datePicker =
         DatePickerDialog(
             context,
-            { _: DatePicker, Year: Int, Month: Int, DayOfMonth: Int ->
-                birthDate = "$Year-$Month-$DayOfMonth"
-                val split = birthDate.split("-")
-                if (split.size == EXPECTED_ARRAY_SIZE) {
-                    val year = split[0].toIntOrNull()
-                    val month = split[1].toIntOrNull()
-                    val day = split[2].toIntOrNull()
-                    year?.let {
-                        month?.let {
-                            day?.let {
-                                birthError = (
-                                    (currentYear - year < AGE_MINIMUM) ||
-                                        ((currentYear - year == AGE_MINIMUM && currentMonth - month < 0)) ||
-                                        ((currentYear - year == AGE_MINIMUM && currentMonth - month == 0 && currentDay - day < 0))
-                                    )
-                                onTextChange(
-                                    firstName,
-                                    lastName,
-                                    birthDate,
-                                    email,
-                                    location,
-                                    firstNameError,
-                                    lastNameError,
-                                    birthError,
-                                    emailError,
-                                    locationError
-                                )
-                            }
-                        }
-                    }
-                }
+            R.style.MySpinnerDatePickerStyle,
+            { _: DatePicker, year: Int, month: Int, day: Int ->
+                val actualMonth = month + 1
+                birthDate = context.getString(R.string.create_account_date, year, actualMonth, day)
+                birthError = (
+                    (currentYear - year < AGE_MINIMUM) ||
+                        ((currentYear - year == AGE_MINIMUM && currentMonth - actualMonth < 0)) ||
+                        ((currentYear - year == AGE_MINIMUM && currentMonth - actualMonth == 0 && currentDay - day < 0))
+                    )
+                onTextChange(
+                    Entry(firstName, firstNameError),
+                    Entry(lastName, lastNameError),
+                    Entry(birthDate, birthError),
+                    Entry(email, emailError),
+                    Entry(location, locationError),
+                )
             },
             selectedYear,
             selectedMonth,
@@ -183,14 +151,17 @@ private fun UserInputtingContent(
             firstName = it
             firstNameError = firstName.length > NAME_LENGTH_LIMIT
             onTextChange(
-                firstName, lastName, birthDate, email, location,
-                firstNameError, lastNameError, birthError, emailError, locationError
+                Entry(firstName, firstNameError),
+                Entry(lastName, lastNameError),
+                Entry(birthDate, birthError),
+                Entry(email, emailError),
+                Entry(location, locationError),
             )
         },
         imeAction = ImeAction.Next,
         onNext = { focusManager.moveFocus(FocusDirection.Down) }
     )
-    if (firstNameError && firstName != "") {
+    if (firstNameError && firstName.isNotEmpty()) {
         Text(text = stringResource(R.string.create_account_first_name_error))
     }
     InputField(
@@ -200,14 +171,17 @@ private fun UserInputtingContent(
             lastName = it
             lastNameError = lastName.length > NAME_LENGTH_LIMIT
             onTextChange(
-                firstName, lastName, birthDate, email, location,
-                firstNameError, lastNameError, birthError, emailError, locationError
+                Entry(firstName, firstNameError),
+                Entry(lastName, lastNameError),
+                Entry(birthDate, birthError),
+                Entry(email, emailError),
+                Entry(location, locationError),
             )
         },
         imeAction = ImeAction.Next,
         onNext = { focusManager.moveFocus(FocusDirection.Down) }
     )
-    if (lastNameError && lastName != "") {
+    if (lastNameError && lastName.isNotEmpty()) {
         Text(text = stringResource(R.string.create_account_last_name_error))
     }
     TextField(
@@ -217,8 +191,8 @@ private fun UserInputtingContent(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                horizontal = com.hamdan.forzenbook.theme.PaddingValues.largePad_4,
-                vertical = com.hamdan.forzenbook.theme.PaddingValues.smallPad_2
+                horizontal = PaddingValues.largePad_4,
+                vertical = PaddingValues.smallPad_2
             )
             .clickable {
                 datePicker.show()
@@ -226,7 +200,7 @@ private fun UserInputtingContent(
         trailingIcon = {
             Icon(
                 imageVector = Icons.Default.DateRange,
-                contentDescription = null,
+                contentDescription = stringResource(id = R.string.calendar_icon),
                 modifier = Modifier
                     .size(IconSizeValues.small_1)
             )
@@ -243,7 +217,7 @@ private fun UserInputtingContent(
         ),
         singleLine = true
     )
-    if (birthError && birthDate != "") {
+    if (birthError && birthDate.isNotEmpty()) {
         Text(text = stringResource(R.string.create_account_birth_date_error))
     }
     InputField(
@@ -252,17 +226,20 @@ private fun UserInputtingContent(
         onValueChange = {
             email = it
             emailError =
-                email.length > EMAIL_LENGTH_LIMIT || !TextUtils.isEmpty(email) &&
-                !validateEmail(email)
+                email.length > EMAIL_LENGTH_LIMIT ||
+                !TextUtils.isEmpty(email) && !validateEmail(email)
             onTextChange(
-                firstName, lastName, birthDate, email, location,
-                firstNameError, lastNameError, birthError, emailError, locationError
+                Entry(firstName, firstNameError),
+                Entry(lastName, lastNameError),
+                Entry(birthDate, birthError),
+                Entry(email, emailError),
+                Entry(location, locationError),
             )
         },
         imeAction = ImeAction.Next,
         onNext = { focusManager.moveFocus(FocusDirection.Down) }
     )
-    if (emailError && email != "") {
+    if (emailError && email.isNotEmpty()) {
         Text(text = stringResource(R.string.create_account_email_error))
     }
     InputField(
@@ -272,8 +249,11 @@ private fun UserInputtingContent(
             location = it
             locationError = location.length > LOCATION_LENGTH_LIMIT
             onTextChange(
-                firstName, lastName, birthDate, email, location,
-                firstNameError, lastNameError, birthError, emailError, locationError
+                Entry(firstName, firstNameError),
+                Entry(lastName, lastNameError),
+                Entry(birthDate, birthError),
+                Entry(email, emailError),
+                Entry(location, locationError),
             )
         },
         imeAction = ImeAction.Done,
@@ -284,7 +264,7 @@ private fun UserInputtingContent(
             }
         }
     )
-    if (locationError && location != "") {
+    if (locationError && location.isNotEmpty()) {
         Text(text = stringResource(R.string.create_account_location_error))
     }
     Spacer(modifier = Modifier.height(com.hamdan.forzenbook.theme.PaddingValues.smallPad_3))
@@ -294,4 +274,30 @@ private fun UserInputtingContent(
         enabled = !(emailError || birthError || locationError || firstNameError || lastNameError)
     )
     Spacer(modifier = Modifier.height(60.dp))
+
+    // TODO In FA 82 deal with color scheming as well as potential ellipsize / wrapping
+    if (stateError != null) {
+        AlertDialog(
+            onDismissRequest = { onErrorDismiss() },
+            title = {
+                Text(text = stringResource(R.string.create_account_error_title))
+            },
+            text = {
+                Text(text = stringResource(stateError))
+            },
+            confirmButton = {
+                Text(
+                    text = stringResource(id = R.string.create_account_confirm_error),
+                    modifier = Modifier
+                        .padding(
+                            end = PaddingValues.smallPad_2,
+                            bottom = PaddingValues.smallPad_2
+                        )
+                        .clickable { onErrorDismiss() },
+                )
+            },
+            modifier = Modifier
+                .padding(PaddingValues.largePad_1),
+        )
+    }
 }
