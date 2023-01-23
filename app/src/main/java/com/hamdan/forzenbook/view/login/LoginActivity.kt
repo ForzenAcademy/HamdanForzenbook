@@ -65,7 +65,10 @@ class LoginActivity : ComponentActivity() {
                                         email,
                                         location,
                                     )
-                                }
+                                },
+                                onDateFieldClick = { loginViewModel.createAccountDateDialogClicked() },
+                                onDateSubmission = { loginViewModel.createAccountDateDialogSubmitClicked() },
+                                onDateDismiss = { loginViewModel.createAccountDateDialogDismiss() }
                             ) {
                                 loginViewModel.createAccount()
                             }

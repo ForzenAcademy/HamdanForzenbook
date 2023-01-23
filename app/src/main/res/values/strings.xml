@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Forzenbook</string>
+    <string name="app_name">forzenbook</string>
     <!--
     Create Account Page
     -->
@@ -10,12 +10,17 @@
     <string name="create_account_error_user_exists">User already exists</string>
     <string name="create_account_confirm_error">OK</string>
     <string name="create_account_first_name_prompt">First Name</string>
-    <string name="create_account_first_name_error">First Names can only
+    <string name="create_account_first_name_error_length">First Names can only
         be 20 characters or less</string>
+    <string name="create_account_first_name_error_invalid_characters">First Names can only
+        have letters</string>
     <string name="create_account_last_name_prompt">Last Name</string>
-    <string name="create_account_last_name_error">Last Names can only
+    <string name="create_account_last_name_error_length">Last Names can only
         be 20 characters or less</string>
-    <string name="create_account_date">%1$d-%2$d-%3$d</string>
+    <string name="create_account_last_name_error_invalid_characters">Last Names can only
+        have letters</string>
+    <string name="create_account_date_tens">%1$d-%2$d-%3$d</string>
+    <string name="create_account_date">%1$d-0%2$d-%3$d</string>
     <string name="create_account_birth_date_prompt">Birth Date</string>
     <string name="create_account_birth_date_error">Invalid birth date,
         must be 13 or older</string>
@@ -37,7 +42,8 @@
     <string name="login_confirm_info">OK</string>
     <string name="login_button_text">Login</string>
     <string name="login_email_prompt">Email</string>
-    <string name="login_email_error">Invalid email</string>
+    <string name="login_email_error_format">Invalid email format</string>
+    <string name="login_email_error_length">Email length cannot be longer than 30 characters</string>
     <string name="login_code_prompt">Code</string>
     <string name="login_code_error">Invalid Code</string>
     <string name="login_create_account_text">Create Account</string>
