@@ -4,8 +4,8 @@ import com.hamdan.forzenbook.data.network.CreateAccountService
 import com.hamdan.forzenbook.data.repository.CreateAccountRepository
 import com.hamdan.forzenbook.data.repository.CreateAccountRepositoryImpl
 import com.hamdan.forzenbook.di.login.ModuleSharedValues.LOGIN_BASE_URL
-import com.hamdan.forzenbook.domain.usecase.login.CreateAccountRequestUseCase
-import com.hamdan.forzenbook.domain.usecase.login.CreateAccountRequestUseCaseImpl
+import com.hamdan.forzenbook.domain.usecase.login.CreateAccountUseCase
+import com.hamdan.forzenbook.domain.usecase.login.CreateAccountUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,9 +42,9 @@ object CreateAccountModule {
     }
 
     @Provides
-    fun providesCreateAccountRequestUseCase(repository: CreateAccountRepository): CreateAccountRequestUseCase {
+    fun providesCreateAccountRequestUseCase(repository: CreateAccountRepository): CreateAccountUseCase {
         // return MockCreateAccountRequestUseCaseFails()
-        return CreateAccountRequestUseCaseImpl(repository)
+        return CreateAccountUseCaseImpl(repository)
     }
 
     private const val MODULE_NAME = "create_account"

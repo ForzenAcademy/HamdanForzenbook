@@ -3,9 +3,9 @@ package com.hamdan.forzenbook.domain.usecase.login
 import com.hamdan.forzenbook.data.repository.AccountException
 import com.hamdan.forzenbook.data.repository.CreateAccountRepository
 
-class CreateAccountRequestUseCaseImpl(
+class CreateAccountUseCaseImpl(
     val repository: CreateAccountRepository
-) : CreateAccountRequestUseCase {
+) : CreateAccountUseCase {
     override suspend fun invoke(
         firstName: String,
         lastName: String,
@@ -22,4 +22,10 @@ class CreateAccountRequestUseCaseImpl(
             CreateAccountResult.CREATE_FAILURE
         }
     }
+}
+
+enum class CreateAccountResult {
+    CREATE_SUCCESS,
+    CREATE_EXISTS,
+    CREATE_FAILURE,
 }

@@ -47,6 +47,7 @@ import com.hamdan.forzenbook.viewmodels.Entry
 import com.hamdan.forzenbook.viewmodels.LoginViewModel
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 private const val AGE_MINIMUM = 13
@@ -306,11 +307,10 @@ private fun Content(
         var selectedDay: Int = currentDay
         if (birthDate.isNotEmpty()) {
             val split = birthDate.split("-")
-            selectedYear = split[0].toInt()
-            selectedMonth = split[1].toInt()
-            selectedDay = split[2].toInt()
+            selectedYear = split[2].toInt()
+            selectedMonth = split[0].toInt()
+            selectedDay = split[1].toInt()
         }
-        // TODO change how the date format is FA-84
         LaunchedEffect(Unit) {
             DatePickerDialog(
                 context,
@@ -318,14 +318,35 @@ private fun Content(
                 { _: DatePicker, year: Int, month: Int, day: Int ->
                     val actualMonth = month + 1
                     birthDate = if (actualMonth < 10) {
-                        context.getString(R.string.create_account_date, year, actualMonth, day)
-                    } else context.getString(
-                        R.string.create_account_date_tens,
-                        year,
-                        actualMonth,
-                        day
-                    )
-                    val selectedDate = LocalDate.parse(birthDate)
+                        if (day < 10) {
+                            context.getString(
+                                R.string.create_account_date_month_add_zero_day_add_zero,
+                                actualMonth,
+                                day,
+                                year
+                            )
+                        } else context.getString(
+                            R.string.create_account_date_month_add_zero,
+                            actualMonth,
+                            day,
+                            year
+                        )
+                    } else {
+                        if (day < 10) {
+                            context.getString(
+                                R.string.create_account_date_day_add_zero,
+                                actualMonth,
+                                day,
+                                year,
+                            )
+                        } else context.getString(
+                            R.string.create_account_date,
+                            actualMonth,
+                            day,
+                            year,
+                        )
+                    }
+                    val selectedDate = LocalDate.parse(birthDate, DateTimeFormatter.ofPattern("MM-dd-yyyy"))
                     birthError = if (selectedDate.isAfter(minDate.toLocalDate())) {
                         LoginError.BirthDateError.TooYoung
                     } else LoginError.BirthDateError.Valid

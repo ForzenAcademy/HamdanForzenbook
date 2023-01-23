@@ -9,10 +9,12 @@ import com.hamdan.forzenbook.data.network.LoginService
 import com.hamdan.forzenbook.data.repository.LoginRepository
 import com.hamdan.forzenbook.data.repository.LoginRepositoryImpl
 import com.hamdan.forzenbook.di.login.ModuleSharedValues.LOGIN_BASE_URL
-import com.hamdan.forzenbook.domain.usecase.login.LoginGetTokenUseCase
-import com.hamdan.forzenbook.domain.usecase.login.LoginGetTokenUseCaseImpl
-import com.hamdan.forzenbook.domain.usecase.login.LoginRequestValidationUseCase
-import com.hamdan.forzenbook.domain.usecase.login.LoginRequestValidationUseCaseImpl
+import com.hamdan.forzenbook.domain.usecase.login.LoginUseCaseGetCredentialsFromNetwork
+import com.hamdan.forzenbook.domain.usecase.login.LoginUseCaseGetCredentialsFromNetworkImpl
+import com.hamdan.forzenbook.domain.usecase.login.LoginUseCaseGetStoredCredentials
+import com.hamdan.forzenbook.domain.usecase.login.LoginUseCaseGetStoredCredentialsImpl
+import com.hamdan.forzenbook.domain.usecase.login.LoginUseCaseValidation
+import com.hamdan.forzenbook.domain.usecase.login.LoginUseCaseValidationImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -66,15 +68,20 @@ object LoginModule {
     }
 
     @Provides
-    fun providesLoginGetTokenUseCase(loginRepository: LoginRepository): LoginGetTokenUseCase {
+    fun providesLoginGetTokenFromNetworkUseCase(loginRepository: LoginRepository): LoginUseCaseGetCredentialsFromNetwork {
         // return MockLoginGetTokenUseCaseFails()
         // return MockLoginGetTokenUseCaseSuccess(loginRepository)
-        return LoginGetTokenUseCaseImpl(loginRepository)
+        return LoginUseCaseGetCredentialsFromNetworkImpl(loginRepository)
     }
 
     @Provides
-    fun providesLoginRequestValidationUseCase(loginRepository: LoginRepository): LoginRequestValidationUseCase {
-        return LoginRequestValidationUseCaseImpl(loginRepository)
+    fun providesLoginGetTokenFromDatabaseUseCaseImpl(loginRepository: LoginRepository): LoginUseCaseGetStoredCredentials {
+        return LoginUseCaseGetStoredCredentialsImpl(loginRepository)
+    }
+
+    @Provides
+    fun providesLoginRequestValidationUseCase(loginRepository: LoginRepository): LoginUseCaseValidation {
+        return LoginUseCaseValidationImpl(loginRepository)
     }
 
     private const val MODULE_NAME = "login"

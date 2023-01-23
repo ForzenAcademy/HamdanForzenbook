@@ -1,9 +1,9 @@
 package com.hamdan.forzenbook.data.repository.mocks
 
 import com.hamdan.forzenbook.data.database.LoginDao
-import com.hamdan.forzenbook.data.network.LoginResponse
 import com.hamdan.forzenbook.data.network.LoginService
 import com.hamdan.forzenbook.data.repository.LoginRepository
+import com.hamdan.forzenbook.data.repository.User
 
 class MockGetsToken(
     private val loginDao: LoginDao,
@@ -12,7 +12,7 @@ class MockGetsToken(
     override suspend fun requestValidation(email: String) {
     }
 
-    override suspend fun getToken(email: String, code: String): LoginResponse {
-        return LoginResponse("stringofalotofrandomstuff")
+    override suspend fun getToken(email: String?, code: String?): User {
+        return User.LoggedIn
     }
 }
