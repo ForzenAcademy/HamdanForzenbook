@@ -19,9 +19,6 @@
         be 20 characters or less</string>
     <string name="create_account_last_name_error_invalid_characters">Last Names can only
         have letters</string>
-    <string name="create_account_date_month_add_zero_day_add_zero">0%1$d-0%2$d-%3$d</string>
-    <string name="create_account_date_month_add_zero">0%1$d-%2$d-%3$d</string>
-    <string name="create_account_date_day_add_zero">%1$d-0%2$d-%3$d</string>
     <string name="create_account_date">%1$d-%2$d-%3$d</string>
     <string name="create_account_birth_date_prompt">Birth Date</string>
     <string name="create_account_birth_date_error">Invalid birth date,

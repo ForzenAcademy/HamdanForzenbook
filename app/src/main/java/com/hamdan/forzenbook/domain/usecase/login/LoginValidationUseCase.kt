@@ -1,5 +1,5 @@
 package com.hamdan.forzenbook.domain.usecase.login
 
-interface LoginUseCaseValidation {
+interface LoginValidationUseCase {
     suspend operator fun invoke(email: String)
 }

@@ -7,9 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.R
 import com.hamdan.forzenbook.domain.usecase.login.CreateAccountResult
 import com.hamdan.forzenbook.domain.usecase.login.CreateAccountUseCase
-import com.hamdan.forzenbook.domain.usecase.login.LoginUseCaseGetCredentialsFromNetwork
-import com.hamdan.forzenbook.domain.usecase.login.LoginUseCaseGetStoredCredentials
-import com.hamdan.forzenbook.domain.usecase.login.LoginUseCaseValidation
+import com.hamdan.forzenbook.domain.usecase.login.CreateAccountValidationUseCase
+import com.hamdan.forzenbook.domain.usecase.login.LoginGetCredentialsFromNetworkUseCase
+import com.hamdan.forzenbook.domain.usecase.login.LoginGetStoredCredentialsUseCase
+import com.hamdan.forzenbook.domain.usecase.login.LoginStringValidationUseCase
+import com.hamdan.forzenbook.domain.usecase.login.LoginValidationUseCase
 import com.hamdan.forzenbook.view.login.LoginError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -17,9 +19,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val getTokenFromNetworkUseCase: LoginUseCaseGetCredentialsFromNetwork,
-    private val getTokenFromDatabaseUseCase: LoginUseCaseGetStoredCredentials,
-    private val requestValidationCode: LoginUseCaseValidation,
+    private val createAccountValidationUseCase: CreateAccountValidationUseCase,
+    private val loginStringValidationUseCase: LoginStringValidationUseCase,
+    private val getTokenFromNetworkUseCase: LoginGetCredentialsFromNetworkUseCase,
+    private val getTokenFromDatabaseUseCase: LoginGetStoredCredentialsUseCase,
+    private val requestValidationCode: LoginValidationUseCase,
     private val createAccountUseCase: CreateAccountUseCase,
 ) : ViewModel() {
     data class LoginState(
@@ -64,6 +68,7 @@ class LoginViewModel @Inject constructor(
             code = code,
             inputtingCode = isInputtingCode,
         )
+        loginState.value = loginStringValidationUseCase(loginState.value)
     }
 
     fun updateCreateAccountTextAndErrors(
@@ -80,6 +85,7 @@ class LoginViewModel @Inject constructor(
             email = email,
             location = location,
         )
+        createAccountState.value = createAccountValidationUseCase(createAccountState.value)
     }
 
     fun createAccountDateDialogClicked() {
