@@ -12,4 +12,8 @@ class MockLoginDatabaseFailsToGetToken : LoginDao {
     override suspend fun getToken(): LoginEntity? {
         throw RuntimeException("Failed to get token")
     }
+
+    override suspend fun deleteToken() {
+        Log.v("Hamdan", "things were deleted")
+    }
 }

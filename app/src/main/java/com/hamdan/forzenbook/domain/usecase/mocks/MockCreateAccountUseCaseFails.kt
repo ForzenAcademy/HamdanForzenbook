@@ -1,9 +1,9 @@
 package com.hamdan.forzenbook.domain.usecase.mocks
 
-import com.hamdan.forzenbook.domain.usecase.login.CreateAccountRequestUseCase
 import com.hamdan.forzenbook.domain.usecase.login.CreateAccountResult
+import com.hamdan.forzenbook.domain.usecase.login.CreateAccountUseCase
 
-class MockCreateAccountRequestUseCaseFails : CreateAccountRequestUseCase {
+class MockCreateAccountUseCaseFails : CreateAccountUseCase {
     override suspend fun invoke(
         firstName: String,
         lastName: String,

@@ -1,5 +1,5 @@
 package com.hamdan.forzenbook.domain.usecase.login
 
-interface LoginGetTokenUseCase {
+interface LoginUseCaseGetCredentialsFromNetwork {
     suspend operator fun invoke(email: String, code: String)
 }

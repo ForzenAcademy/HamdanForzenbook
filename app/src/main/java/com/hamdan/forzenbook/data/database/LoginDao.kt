@@ -17,4 +17,11 @@ interface LoginDao {
         """
     )
     suspend fun getToken(): LoginEntity?
+
+    @Query(
+        """
+            DELETE FROM ${LoginEntity.TABLE_NAME}
+        """
+    )
+    suspend fun deleteToken()
 }

@@ -5,21 +5,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.R
-import com.hamdan.forzenbook.domain.usecase.login.CreateAccountRequestUseCase
 import com.hamdan.forzenbook.domain.usecase.login.CreateAccountResult
-import com.hamdan.forzenbook.domain.usecase.login.LoginGetTokenUseCase
-import com.hamdan.forzenbook.domain.usecase.login.LoginRequestValidationUseCase
+import com.hamdan.forzenbook.domain.usecase.login.CreateAccountUseCase
+import com.hamdan.forzenbook.domain.usecase.login.LoginUseCaseGetCredentialsFromNetwork
+import com.hamdan.forzenbook.domain.usecase.login.LoginUseCaseGetStoredCredentials
+import com.hamdan.forzenbook.domain.usecase.login.LoginUseCaseValidation
 import com.hamdan.forzenbook.view.login.LoginError
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val getTokenUseCase: LoginGetTokenUseCase,
-    private val requestValidationCode: LoginRequestValidationUseCase,
-    private val createAccountRequestUseCase: CreateAccountRequestUseCase
+    private val getTokenFromNetworkUseCase: LoginUseCaseGetCredentialsFromNetwork,
+    private val getTokenFromDatabaseUseCase: LoginUseCaseGetStoredCredentials,
+    private val requestValidationCode: LoginUseCaseValidation,
+    private val createAccountUseCase: CreateAccountUseCase,
 ) : ViewModel() {
     data class LoginState(
         val email: Entry = Entry("", LoginError.EmailError.Length),
@@ -47,15 +48,7 @@ class LoginViewModel @Inject constructor(
         get() = _createAccountState
 
     private var _loginState: MutableState<LoginState> =
-        // TODO remove this when Database for login token is setup (FA-84)
-        mutableStateOf(
-            LoginState(
-                email = Entry(
-                    "Hamdan.mobeen@Gmail.com",
-                    LoginError.NameError.Valid
-                )
-            )
-        )
+        mutableStateOf(LoginState(email = Entry("", LoginError.NameError.Length)))
     val loginState: MutableState<LoginState>
         get() = _loginState
 
@@ -143,10 +136,8 @@ class LoginViewModel @Inject constructor(
                         isLoading = true,
                         hasError = false,
                     )
-                // TODO remove delay when login flow fully complete with UI (FA-84)
-                delay(1000)
                 try {
-                    getTokenUseCase(email.text, code.text)
+                    getTokenFromNetworkUseCase(email.text, code.text)
                     // TODO here they would be considered succesful
                     // send off to where the user needs to see next, that location will retrieve token from DB
                     loginState.value = loginState.value.copy(
@@ -167,7 +158,6 @@ class LoginViewModel @Inject constructor(
                         hasError = true,
                     )
                 }
-
             }
         }
     }
@@ -178,8 +168,6 @@ class LoginViewModel @Inject constructor(
                 loginState.value = loginState.value.copy(
                     isLoading = true,
                 )
-                // TODO remove delay when login flow fully complete with UI (FA-84)
-                delay(1000)
                 try {
                     requestValidationCode(it.email.text)
                     loginState.value = loginState.value.copy(
@@ -204,12 +192,13 @@ class LoginViewModel @Inject constructor(
                 createAccountState.value = createAccountState.value.copy(
                     isLoading = true,
                 )
-                // TODO remove delay when login flow fully complete (FA-84)
-                delay(1000)
-                val result = createAccountRequestUseCase(
+                val split = it.birthDay.text.split("-")
+                // convert date back to a readable format for the sql on the server
+                val actualDate = "${split[2]}-${split[0]}-${split[1]}"
+                val result = createAccountUseCase(
                     firstName = it.firstName.text,
                     lastName = it.lastName.text,
-                    birthDay = it.birthDay.text,
+                    birthDay = actualDate,
                     email = it.email.text,
                     location = it.location.text,
                 )

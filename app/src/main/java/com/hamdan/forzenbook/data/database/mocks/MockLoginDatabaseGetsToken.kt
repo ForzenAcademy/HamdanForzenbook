@@ -10,6 +10,10 @@ class MockLoginDatabaseGetsToken : LoginDao {
     }
 
     override suspend fun getToken(): LoginEntity? {
-        return LoginEntity("it worked")
+        return LoginEntity("it worked", "it's an email")
+    }
+
+    override suspend fun deleteToken() {
+        Log.v("Hamdan", "things were deleted")
     }
 }

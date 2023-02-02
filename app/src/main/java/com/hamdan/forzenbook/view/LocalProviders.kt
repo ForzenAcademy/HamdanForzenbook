@@ -6,12 +6,12 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.navigation.NavHostController
-import com.hamdan.forzenbook.theme.Dimens
 import com.hamdan.forzenbook.theme.ReplacementColors
 import com.hamdan.forzenbook.theme.ReplacementTypography
 import com.hamdan.forzenbook.theme.normalDimens
 
 val LocalNavController = compositionLocalOf<NavHostController?> { null }
+
 /**
  * this Default Typography is just used as a default that will be overriden in the theme
  */
