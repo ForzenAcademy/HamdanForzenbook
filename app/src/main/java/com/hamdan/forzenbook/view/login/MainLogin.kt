@@ -29,8 +29,6 @@ import com.hamdan.forzenbook.view.composables.LoginBackgroundColumn
 import com.hamdan.forzenbook.view.composables.LoginTitleSection
 import com.hamdan.forzenbook.view.composables.PreventScreenActionsDuringLoad
 import com.hamdan.forzenbook.view.composables.SubmitButton
-import com.hamdan.forzenbook.view.composables.validateEmail
-import com.hamdan.forzenbook.view.login.LoginSharedConstants.EMAIL_LENGTH_LIMIT
 import com.hamdan.forzenbook.viewmodels.Entry
 import com.hamdan.forzenbook.viewmodels.LoginViewModel
 
@@ -95,11 +93,6 @@ private fun Content(
         value = email,
         onValueChange = {
             email = it
-            emailError = if (email.length > EMAIL_LENGTH_LIMIT) {
-                LoginError.EmailError.Length
-            } else if (!validateEmail(email)) {
-                LoginError.EmailError.InvalidFormat
-            } else LoginError.EmailError.Valid
             onTextChange(Entry(email, emailError), Entry(code, codeError), isInputtingCode)
         },
         imeAction = if (isInputtingCode) ImeAction.Next else ImeAction.Done,
@@ -123,9 +116,6 @@ private fun Content(
             label = stringResource(R.string.login_code_prompt), value = code,
             onValueChange = {
                 code = it
-                codeError = if (code.length > CODE_LENGTH_MAX) {
-                    LoginError.CodeError.Length
-                } else LoginError.CodeError.Valid
                 onTextChange(Entry(email, emailError), Entry(code, codeError), isInputtingCode)
             },
             keyboardType = KeyboardType.Number,

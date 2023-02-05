@@ -1,6 +1,7 @@
 package com.hamdan.forzenbook.view.login
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.widget.DatePicker
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
@@ -41,18 +42,10 @@ import com.hamdan.forzenbook.view.composables.LoginBackgroundColumn
 import com.hamdan.forzenbook.view.composables.LoginTopBar
 import com.hamdan.forzenbook.view.composables.PreventScreenActionsDuringLoad
 import com.hamdan.forzenbook.view.composables.SubmitButton
-import com.hamdan.forzenbook.view.composables.validateEmail
-import com.hamdan.forzenbook.view.login.LoginSharedConstants.EMAIL_LENGTH_LIMIT
 import com.hamdan.forzenbook.viewmodels.Entry
 import com.hamdan.forzenbook.viewmodels.LoginViewModel
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
-private const val AGE_MINIMUM = 13
-private const val NAME_LENGTH_LIMIT = 20
-private const val LOCATION_LENGTH_LIMIT = 64
 private const val ONE_LINE = 1
 
 @Composable
@@ -112,15 +105,10 @@ private fun Content(
     onDateFieldClick: () -> Unit,
 ) {
     var firstName = stateFirstName.text
-    var firstNameError = stateFirstName.error
     var lastName = stateLastName.text
-    var lastNameError = stateLastName.error
     var birthDate = stateBirthDate.text
-    var birthError = stateBirthDate.error
     var email = stateEmail.text
-    var emailError = stateEmail.error
     var location = stateLocation.text
-    var locationError = stateLocation.error
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -130,26 +118,21 @@ private fun Content(
         value = firstName,
         onValueChange = {
             firstName = it
-            firstNameError = if (firstName.length > NAME_LENGTH_LIMIT) {
-                LoginError.NameError.Length
-            } else if (!firstName.all { name -> name.isLetter() }) {
-                LoginError.NameError.InvalidCharacters
-            } else LoginError.NameError.Valid
             onTextChange(
-                Entry(firstName, firstNameError),
-                Entry(lastName, lastNameError),
-                Entry(birthDate, birthError),
-                Entry(email, emailError),
-                Entry(location, locationError),
+                Entry(firstName, stateFirstName.error),
+                Entry(lastName, stateLastName.error),
+                Entry(birthDate, stateBirthDate.error),
+                Entry(email, stateEmail.error),
+                Entry(location, stateLocation.error),
             )
         },
         imeAction = ImeAction.Next,
         onNext = { focusManager.moveFocus(FocusDirection.Down) }
     )
-    if (firstName.isNotEmpty() && !firstNameError.isValid()) {
-        if (firstNameError == LoginError.NameError.Length) {
+    if (firstName.isNotEmpty() && !stateFirstName.error.isValid()) {
+        if (stateFirstName.error == LoginError.NameError.Length) {
             ErrorText(error = stringResource(R.string.create_account_first_name_error_length))
-        } else if (firstNameError == LoginError.NameError.InvalidCharacters) {
+        } else if (stateFirstName.error == LoginError.NameError.InvalidCharacters) {
             ErrorText(error = stringResource(R.string.create_account_first_name_error_invalid_characters))
         }
     }
@@ -158,26 +141,21 @@ private fun Content(
         value = lastName,
         onValueChange = {
             lastName = it
-            lastNameError = if (lastName.length > NAME_LENGTH_LIMIT) {
-                LoginError.NameError.Length
-            } else if (!lastName.all { name -> name.isLetter() }) {
-                LoginError.NameError.InvalidCharacters
-            } else LoginError.NameError.Valid
             onTextChange(
-                Entry(firstName, firstNameError),
-                Entry(lastName, lastNameError),
-                Entry(birthDate, birthError),
-                Entry(email, emailError),
-                Entry(location, locationError),
+                Entry(firstName, stateFirstName.error),
+                Entry(lastName, stateLastName.error),
+                Entry(birthDate, stateBirthDate.error),
+                Entry(email, stateEmail.error),
+                Entry(location, stateLocation.error),
             )
         },
         imeAction = ImeAction.Next,
         onNext = { focusManager.moveFocus(FocusDirection.Down) }
     )
-    if (lastName.isNotEmpty() && !lastNameError.isValid()) {
-        if (lastNameError == LoginError.NameError.Length) {
+    if (lastName.isNotEmpty() && !stateLastName.error.isValid()) {
+        if (stateLastName.error == LoginError.NameError.Length) {
             ErrorText(error = stringResource(R.string.create_account_last_name_error_length))
-        } else if (lastNameError == LoginError.NameError.InvalidCharacters) {
+        } else if (stateLastName.error == LoginError.NameError.InvalidCharacters) {
             ErrorText(error = stringResource(R.string.create_account_last_name_error_invalid_characters))
         }
     }
@@ -216,7 +194,7 @@ private fun Content(
         textStyle = TextStyle(fontSize = ForzenbookTheme.typography.h2.fontSize),
         maxLines = ONE_LINE,
     )
-    if (birthDate.isNotEmpty() && !birthError.isValid()) {
+    if (birthDate.isNotEmpty() && !stateBirthDate.error.isValid()) {
         ErrorText(error = stringResource(R.string.create_account_birth_date_error))
     }
     InputField(
@@ -224,26 +202,21 @@ private fun Content(
         value = email,
         onValueChange = {
             email = it
-            emailError = if (email.length > EMAIL_LENGTH_LIMIT) {
-                LoginError.EmailError.Length
-            } else if (!validateEmail(email)) {
-                LoginError.EmailError.InvalidFormat
-            } else LoginError.EmailError.Valid
             onTextChange(
-                Entry(firstName, firstNameError),
-                Entry(lastName, lastNameError),
-                Entry(birthDate, birthError),
-                Entry(email, emailError),
-                Entry(location, locationError),
+                Entry(firstName, stateFirstName.error),
+                Entry(lastName, stateLastName.error),
+                Entry(birthDate, stateBirthDate.error),
+                Entry(email, stateEmail.error),
+                Entry(location, stateLocation.error),
             )
         },
         imeAction = ImeAction.Next,
         onNext = { focusManager.moveFocus(FocusDirection.Down) }
     )
-    if (email.isNotEmpty() && !emailError.isValid()) {
-        if (emailError == LoginError.EmailError.Length) {
+    if (email.isNotEmpty() && !stateEmail.error.isValid()) {
+        if (stateEmail.error == LoginError.EmailError.Length) {
             ErrorText(error = stringResource(R.string.login_email_error_length))
-        } else if (emailError == LoginError.EmailError.InvalidFormat) {
+        } else if (stateEmail.error == LoginError.EmailError.InvalidFormat) {
             ErrorText(error = stringResource(R.string.login_email_error_format))
         }
     }
@@ -252,27 +225,24 @@ private fun Content(
         value = location,
         onValueChange = {
             location = it
-            locationError = if (location.length > LOCATION_LENGTH_LIMIT) {
-                LoginError.LocationError.Length
-            } else LoginError.LocationError.Valid
             onTextChange(
-                Entry(firstName, firstNameError),
-                Entry(lastName, lastNameError),
-                Entry(birthDate, birthError),
-                Entry(email, emailError),
-                Entry(location, locationError),
+                Entry(firstName, stateFirstName.error),
+                Entry(lastName, stateLastName.error),
+                Entry(birthDate, stateBirthDate.error),
+                Entry(email, stateEmail.error),
+                Entry(location, stateLocation.error),
             )
         },
         imeAction = ImeAction.Done,
         onDone = {
             keyboardController?.hide()
-            if (emailError.isValid() && birthError.isValid() && locationError.isValid() && lastNameError.isValid() && firstNameError.isValid()) {
+            if (stateEmail.error.isValid() && stateBirthDate.error.isValid() && stateLocation.error.isValid() && stateLastName.error.isValid() && stateFirstName.error.isValid()) {
                 onSubmission()
             }
         }
     )
-    if (location.isNotEmpty() && !locationError.isValid()) {
-        if (locationError == LoginError.LocationError.Length) {
+    if (location.isNotEmpty() && !stateLocation.error.isValid()) {
+        if (stateLocation.error == LoginError.LocationError.Length) {
             ErrorText(error = stringResource(R.string.create_account_location_error))
         }
     }
@@ -283,7 +253,7 @@ private fun Content(
         SubmitButton(
             onSubmission = onSubmission,
             label = stringResource(R.string.create_account_submit),
-            enabled = (emailError.isValid() && birthError.isValid() && locationError.isValid() && lastNameError.isValid() && firstNameError.isValid())
+            enabled = (stateEmail.error.isValid() && stateBirthDate.error.isValid() && stateLocation.error.isValid() && stateLastName.error.isValid() && stateFirstName.error.isValid())
         )
     }
     Spacer(modifier = Modifier.height(60.dp))
@@ -299,16 +269,15 @@ private fun Content(
     if (isDialogOpen) {
         val calendar = Calendar.getInstance()
         val currentYear = calendar.get(Calendar.YEAR)
-        val currentMonth = calendar.get(Calendar.MONTH) + 1
+        val currentMonth = calendar.get(Calendar.MONTH)
         val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
-        val minDate = LocalDateTime.of(currentYear - AGE_MINIMUM, currentMonth, currentDay, 0, 0)
         var selectedYear: Int = currentYear
         var selectedMonth: Int = currentMonth
         var selectedDay: Int = currentDay
         if (birthDate.isNotEmpty()) {
             val split = birthDate.split("-")
             selectedYear = split[2].toInt()
-            selectedMonth = split[0].toInt()
+            selectedMonth = split[0].toInt() - 1
             selectedDay = split[1].toInt()
         }
         LaunchedEffect(Unit) {
@@ -316,46 +285,13 @@ private fun Content(
                 context,
                 R.style.MySpinnerDatePickerStyle,
                 { _: DatePicker, year: Int, month: Int, day: Int ->
-                    val actualMonth = month + 1
-                    birthDate = if (actualMonth < 10) {
-                        if (day < 10) {
-                            context.getString(
-                                R.string.create_account_date_month_add_zero_day_add_zero,
-                                actualMonth,
-                                day,
-                                year
-                            )
-                        } else context.getString(
-                            R.string.create_account_date_month_add_zero,
-                            actualMonth,
-                            day,
-                            year
-                        )
-                    } else {
-                        if (day < 10) {
-                            context.getString(
-                                R.string.create_account_date_day_add_zero,
-                                actualMonth,
-                                day,
-                                year,
-                            )
-                        } else context.getString(
-                            R.string.create_account_date,
-                            actualMonth,
-                            day,
-                            year,
-                        )
-                    }
-                    val selectedDate = LocalDate.parse(birthDate, DateTimeFormatter.ofPattern("MM-dd-yyyy"))
-                    birthError = if (selectedDate.isAfter(minDate.toLocalDate())) {
-                        LoginError.BirthDateError.TooYoung
-                    } else LoginError.BirthDateError.Valid
+                    birthDate = stringDate(month + 1, day, year, context)
                     onTextChange(
-                        Entry(firstName, firstNameError),
-                        Entry(lastName, lastNameError),
-                        Entry(birthDate, birthError),
-                        Entry(email, emailError),
-                        Entry(location, locationError),
+                        Entry(firstName, stateFirstName.error),
+                        Entry(lastName, stateLastName.error),
+                        Entry(birthDate, stateBirthDate.error),
+                        Entry(email, stateEmail.error),
+                        Entry(location, stateLocation.error),
                     )
                     onDateSubmission()
                 },
@@ -367,4 +303,16 @@ private fun Content(
             }.show()
         }
     }
+}
+
+private fun stringDate(month: Int, day: Int, year: Int, context: Context): String {
+    val date =
+        context.getString(R.string.create_account_date, month, day, year).split("-")
+    return date.joinToString("-") { it.leftPad() }
+}
+
+private fun String.leftPad(): String {
+    return if (this.length < 2) {
+        "0$this"
+    } else this
 }

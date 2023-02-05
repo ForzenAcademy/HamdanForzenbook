@@ -1,0 +1,16 @@
+diff a/.idea/deploymentTargetDropDown.xml b/.idea/deploymentTargetDropDown.xml	(rejected hunks)
+@@ -7,11 +7,11 @@
+         <deviceKey>
+           <Key>
+             <type value="VIRTUAL_DEVICE_PATH" />
+-            <value value="C:\Users\hamda\.android\avd\Nexus_S_API_30.avd" />
++            <value value="C:\Users\hamda\.android\avd\Pixel_2_API_30_2.avd" />
+           </Key>
+         </deviceKey>
+       </Target>
+     </targetSelectedWithDropDown>
+-    <timeTargetWasSelectedWithDropDown value="2023-01-27T01:28:50.652886300Z" />
++    <timeTargetWasSelectedWithDropDown value="2023-01-30T01:06:48.641559600Z" />
+   </component>
+ </project>
+\ No newline at end of file

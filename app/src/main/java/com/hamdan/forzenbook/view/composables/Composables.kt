@@ -42,6 +42,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.hamdan.forzenbook.R
 import com.hamdan.forzenbook.theme.ForzenbookTheme
 import com.hamdan.forzenbook.view.LocalNavController
+import java.util.regex.Pattern
 
 private const val ONE_LINE = 1
 
@@ -57,7 +58,10 @@ fun LoginTitleSection(title: String) {
 }
 
 fun validateEmail(email: String): Boolean {
-    return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    val regex =
+        "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}\\@[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}(\\.[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25})+"
+    val pattern = Pattern.compile(regex)
+    return pattern.matcher(email).matches()
 }
 
 @Composable

@@ -4,11 +4,11 @@ import com.hamdan.forzenbook.data.repository.LoginRepository
 import com.hamdan.forzenbook.data.repository.NullTokenException
 import com.hamdan.forzenbook.data.repository.User
 
-class LoginUseCaseGetCredentialsFromNetworkImpl(
+class LoginGetStoredCredentialsUseCaseImpl(
     val repository: LoginRepository
-) : LoginUseCaseGetCredentialsFromNetwork {
-    override suspend fun invoke(email: String, code: String) {
-        val userState = repository.getToken(email, code)
+) : LoginGetStoredCredentialsUseCase {
+    override suspend operator fun invoke() {
+        val userState = repository.getToken()
         if (userState is User.LoggedIn) {
             // TODO logged in path when homepage implemented
         } else throw(NullTokenException("null token"))
