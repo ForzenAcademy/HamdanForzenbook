@@ -11,10 +11,11 @@ import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountEntrys
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountResult
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountUseCase
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountValidationUseCase
-import com.hamdan.forzenbook.domain.usecase.login.LoginGetCredentialsFromNetworkUseCase
-import com.hamdan.forzenbook.domain.usecase.login.LoginGetStoredCredentialsUseCase
-import com.hamdan.forzenbook.domain.usecase.login.LoginStringValidationUseCase
-import com.hamdan.forzenbook.domain.usecase.login.LoginValidationUseCase
+import com.hamdan.forzenbook.login.core.domain.usecase.LoginEntrys
+import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetCredentialsFromNetworkUseCase
+import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetStoredCredentialsUseCase
+import com.hamdan.forzenbook.login.core.domain.usecase.LoginStringValidationUseCase
+import com.hamdan.forzenbook.login.core.domain.usecase.LoginValidationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,8 +30,8 @@ class LoginViewModel @Inject constructor(
     private val createAccountUseCase: CreateAccountUseCase,
 ) : ViewModel() {
     data class LoginState(
-        val email: Entry = Entry("", LoginError.EmailError.Length),
-        val code: Entry = Entry("", LoginError.CodeError.Length),
+        val email: Entry = Entry("", LoginError.EmailError.None),
+        val code: Entry = Entry("", LoginError.CodeError.None),
         val showInfoDialog: Boolean = false,
         val inputtingCode: Boolean = false,
         val isLoading: Boolean = false,
@@ -39,11 +40,11 @@ class LoginViewModel @Inject constructor(
 
     data class CreateAccountState(
         val errorId: Int? = null,
-        val firstName: Entry = Entry("", LoginError.NameError.Length),
-        val lastName: Entry = Entry("", LoginError.NameError.Length),
-        val birthDay: Entry = Entry("", LoginError.BirthDateError.TooYoung),
-        val email: Entry = Entry("", LoginError.EmailError.Length),
-        val location: Entry = Entry("", LoginError.LocationError.Length),
+        val firstName: Entry = Entry("", LoginError.NameError.None),
+        val lastName: Entry = Entry("", LoginError.NameError.None),
+        val birthDay: Entry = Entry("", LoginError.BirthDateError.None),
+        val email: Entry = Entry("", LoginError.EmailError.None),
+        val location: Entry = Entry("", LoginError.LocationError.None),
         val isDateDialogOpen: Boolean = false,
         val isLoading: Boolean = false,
     )
@@ -70,7 +71,9 @@ class LoginViewModel @Inject constructor(
             code = code,
             inputtingCode = isInputtingCode,
         )
-        loginState.value = loginStringValidationUseCase(loginState.value)
+        val stringStates = loginStringValidationUseCase(loginState.value.toLoginEntrys())
+        loginState.value =
+            loginState.value.copy(email = stringStates.email, code = stringStates.code)
     }
 
     fun updateCreateAccountTextAndErrors(
@@ -87,7 +90,8 @@ class LoginViewModel @Inject constructor(
             email = email,
             location = location,
         )
-        val stringStates = createAccountValidationUseCase(createAccountState.value.toCreateAccountEntrys())
+        val stringStates =
+            createAccountValidationUseCase(createAccountState.value.toCreateAccountEntrys())
         createAccountState.value = createAccountState.value.copy(
             firstName = stringStates.firstName,
             lastName = stringStates.lastName,
@@ -263,4 +267,10 @@ fun LoginViewModel.CreateAccountState.toCreateAccountEntrys(): CreateAccountEntr
         birthDay = this.birthDay,
         email = this.email,
         location = this.location
+    )
+
+fun LoginViewModel.LoginState.toLoginEntrys(): LoginEntrys =
+    LoginEntrys(
+        email = this.email,
+        code = this.code,
     )

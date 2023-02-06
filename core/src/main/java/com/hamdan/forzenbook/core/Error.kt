@@ -1,5 +1,5 @@
 package com.hamdan.forzenbook.core
 
 interface Error {
-    fun isValid() = false
+    fun isValid(): Boolean = false
 }

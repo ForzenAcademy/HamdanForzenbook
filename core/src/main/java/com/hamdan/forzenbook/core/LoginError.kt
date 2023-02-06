@@ -4,15 +4,16 @@ sealed interface LoginError : Error {
     override fun isValid(): Boolean = false
 
     sealed interface NameError {
+        object None : LoginError
         object Valid : LoginError {
             override fun isValid(): Boolean = true
         }
-
         object Length : LoginError
         object InvalidCharacters : LoginError
     }
 
     sealed interface BirthDateError {
+        object None : LoginError
         object Valid : LoginError {
             override fun isValid(): Boolean = true
         }
@@ -21,6 +22,7 @@ sealed interface LoginError : Error {
     }
 
     sealed interface EmailError {
+        object None : LoginError
         object Valid : LoginError {
             override fun isValid(): Boolean = true
         }
@@ -30,6 +32,7 @@ sealed interface LoginError : Error {
     }
 
     sealed interface LocationError {
+        object None : LoginError
         object Valid : LoginError {
             override fun isValid(): Boolean = true
         }
@@ -38,6 +41,7 @@ sealed interface LoginError : Error {
     }
 
     sealed interface CodeError {
+        object None : LoginError
         object Valid : LoginError {
             override fun isValid(): Boolean = true
         }
