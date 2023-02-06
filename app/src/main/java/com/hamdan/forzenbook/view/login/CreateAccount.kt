@@ -32,6 +32,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.hamdan.forzenbook.R
+import com.hamdan.forzenbook.core.Entry
+import com.hamdan.forzenbook.core.LoginError
 import com.hamdan.forzenbook.theme.ForzenbookTheme
 import com.hamdan.forzenbook.theme.IconSizeValues
 import com.hamdan.forzenbook.view.composables.ErrorText
@@ -42,7 +44,6 @@ import com.hamdan.forzenbook.view.composables.LoginBackgroundColumn
 import com.hamdan.forzenbook.view.composables.LoginTopBar
 import com.hamdan.forzenbook.view.composables.PreventScreenActionsDuringLoad
 import com.hamdan.forzenbook.view.composables.SubmitButton
-import com.hamdan.forzenbook.viewmodels.Entry
 import com.hamdan.forzenbook.viewmodels.LoginViewModel
 import java.util.Calendar
 

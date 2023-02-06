@@ -1,14 +1,14 @@
 package com.hamdan.forzenbook.domain.usecase.login
 
-import com.hamdan.forzenbook.view.composables.validateEmail
-import com.hamdan.forzenbook.view.login.LoginError
-import com.hamdan.forzenbook.view.login.LoginSharedConstants
-import com.hamdan.forzenbook.viewmodels.Entry
+import com.hamdan.forzenbook.core.Entry
+import com.hamdan.forzenbook.core.GlobalConstants.EMAIL_LENGTH_LIMIT
+import com.hamdan.forzenbook.core.LoginError
+import com.hamdan.forzenbook.core.validateEmail
 import com.hamdan.forzenbook.viewmodels.LoginViewModel
 
 class LoginStringValidationUseCaseImpl : LoginStringValidationUseCase {
     override fun invoke(state: LoginViewModel.LoginState): LoginViewModel.LoginState {
-        val emailError = if (state.email.text.length > LoginSharedConstants.EMAIL_LENGTH_LIMIT) {
+        val emailError = if (state.email.text.length > EMAIL_LENGTH_LIMIT) {
             LoginError.EmailError.Length
         } else if (!validateEmail(state.email.text)) {
             LoginError.EmailError.InvalidFormat

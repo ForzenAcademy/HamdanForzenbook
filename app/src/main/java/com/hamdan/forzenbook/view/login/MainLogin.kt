@@ -18,6 +18,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.hamdan.forzenbook.R
+import com.hamdan.forzenbook.core.Entry
+import com.hamdan.forzenbook.core.LoginError
 import com.hamdan.forzenbook.theme.ForzenbookTheme
 import com.hamdan.forzenbook.view.LocalNavController
 import com.hamdan.forzenbook.view.NavigationDestinations
@@ -29,10 +31,7 @@ import com.hamdan.forzenbook.view.composables.LoginBackgroundColumn
 import com.hamdan.forzenbook.view.composables.LoginTitleSection
 import com.hamdan.forzenbook.view.composables.PreventScreenActionsDuringLoad
 import com.hamdan.forzenbook.view.composables.SubmitButton
-import com.hamdan.forzenbook.viewmodels.Entry
 import com.hamdan.forzenbook.viewmodels.LoginViewModel
-
-private const val CODE_LENGTH_MAX = 6
 
 @Composable
 fun MainLoginContent(
