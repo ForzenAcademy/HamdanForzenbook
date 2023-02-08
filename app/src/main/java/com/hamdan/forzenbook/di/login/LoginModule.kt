@@ -3,12 +3,12 @@ package com.hamdan.forzenbook.di.login
 import android.content.Context
 import androidx.room.Room
 import com.google.gson.GsonBuilder
+import com.hamdan.forzenbook.core.GlobalConstants.LOGIN_BASE_URL
 import com.hamdan.forzenbook.data.database.LoginDao
 import com.hamdan.forzenbook.data.database.LoginDatabase
 import com.hamdan.forzenbook.data.network.LoginService
 import com.hamdan.forzenbook.data.repository.LoginRepository
 import com.hamdan.forzenbook.data.repository.LoginRepositoryImpl
-import com.hamdan.forzenbook.di.login.ModuleSharedValues.LOGIN_BASE_URL
 import com.hamdan.forzenbook.domain.usecase.login.LoginGetCredentialsFromNetworkUseCase
 import com.hamdan.forzenbook.domain.usecase.login.LoginGetCredentialsFromNetworkUseCaseImpl
 import com.hamdan.forzenbook.domain.usecase.login.LoginGetStoredCredentialsUseCase

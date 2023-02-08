@@ -3,11 +3,8 @@ package com.example.forzenbook.data
 import android.accounts.NetworkErrorException
 import com.hamdan.forzenbook.data.database.LoginDao
 import com.hamdan.forzenbook.data.database.LoginEntity
-import com.hamdan.forzenbook.data.network.CreateAccountService
 import com.hamdan.forzenbook.data.network.LoginResponse
 import com.hamdan.forzenbook.data.network.LoginService
-import com.hamdan.forzenbook.data.repository.AccountException
-import com.hamdan.forzenbook.data.repository.CreateAccountRepositoryImpl
 import com.hamdan.forzenbook.data.repository.FailTokenRetrievalException
 import com.hamdan.forzenbook.data.repository.LoginRepositoryImpl
 import com.hamdan.forzenbook.data.repository.NullTokenException
@@ -19,7 +16,6 @@ import okhttp3.ResponseBody
 import org.junit.Assert.fail
 import org.junit.Test
 import retrofit2.Response
-import java.sql.Date
 
 class RepositoryUnitTest {
     @Test
@@ -140,94 +136,6 @@ class RepositoryUnitTest {
                 if (repository.getToken() != User.NotLoggedIn) fail()
             } catch (e: Exception) {
                 fail()
-            }
-        }
-    }
-
-    @Test
-    fun `CreateAccount Repository test, checking success case, and making sure throws are correct`() {
-        val succeedsService = mockk<CreateAccountService>()
-        val userExistsService = mockk<CreateAccountService>()
-        val errorService = mockk<CreateAccountService>()
-        val networkErrorService = mockk<CreateAccountService>()
-
-        coEvery {
-            succeedsService.createUser(
-                "",
-                Date.valueOf("2020-01-01"),
-                "",
-                "",
-                ""
-            )
-        } returns Response.success(null)
-        coEvery {
-            userExistsService.createUser(
-                "",
-                Date.valueOf("2020-01-01"),
-                "",
-                "",
-                ""
-            )
-        } returns Response.error(
-            409,
-            ResponseBody.create(null, "")
-        )
-        coEvery {
-            errorService.createUser(
-                "",
-                Date.valueOf("2020-01-01"),
-                "",
-                "",
-                ""
-            )
-        } returns Response.error(
-            400,
-            ResponseBody.create(null, "")
-        )
-        coEvery {
-            networkErrorService.createUser(
-                "",
-                Date.valueOf("2020-01-01"),
-                "",
-                "",
-                ""
-            )
-        } throws NetworkErrorException()
-
-        var repository = CreateAccountRepositoryImpl(succeedsService)
-        runBlocking {
-            try {
-                repository.createUser("", "", "2020-01-01", "", "")
-            } catch (e: Exception) {
-                fail()
-            }
-        }
-        repository = CreateAccountRepositoryImpl(userExistsService)
-        runBlocking {
-            try {
-                repository.createUser("", "", "2020-01-01", "", "")
-                fail()
-            } catch (e: Exception) {
-                if (e !is AccountException) fail()
-            }
-        }
-        repository = CreateAccountRepositoryImpl(errorService)
-        runBlocking {
-            try {
-                repository.createUser("", "", "2020-01-01", "", "")
-                fail()
-            } catch (e: Exception) {
-                if (e is AccountException) fail()
-            }
-        }
-        repository = CreateAccountRepositoryImpl(networkErrorService)
-        runBlocking {
-            try {
-                repository.createUser("", "", "2020-01-01", "", "")
-                fail()
-            } catch (e: Exception) {
-                println(e)
-                if (e !is NetworkErrorException) fail()
             }
         }
     }

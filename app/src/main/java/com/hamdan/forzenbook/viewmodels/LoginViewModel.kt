@@ -5,14 +5,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.R
-import com.hamdan.forzenbook.domain.usecase.login.CreateAccountResult
-import com.hamdan.forzenbook.domain.usecase.login.CreateAccountUseCase
-import com.hamdan.forzenbook.domain.usecase.login.CreateAccountValidationUseCase
+import com.hamdan.forzenbook.core.Entry
+import com.hamdan.forzenbook.core.LoginError
+import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountEntrys
+import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountResult
+import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountUseCase
+import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountValidationUseCase
 import com.hamdan.forzenbook.domain.usecase.login.LoginGetCredentialsFromNetworkUseCase
 import com.hamdan.forzenbook.domain.usecase.login.LoginGetStoredCredentialsUseCase
 import com.hamdan.forzenbook.domain.usecase.login.LoginStringValidationUseCase
 import com.hamdan.forzenbook.domain.usecase.login.LoginValidationUseCase
-import com.hamdan.forzenbook.view.login.LoginError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -85,7 +87,14 @@ class LoginViewModel @Inject constructor(
             email = email,
             location = location,
         )
-        createAccountState.value = createAccountValidationUseCase(createAccountState.value)
+        val stringStates = createAccountValidationUseCase(createAccountState.value.toCreateAccountEntrys())
+        createAccountState.value = createAccountState.value.copy(
+            firstName = stringStates.firstName,
+            lastName = stringStates.lastName,
+            birthDay = stringStates.birthDay,
+            email = stringStates.email,
+            location = stringStates.location,
+        )
     }
 
     fun createAccountDateDialogClicked() {
@@ -247,7 +256,11 @@ class LoginViewModel @Inject constructor(
     }
 }
 
-data class Entry(
-    val text: String,
-    val error: LoginError
-)
+fun LoginViewModel.CreateAccountState.toCreateAccountEntrys(): CreateAccountEntrys =
+    CreateAccountEntrys(
+        firstName = this.firstName,
+        lastName = this.lastName,
+        birthDay = this.birthDay,
+        email = this.email,
+        location = this.location
+    )
