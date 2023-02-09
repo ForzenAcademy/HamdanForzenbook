@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace 'com.hamdan.forzenbook.logincompose'
+    namespace 'com.example.createaccount.compose'
     compileSdk 33
 
     defaultConfig {
@@ -38,15 +38,16 @@ android {
 }
 
 dependencies {
+
     //modules
     implementation project(':core')
     implementation project(':composeCore')
     implementation project(':uiCore')
-    implementation project(':loginCore')
+    implementation project(':createAccountCore')
 
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
-    implementation "androidx.activity:activity-compose:1.6.1"
+    implementation 'androidx.activity:activity-compose:1.6.1'
     implementation "androidx.compose.ui:ui:$compose_ui_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
     implementation 'androidx.compose.material:material:1.3.1'

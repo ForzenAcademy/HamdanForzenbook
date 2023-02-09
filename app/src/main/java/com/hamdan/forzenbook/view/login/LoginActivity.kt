@@ -14,6 +14,7 @@ import com.hamdan.forzenbook.login.compose.MainLoginContent
 import com.hamdan.forzenbook.view.LocalNavController
 import com.hamdan.forzenbook.view.NavigationDestinations
 import com.hamdan.forzenbook.viewmodels.LoginViewModel
+import com.hamdan.forzenbook.viewmodels.toCreateAccountComposeState
 import com.hamdan.forzenbook.viewmodels.toLoginComposeState
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -58,7 +59,7 @@ class LoginActivity : ComponentActivity() {
                         }
                         composable(NavigationDestinations.CREATE_ACCOUNT) {
                             CreateAccountContent(
-                                state = loginViewModel.createAccountState.value,
+                                state = loginViewModel.createAccountState.value.toCreateAccountComposeState(),
                                 onErrorDismiss = {
                                     loginViewModel.createAccountDismissErrorClicked()
                                 },

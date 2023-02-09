@@ -28,11 +28,12 @@ import com.hamdan.forzenbook.compose.core.composables.SubmitButton
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
 import com.hamdan.forzenbook.core.Entry
 import com.hamdan.forzenbook.core.LoginError
+import com.hamdan.forzenbook.login.core.view.LoginUiState
 import com.hamdan.forzenbook.ui.core.R
 
 @Composable
 fun MainLoginContent(
-    state: LoginComposeState,
+    state: LoginUiState,
     onInfoDismiss: () -> Unit,
     onErrorDismiss: () -> Unit,
     onTextChange: (Entry, Entry, Boolean) -> Unit,
