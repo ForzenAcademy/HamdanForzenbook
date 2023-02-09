@@ -10,6 +10,7 @@ import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountEntrys
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountResult
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountUseCase
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountValidationUseCase
+import com.hamdan.forzenbook.login.compose.LoginComposeState
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginEntrys
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetCredentialsFromNetworkUseCase
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetStoredCredentialsUseCase
@@ -273,4 +274,14 @@ fun LoginViewModel.LoginState.toLoginEntrys(): LoginEntrys =
     LoginEntrys(
         email = this.email,
         code = this.code,
+    )
+
+fun LoginViewModel.LoginState.toLoginComposeState(): LoginComposeState =
+    LoginComposeState(
+        email = this.email,
+        code = this.code,
+        showInfoDialog = this.showInfoDialog,
+        inputtingCode = this.inputtingCode,
+        isLoading = this.isLoading,
+        hasError = this.hasError
     )

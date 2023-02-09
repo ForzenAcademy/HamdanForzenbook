@@ -29,6 +29,7 @@ class CreateAccountValidationUseCaseImpl : CreateAccountValidationUseCase {
         val locationError = if (state.location.text.length > LOCATION_LENGTH_LIMIT) {
             LoginError.LocationError.Length
         } else LoginError.LocationError.Valid
+        // TODO AFTER FA-92 add a branch statement for locationError (may be needed, wait for response)
         val birthError = if (state.birthDay.text.isNotEmpty()) {
             val calendar = Calendar.getInstance()
             val currentYear = calendar.get(Calendar.YEAR)

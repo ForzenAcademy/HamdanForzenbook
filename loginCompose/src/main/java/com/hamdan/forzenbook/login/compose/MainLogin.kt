@@ -1,4 +1,4 @@
-package com.hamdan.forzenbook.view.login
+package com.hamdan.forzenbook.login.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -29,11 +29,10 @@ import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
 import com.hamdan.forzenbook.core.Entry
 import com.hamdan.forzenbook.core.LoginError
 import com.hamdan.forzenbook.ui.core.R
-import com.hamdan.forzenbook.viewmodels.LoginViewModel
 
 @Composable
 fun MainLoginContent(
-    state: LoginViewModel.LoginState,
+    state: LoginComposeState,
     onInfoDismiss: () -> Unit,
     onErrorDismiss: () -> Unit,
     onTextChange: (Entry, Entry, Boolean) -> Unit,
