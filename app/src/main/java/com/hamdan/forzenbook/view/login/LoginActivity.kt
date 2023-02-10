@@ -9,7 +9,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.hamdan.forzenbook.theme.ForzenBookTheme
+import com.hamdan.forzenbook.compose.core.theme.ForzenBookTheme
 import com.hamdan.forzenbook.view.LocalNavController
 import com.hamdan.forzenbook.view.NavigationDestinations
 import com.hamdan.forzenbook.viewmodels.LoginViewModel
@@ -46,9 +46,12 @@ class LoginActivity : ComponentActivity() {
                                         code,
                                         isInputting
                                     )
+                                },
+                                {
+                                    loginViewModel.loginClicked()
                                 }
                             ) {
-                                loginViewModel.loginClicked()
+                                navController.navigate(NavigationDestinations.CREATE_ACCOUNT)
                             }
                         }
                         composable(NavigationDestinations.CREATE_ACCOUNT) {
@@ -68,9 +71,12 @@ class LoginActivity : ComponentActivity() {
                                 },
                                 onDateFieldClick = { loginViewModel.createAccountDateDialogClicked() },
                                 onDateSubmission = { loginViewModel.createAccountDateDialogSubmitClicked() },
-                                onDateDismiss = { loginViewModel.createAccountDateDialogDismiss() }
+                                onDateDismiss = { loginViewModel.createAccountDateDialogDismiss() },
+                                {
+                                    loginViewModel.createAccount()
+                                }
                             ) {
-                                loginViewModel.createAccount()
+                                navController.navigateUp()
                             }
                         }
                     }

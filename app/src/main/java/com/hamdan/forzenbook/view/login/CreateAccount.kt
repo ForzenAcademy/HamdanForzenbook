@@ -32,18 +32,17 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.hamdan.forzenbook.R
+import com.hamdan.forzenbook.compose.core.composables.ErrorText
+import com.hamdan.forzenbook.compose.core.composables.ForzenbookDialog
+import com.hamdan.forzenbook.compose.core.composables.InputField
+import com.hamdan.forzenbook.compose.core.composables.LoadingButton
+import com.hamdan.forzenbook.compose.core.composables.LoginBackgroundColumn
+import com.hamdan.forzenbook.compose.core.composables.LoginTopBar
+import com.hamdan.forzenbook.compose.core.composables.PreventScreenActionsDuringLoad
+import com.hamdan.forzenbook.compose.core.composables.SubmitButton
+import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
 import com.hamdan.forzenbook.core.Entry
 import com.hamdan.forzenbook.core.LoginError
-import com.hamdan.forzenbook.theme.ForzenbookTheme
-import com.hamdan.forzenbook.theme.IconSizeValues
-import com.hamdan.forzenbook.view.composables.ErrorText
-import com.hamdan.forzenbook.view.composables.ForzenbookDialog
-import com.hamdan.forzenbook.view.composables.InputField
-import com.hamdan.forzenbook.view.composables.LoadingButton
-import com.hamdan.forzenbook.view.composables.LoginBackgroundColumn
-import com.hamdan.forzenbook.view.composables.LoginTopBar
-import com.hamdan.forzenbook.view.composables.PreventScreenActionsDuringLoad
-import com.hamdan.forzenbook.view.composables.SubmitButton
 import com.hamdan.forzenbook.viewmodels.LoginViewModel
 import java.util.Calendar
 
@@ -57,11 +56,12 @@ fun CreateAccountContent(
     onDateFieldClick: () -> Unit,
     onDateSubmission: () -> Unit,
     onDateDismiss: () -> Unit,
-    onSubmission: () -> Unit
+    onSubmission: () -> Unit,
+    onNavigateUp: () -> Unit,
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { LoginTopBar(topText = stringResource(R.string.top_bar_text_create_account)) },
+        topBar = { LoginTopBar(topText = stringResource(R.string.top_bar_text_create_account), onNavigateUp = onNavigateUp) },
     ) { padding ->
         LoginBackgroundColumn(modifier = Modifier.padding(padding)) {
             Content(
@@ -179,7 +179,7 @@ private fun Content(
                 imageVector = Icons.Default.DateRange,
                 contentDescription = stringResource(id = R.string.calendar_icon),
                 modifier = Modifier
-                    .size(IconSizeValues.small_1)
+                    .size(ForzenbookTheme.dimens.iconSizeSmall)
             )
         },
         enabled = false,

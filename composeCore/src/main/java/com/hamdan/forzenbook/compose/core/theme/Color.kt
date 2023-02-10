@@ -1,4 +1,4 @@
-package com.hamdan.forzenbook.theme
+package com.hamdan.forzenbook.compose.core.theme
 
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors

@@ -1,4 +1,4 @@
-package com.hamdan.forzenbook.theme
+package com.hamdan.forzenbook.compose.core.theme
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
