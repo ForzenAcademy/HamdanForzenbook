@@ -18,19 +18,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.hamdan.forzenbook.R
+import com.hamdan.forzenbook.compose.core.composables.ErrorText
+import com.hamdan.forzenbook.compose.core.composables.ForzenbookDialog
+import com.hamdan.forzenbook.compose.core.composables.InputField
+import com.hamdan.forzenbook.compose.core.composables.LoadingButton
+import com.hamdan.forzenbook.compose.core.composables.LoginBackgroundColumn
+import com.hamdan.forzenbook.compose.core.composables.LoginTitleSection
+import com.hamdan.forzenbook.compose.core.composables.PreventScreenActionsDuringLoad
+import com.hamdan.forzenbook.compose.core.composables.SubmitButton
+import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
 import com.hamdan.forzenbook.core.Entry
 import com.hamdan.forzenbook.core.LoginError
-import com.hamdan.forzenbook.theme.ForzenbookTheme
-import com.hamdan.forzenbook.view.LocalNavController
 import com.hamdan.forzenbook.view.NavigationDestinations
-import com.hamdan.forzenbook.view.composables.ErrorText
-import com.hamdan.forzenbook.view.composables.ForzenbookDialog
-import com.hamdan.forzenbook.view.composables.InputField
-import com.hamdan.forzenbook.view.composables.LoadingButton
-import com.hamdan.forzenbook.view.composables.LoginBackgroundColumn
-import com.hamdan.forzenbook.view.composables.LoginTitleSection
-import com.hamdan.forzenbook.view.composables.PreventScreenActionsDuringLoad
-import com.hamdan.forzenbook.view.composables.SubmitButton
 import com.hamdan.forzenbook.viewmodels.LoginViewModel
 
 @Composable
@@ -39,7 +38,8 @@ fun MainLoginContent(
     onInfoDismiss: () -> Unit,
     onErrorDismiss: () -> Unit,
     onTextChange: (Entry, Entry, Boolean) -> Unit,
-    onSubmission: () -> Unit
+    onSubmission: () -> Unit,
+    onCreateAccountPress: () -> Unit,
 ) {
     LoginBackgroundColumn {
         Image(
@@ -58,7 +58,8 @@ fun MainLoginContent(
             onInfoDismiss = onInfoDismiss,
             onErrorDismiss = onErrorDismiss,
             onTextChange = onTextChange,
-            onSubmission = onSubmission
+            onSubmission = onSubmission,
+            onCreateAccountPress = onCreateAccountPress
         )
     }
     if (state.isLoading) {
@@ -78,7 +79,8 @@ private fun Content(
     onInfoDismiss: () -> Unit,
     onErrorDismiss: () -> Unit,
     onTextChange: (Entry, Entry, Boolean) -> Unit,
-    onSubmission: () -> Unit
+    onSubmission: () -> Unit,
+    onCreateAccountPress: () -> Unit,
 ) {
     var email = stateEmail.text
     var emailError = stateEmail.error
@@ -147,13 +149,12 @@ private fun Content(
         )
     }
     Spacer(modifier = Modifier.height(ForzenbookTheme.dimens.mediumPad_1))
-    val navController = LocalNavController.current
     Text(
         text = stringResource(R.string.login_create_account_text),
         fontSize = ForzenbookTheme.typography.h2.fontSize,
         modifier = Modifier
             .clickable {
-                navController?.navigate(NavigationDestinations.CREATE_ACCOUNT)
+                onCreateAccountPress()
             }
             .padding(ForzenbookTheme.dimens.smallPad_2)
     )
