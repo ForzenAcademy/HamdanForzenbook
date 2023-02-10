@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/createAccountCore" />
+            <option value="$PROJECT_DIR$/loginCore" />
           </set>
         </option>
       </GradleProjectSettings>
