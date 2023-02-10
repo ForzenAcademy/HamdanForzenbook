@@ -31,7 +31,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.hamdan.forzenbook.R
 import com.hamdan.forzenbook.compose.core.composables.ErrorText
 import com.hamdan.forzenbook.compose.core.composables.ForzenbookDialog
 import com.hamdan.forzenbook.compose.core.composables.InputField
@@ -43,6 +42,7 @@ import com.hamdan.forzenbook.compose.core.composables.SubmitButton
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
 import com.hamdan.forzenbook.core.Entry
 import com.hamdan.forzenbook.core.LoginError
+import com.hamdan.forzenbook.ui.core.R
 import com.hamdan.forzenbook.viewmodels.LoginViewModel
 import java.util.Calendar
 
@@ -61,7 +61,12 @@ fun CreateAccountContent(
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { LoginTopBar(topText = stringResource(R.string.top_bar_text_create_account), onNavigateUp = onNavigateUp) },
+        topBar = {
+            LoginTopBar(
+                topText = stringResource(R.string.top_bar_text_create_account),
+                onNavigateUp = onNavigateUp
+            )
+        },
     ) { padding ->
         LoginBackgroundColumn(modifier = Modifier.padding(padding)) {
             Content(

@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/createAccountCore" />
             <option value="$PROJECT_DIR$/loginCore" />
+            <option value="$PROJECT_DIR$/uiCore" />
           </set>
         </option>
       </GradleProjectSettings>

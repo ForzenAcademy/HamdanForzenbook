@@ -39,8 +39,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import com.hamdan.forzenbook.compose.core.R
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
+import com.hamdan.forzenbook.ui.core.R
 
 private const val ONE_LINE = 1
 
