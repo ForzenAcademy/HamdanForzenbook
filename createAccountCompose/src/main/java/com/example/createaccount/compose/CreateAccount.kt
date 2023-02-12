@@ -42,15 +42,15 @@ import com.hamdan.forzenbook.compose.core.composables.SubmitButton
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
 import com.hamdan.forzenbook.core.Entry
 import com.hamdan.forzenbook.core.LoginError
+import com.hamdan.forzenbook.createaccount.core.view.CreateUiComposeState
 import com.hamdan.forzenbook.ui.core.R
-import com.hamdan.forzenbook.viewmodels.LoginViewModel
 import java.util.Calendar
 
 private const val ONE_LINE = 1
 
 @Composable
 fun CreateAccountContent(
-    state: LoginViewModel.CreateAccountState,
+    state: CreateUiComposeState,
     onErrorDismiss: () -> Unit,
     onTextChange: (Entry, Entry, Entry, Entry, Entry) -> Unit,
     onDateFieldClick: () -> Unit,

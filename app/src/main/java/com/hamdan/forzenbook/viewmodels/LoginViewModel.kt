@@ -10,12 +10,13 @@ import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountEntrys
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountResult
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountUseCase
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountValidationUseCase
-import com.hamdan.forzenbook.login.compose.LoginComposeState
+import com.hamdan.forzenbook.createaccount.core.view.CreateUiComposeState
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginEntrys
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetCredentialsFromNetworkUseCase
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetStoredCredentialsUseCase
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginStringValidationUseCase
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginValidationUseCase
+import com.hamdan.forzenbook.login.core.view.LoginUiState
 import com.hamdan.forzenbook.ui.core.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -276,12 +277,24 @@ fun LoginViewModel.LoginState.toLoginEntrys(): LoginEntrys =
         code = this.code,
     )
 
-fun LoginViewModel.LoginState.toLoginComposeState(): LoginComposeState =
-    LoginComposeState(
+fun LoginViewModel.LoginState.toLoginComposeState(): LoginUiState =
+    LoginUiState(
         email = this.email,
         code = this.code,
         showInfoDialog = this.showInfoDialog,
         inputtingCode = this.inputtingCode,
         isLoading = this.isLoading,
         hasError = this.hasError
+    )
+
+fun LoginViewModel.CreateAccountState.toCreateAccountComposeState(): CreateUiComposeState =
+    CreateUiComposeState(
+        errorId = this.errorId,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        birthDay = this.birthDay,
+        email = this.email,
+        location = this.location,
+        isDateDialogOpen = this.isDateDialogOpen,
+        isLoading = this.isLoading
     )
