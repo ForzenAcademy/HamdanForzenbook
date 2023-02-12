@@ -10,9 +10,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.hamdan.forzenbook.compose.core.theme.ForzenBookTheme
+import com.hamdan.forzenbook.login.compose.MainLoginContent
 import com.hamdan.forzenbook.view.LocalNavController
 import com.hamdan.forzenbook.view.NavigationDestinations
 import com.hamdan.forzenbook.viewmodels.LoginViewModel
+import com.hamdan.forzenbook.viewmodels.toLoginComposeState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,7 +35,7 @@ class LoginActivity : ComponentActivity() {
                     ) {
                         composable(NavigationDestinations.LOGIN_PAGE) {
                             MainLoginContent(
-                                state = loginViewModel.loginState.value,
+                                state = loginViewModel.loginState.value.toLoginComposeState(),
                                 onInfoDismiss = {
                                     loginViewModel.loginDismissInfoClicked()
                                 },
@@ -47,7 +49,7 @@ class LoginActivity : ComponentActivity() {
                                         isInputting
                                     )
                                 },
-                                {
+                                onSubmission = {
                                     loginViewModel.loginClicked()
                                 }
                             ) {
@@ -72,7 +74,7 @@ class LoginActivity : ComponentActivity() {
                                 onDateFieldClick = { loginViewModel.createAccountDateDialogClicked() },
                                 onDateSubmission = { loginViewModel.createAccountDateDialogSubmitClicked() },
                                 onDateDismiss = { loginViewModel.createAccountDateDialogDismiss() },
-                                {
+                                onSubmission = {
                                     loginViewModel.createAccount()
                                 }
                             ) {

@@ -12,8 +12,10 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
+import org.junit.Test
 
 class DomainUnitTest {
+    @Test
     fun `CreateAccountRequestUseCaseImpl test, checks all branches`() {
         val succeedRepo = mockk<CreateAccountRepository>()
         val accountExistsRepo = mockk<CreateAccountRepository>()
@@ -37,6 +39,7 @@ class DomainUnitTest {
         }
     }
 
+    @Test
     fun `Create Account String Validation Use Case test, checking correct update of all values and branches`() {
         val longName = "asbduiqwnejkasdoinwqeiujnaskdjniuwqnekjansdiunqwekjnasd"
         val invalidCharName = "asdijn123984rkjsnd!"
