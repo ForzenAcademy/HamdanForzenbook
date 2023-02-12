@@ -55,6 +55,7 @@ dependencies {
     implementation project(':core')
     implementation project(':loginCore')
     implementation project(':composeCore')
+    implementation project(':uiCore') //TODO REMOVE AFTER FA-96 is merged
 
     // MockK
     testImplementation("io.mockk:mockk:1.13.4")

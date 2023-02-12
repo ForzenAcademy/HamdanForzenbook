@@ -4,7 +4,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hamdan.forzenbook.R
 import com.hamdan.forzenbook.core.Entry
 import com.hamdan.forzenbook.core.LoginError
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountEntrys
@@ -16,6 +15,7 @@ import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetCredentialsFromNe
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetStoredCredentialsUseCase
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginStringValidationUseCase
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginValidationUseCase
+import com.hamdan.forzenbook.ui.core.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
