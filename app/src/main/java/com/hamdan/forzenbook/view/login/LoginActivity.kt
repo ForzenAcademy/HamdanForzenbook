@@ -14,8 +14,8 @@ import com.hamdan.forzenbook.login.compose.MainLoginContent
 import com.hamdan.forzenbook.view.LocalNavController
 import com.hamdan.forzenbook.view.NavigationDestinations
 import com.hamdan.forzenbook.viewmodels.LoginViewModel
-import com.hamdan.forzenbook.viewmodels.toCreateAccountComposeState
-import com.hamdan.forzenbook.viewmodels.toLoginComposeState
+import com.hamdan.forzenbook.viewmodels.toCreateAccountUiState
+import com.hamdan.forzenbook.viewmodels.toLoginUiState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,7 +36,7 @@ class LoginActivity : ComponentActivity() {
                     ) {
                         composable(NavigationDestinations.LOGIN_PAGE) {
                             MainLoginContent(
-                                state = loginViewModel.loginState.value.toLoginComposeState(),
+                                state = loginViewModel.loginState.value.toLoginUiState(),
                                 onInfoDismiss = {
                                     loginViewModel.loginDismissInfoClicked()
                                 },
@@ -59,7 +59,7 @@ class LoginActivity : ComponentActivity() {
                         }
                         composable(NavigationDestinations.CREATE_ACCOUNT) {
                             CreateAccountContent(
-                                state = loginViewModel.createAccountState.value.toCreateAccountComposeState(),
+                                state = loginViewModel.createAccountState.value.toCreateAccountUiState(),
                                 onErrorDismiss = {
                                     loginViewModel.createAccountDismissErrorClicked()
                                 },

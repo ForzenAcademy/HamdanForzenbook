@@ -1,6 +1,7 @@
 package com.hamdan.forzenbook.createaccount.core.data.network.mocks
 
 import com.hamdan.forzenbook.createaccount.core.data.network.CreateAccountService
+import com.hamdan.forzenbook.createaccount.core.data.network.CreateAccountResponse
 import retrofit2.Response
 import java.sql.Date
 
@@ -11,7 +12,7 @@ class MockCreateAccountServiceError : CreateAccountService {
         firstName: String,
         lastName: String,
         location: String
-    ): Response<Void> {
+    ): Response<CreateAccountResponse> {
         throw RuntimeException("There was an issue!")
     }
 }

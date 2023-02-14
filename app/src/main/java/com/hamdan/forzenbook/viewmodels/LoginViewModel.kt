@@ -277,7 +277,7 @@ fun LoginViewModel.LoginState.toLoginEntrys(): LoginEntrys =
         code = this.code,
     )
 
-fun LoginViewModel.LoginState.toLoginComposeState(): LoginUiState =
+fun LoginViewModel.LoginState.toLoginUiState(): LoginUiState =
     LoginUiState(
         email = this.email,
         code = this.code,
@@ -287,7 +287,7 @@ fun LoginViewModel.LoginState.toLoginComposeState(): LoginUiState =
         hasError = this.hasError
     )
 
-fun LoginViewModel.CreateAccountState.toCreateAccountComposeState(): CreateUiComposeState =
+fun LoginViewModel.CreateAccountState.toCreateAccountUiState(): CreateUiComposeState =
     CreateUiComposeState(
         errorId = this.errorId,
         firstName = this.firstName,
