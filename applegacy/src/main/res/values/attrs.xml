@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="legacy_background" format="color" />
+    <attr name="legacy_primary" format="color" />
+    <attr name="legacy_onPrimary" format="color" />
+    <attr name="legacy_secondaryVariant" format="color" />
+    <attr name="legacy_surface" format="color" />
+    <attr name="legacy_onSurface" format="color" />
+    <attr name="legacy_onError" format="color" />
+    <attr name="legacy_onBackground" format="color" />
+</resources>
