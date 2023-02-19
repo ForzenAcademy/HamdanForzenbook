@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="button_small_1">40dp</dimen>
-    <dimen name="button_small_2">60dp</dimen>
-    <dimen name="button_med_1">80dp</dimen>
-    <dimen name="button_med_2">100dp</dimen>
-    <dimen name="button_large_1">120dp</dimen>
-    <dimen name="button_large_2">140dp</dimen>
+    <dimen name="buttonSmall1">40dp</dimen>
+    <dimen name="buttonSmall2">60dp</dimen>
+    <dimen name="buttonMed1">80dp</dimen>
+    <dimen name="buttonMed2">100dp</dimen>
+    <dimen name="buttonLarge1">120dp</dimen>
+    <dimen name="buttonLarge2">140dp</dimen>
 
 
-    <dimen name="padding_small_1">4dp</dimen>
-    <dimen name="padding_small_2">8dp</dimen>
-    <dimen name="padding_small_3">12dp</dimen>
-    <dimen name="padding_med_1">16dp</dimen>
-    <dimen name="padding_med_2">20dp</dimen>
-    <dimen name="padding_med_3">24dp</dimen>
-    <dimen name="padding_large_1">28dp</dimen>
-    <dimen name="padding_large_2">32dp</dimen>
-    <dimen name="padding_large_3">36dp</dimen>
-    <dimen name="padding_large_4">40dp</dimen>
+    <dimen name="paddingSmall1">4dp</dimen>
+    <dimen name="paddingSmall2">8dp</dimen>
+    <dimen name="paddingSmall3">12dp</dimen>
+    <dimen name="paddingMed1">16dp</dimen>
+    <dimen name="paddingMed2">20dp</dimen>
+    <dimen name="paddingMed3">24dp</dimen>
+    <dimen name="paddingLarge1">28dp</dimen>
+    <dimen name="paddingLarge2">32dp</dimen>
+    <dimen name="paddingLarge3">36dp</dimen>
+    <dimen name="paddingLarge4">40dp</dimen>
 
-    <dimen name="icon_small_1">20dp</dimen>
-    <dimen name="icon_small_2">40dp</dimen>
-    <dimen name="icon_med_1">60dp</dimen>
-    <dimen name="icon_med_2">80dp</dimen>
-    <dimen name="icon_large_1">120dp</dimen>
-    <dimen name="icon_large_2">140dp</dimen>
-    <dimen name="icon_big_1">160dp</dimen>
-    <dimen name="icon_big_2">180dp</dimen>
-    <dimen name="icon_giga_1">200dp</dimen>
-    <dimen name="icon_giga_2">220dp</dimen>
+    <dimen name="iconSmall1">20dp</dimen>
+    <dimen name="iconSmall2">40dp</dimen>
+    <dimen name="iconMed1">60dp</dimen>
+    <dimen name="iconMed2">80dp</dimen>
+    <dimen name="iconLarge1">120dp</dimen>
+    <dimen name="iconLarge2">140dp</dimen>
+    <dimen name="iconBig1">160dp</dimen>
+    <dimen name="iconBig2">180dp</dimen>
+    <dimen name="iconGiga1">200dp</dimen>
+    <dimen name="iconGiga2">220dp</dimen>
 
 
 </resources>

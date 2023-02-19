@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/createAccountCompose" />
             <option value="$PROJECT_DIR$/createAccountCore" />
+            <option value="$PROJECT_DIR$/legacyCore" />
             <option value="$PROJECT_DIR$/loginCompose" />
             <option value="$PROJECT_DIR$/loginCore" />
             <option value="$PROJECT_DIR$/uiCore" />

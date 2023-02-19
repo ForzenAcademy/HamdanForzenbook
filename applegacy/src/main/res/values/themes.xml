@@ -1,16 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.Forzenbook" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="legacy_background">@color/lion_yellow</item>
+        <item name="legacyBackground">@color/lion_yellow</item>
 
-        <item name="legacy_primary">@color/black</item>
-        <item name="legacy_onPrimary">@color/white</item>
-        <item name="legacy_secondaryVariant">@color/black</item>
+        <item name="legacyPrimary">@color/black</item>
+        <item name="legacyOnPrimary">@color/white</item>
+        <item name="legacySecondaryVariant">@color/black</item>
 
-        <item name="legacy_surface">@color/dark_gray</item>
-        <item name="legacy_onSurface">@color/white</item>
-        <item name="legacy_onError">@color/red</item>
-        <item name="legacy_onBackground">@color/black</item>
+        <item name="legacySurface">@color/dark_gray</item>
+        <item name="legacyOnSurface">@color/white</item>
+        <item name="legacyOnError">@color/red</item>
+        <item name="legacyOnBackground">@color/black</item>
 
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
