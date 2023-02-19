@@ -1,6 +1,8 @@
 package com.hamdan.forzenbook.legacy.core.view
 
+import android.content.Context
+
 interface Navigator {
-    fun navigateToLogin(): Unit
-    fun navigateToCreateAccount(): Unit
+    fun navigateToLogin(legacyLoginContext: Context): Unit
+    fun navigateToCreateAccount(legacyCreateAccountContext: Context): Unit
 }
