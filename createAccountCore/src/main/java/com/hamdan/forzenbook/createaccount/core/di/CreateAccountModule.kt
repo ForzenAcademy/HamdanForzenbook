@@ -1,6 +1,5 @@
 package com.hamdan.forzenbook.createaccount.core.di
 
-import android.util.Log
 import com.hamdan.forzenbook.core.GlobalConstants.LOGIN_BASE_URL
 import com.hamdan.forzenbook.createaccount.core.data.network.CreateAccountService
 import com.hamdan.forzenbook.createaccount.core.data.repository.CreateAccountRepository
@@ -9,16 +8,12 @@ import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountUseCase
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountUseCaseImpl
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountValidationUseCase
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountValidationUseCaseImpl
-import com.hamdan.forzenbook.createaccount.core.domain.mocks.MockCreateAccountUseCaseBadData
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
-import okhttp3.ResponseBody
-import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.reflect.Type
 import javax.inject.Named
 
 @InstallIn(ViewModelComponent::class)
