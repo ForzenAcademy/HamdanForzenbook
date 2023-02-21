@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/createAccountLayoutHolder"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?legacyBackground">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?legacyBackground">
+
+        <Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            android:navigationIcon="@drawable/ic_baseline_arrow_back_24"
+            android:paddingEnd="@dimen/gridx9">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="@string/top_bar_text_create_account"
+                android:textColor="?legacyOnBackground"
+                android:textSize="@dimen/subtitle1" />
+
+        </Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/createAccountLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/topAppBarPad">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputFirstNameBody"
+                style="@style/inputBodyStyle"
+                android:hint="@string/create_account_first_name_prompt">
+
+                <!--this is the actual edit text which takes the input-->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputFirstNameText"
+                    style="@style/inputFieldStyle" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/firstNameErrorText"
+                style="@style/errorTextStyle" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputLastNameBody"
+                style="@style/inputBodyStyle"
+                android:hint="@string/create_account_last_name_prompt">
+
+                <!--this is the actual edit text which takes the input-->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputLastNameText"
+                    style="@style/inputFieldStyle" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/lastNameErrorText"
+                style="@style/errorTextStyle" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputBirthDateBody"
+                style="@style/inputBodyStyle"
+                android:hint="@string/create_account_birth_date_prompt">
+
+                <!--this is the actual edit text which takes the input-->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputBirthDateText"
+                    style="@style/inputFieldStyle"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:foreground="?attr/selectableItemBackground" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/birthDateErrorText"
+                style="@style/errorTextStyle"
+                android:text="@string/create_account_birth_date_error" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputEmailBody"
+                style="@style/inputBodyStyle"
+                android:hint="@string/login_email_prompt">
+
+                <!--this is the actual edit text which takes the input-->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputEmailText"
+                    style="@style/inputFieldStyle" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/emailErrorText"
+                style="@style/errorTextStyle" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputLocationBody"
+                style="@style/inputBodyStyle"
+                android:hint="@string/create_account_location_prompt">
+
+                <!--this is the actual edit text which takes the input-->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputLocationText"
+                    style="@style/inputFieldStyle" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/locationErrorText"
+                style="@style/errorTextStyle"
+                android:text="@string/create_account_location_error" />
+
+            <FrameLayout
+                android:id="@+id/createAccountSubmitButton"
+                style="@style/buttonFrame">
+
+                <TextView
+                    android:id="@+id/createAccountSubmitText"
+                    style="@style/buttonText"
+                    android:text="@string/create_account_submit" />
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/createAccountSubmitProgressIndicator"
+                    style="@style/buttonLoadIndicator" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <FrameLayout
+        android:id="@+id/createAccountClickBlocker"
+        style="@style/clickBlocker" />
+
+</FrameLayout>
+

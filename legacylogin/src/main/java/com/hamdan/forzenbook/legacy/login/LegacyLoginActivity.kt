@@ -7,7 +7,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.core.LoginError
-import com.hamdan.forzenbook.legacy.core.view.utils.DialogUtils.standardDialog
+import com.hamdan.forzenbook.legacy.core.view.utils.DialogUtils.standardAlertDialog
 import com.hamdan.forzenbook.legacy.core.viewmodels.LegacyLoginViewModel
 import com.hamdan.forzenbook.legacy.login.databinding.ActivityLegacyLoginBinding
 import com.hamdan.forzenbook.ui.core.R
@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// TODO add IME actions in FA-104
 @AndroidEntryPoint
 class LegacyLoginActivity : ComponentActivity() {
     // TODO FA-104 add a click listener to send to Create Account on the createAccount text
@@ -96,7 +97,7 @@ class LegacyLoginActivity : ComponentActivity() {
                             }
 
                             if (showInfoDialog) {
-                                standardDialog(
+                                standardAlertDialog(
                                     this@LegacyLoginActivity,
                                     getString(R.string.login_info_title),
                                     getString(R.string.login_info),
@@ -107,7 +108,7 @@ class LegacyLoginActivity : ComponentActivity() {
                             }
 
                             if (hasError) {
-                                standardDialog(
+                                standardAlertDialog(
                                     this@LegacyLoginActivity,
                                     getString(R.string.login_error_title),
                                     getString(R.string.login_error),
