@@ -10,20 +10,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.hamdan.forzenbook.compose.core.theme.ForzenBookTheme
-import com.hamdan.forzenbook.createaccount.core.viewmodel.toCreateAccountUiState
 import com.hamdan.forzenbook.login.compose.MainLoginContent
-import com.hamdan.forzenbook.login.core.viewmodel.toLoginUiState
 import com.hamdan.forzenbook.view.LocalNavController
 import com.hamdan.forzenbook.view.NavigationDestinations
-import com.hamdan.forzenbook.viewmodels.CreateAccountViewModel
 import com.hamdan.forzenbook.viewmodels.LoginViewModel
+import com.hamdan.forzenbook.viewmodels.toCreateAccountUiState
+import com.hamdan.forzenbook.viewmodels.toLoginUiState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
 
     private val loginViewModel: LoginViewModel by viewModels()
-    private val createAccountViewModel: CreateAccountViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +36,7 @@ class LoginActivity : ComponentActivity() {
                     ) {
                         composable(NavigationDestinations.LOGIN_PAGE) {
                             MainLoginContent(
-                                state = loginViewModel.state.value.toLoginUiState(),
+                                state = loginViewModel.loginState.value.toLoginUiState(),
                                 onInfoDismiss = {
                                     loginViewModel.loginDismissInfoClicked()
                                 },
@@ -61,12 +59,12 @@ class LoginActivity : ComponentActivity() {
                         }
                         composable(NavigationDestinations.CREATE_ACCOUNT) {
                             CreateAccountContent(
-                                state = createAccountViewModel.state.value.toCreateAccountUiState(),
+                                state = loginViewModel.createAccountState.value.toCreateAccountUiState(),
                                 onErrorDismiss = {
-                                    createAccountViewModel.createAccountDismissErrorClicked()
+                                    loginViewModel.createAccountDismissErrorClicked()
                                 },
                                 onTextChange = { firstName, lastName, birthDate, email, location ->
-                                    createAccountViewModel.updateCreateAccountTextAndErrors(
+                                    loginViewModel.updateCreateAccountTextAndErrors(
                                         firstName,
                                         lastName,
                                         birthDate,
@@ -74,11 +72,11 @@ class LoginActivity : ComponentActivity() {
                                         location,
                                     )
                                 },
-                                onDateFieldClick = { createAccountViewModel.createAccountDateDialogClicked() },
-                                onDateSubmission = { createAccountViewModel.createAccountDateDialogSubmitClicked() },
-                                onDateDismiss = { createAccountViewModel.createAccountDateDialogDismiss() },
+                                onDateFieldClick = { loginViewModel.createAccountDateDialogClicked() },
+                                onDateSubmission = { loginViewModel.createAccountDateDialogSubmitClicked() },
+                                onDateDismiss = { loginViewModel.createAccountDateDialogDismiss() },
                                 onSubmission = {
-                                    createAccountViewModel.createAccount()
+                                    loginViewModel.createAccount()
                                 }
                             ) {
                                 navController.navigateUp()
@@ -86,7 +84,7 @@ class LoginActivity : ComponentActivity() {
                         }
                     }
                 }
-                createAccountViewModel.onAccountCreateSuccess = {
+                loginViewModel.onAccountCreateSuccess = {
                     navController.navigateUp()
                 }
             }

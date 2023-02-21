@@ -1,7 +1,7 @@
 package com.hamdan.forzenbook.createaccount.core.data.network.mocks
 
-import com.hamdan.forzenbook.createaccount.core.data.network.CreateAccountResponse
 import com.hamdan.forzenbook.createaccount.core.data.network.CreateAccountService
+import com.hamdan.forzenbook.createaccount.core.data.network.CreateAccountResponse
 import retrofit2.Response
 import java.sql.Date
 

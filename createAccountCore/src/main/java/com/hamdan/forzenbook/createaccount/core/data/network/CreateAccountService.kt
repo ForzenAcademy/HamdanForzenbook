@@ -6,6 +6,7 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 import java.sql.Date
 
+
 interface CreateAccountService {
     @FormUrlEncoded
     @POST(CREATE_USER)
@@ -16,6 +17,7 @@ interface CreateAccountService {
         @Field(LAST_NAME) lastName: String,
         @Field(LOCATION) location: String
     ): Response<CreateAccountResponse>
+
     companion object {
         private const val EMAIL = "email"
         private const val BIRTH_DATE = "birth_date"
