@@ -1,11 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.Forzenbook" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.Forzenbook" parent="Theme.Forzenbook.colorBase">
+        <item name="android:fontFamily">@font/mont_medium</item>
+        <item name="fontFamily">@font/mont_medium</item>
         <item name="legacyBackground">@color/lion_yellow</item>
 
         <item name="legacyPrimary">@color/black</item>
         <item name="legacyOnPrimary">@color/white</item>
-        <item name="legacySecondaryVariant">@color/black</item>
+        <item name="legacySecondaryVariant">@color/white</item>
 
         <item name="legacySurface">@color/dark_gray</item>
         <item name="legacyOnSurface">@color/white</item>
@@ -13,6 +14,5 @@
         <item name="legacyOnBackground">@color/black</item>
 
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
     </style>
 </resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="?legacySurface" />
+
+    <stroke
+        android:width="@dimen/strokeSmall2"
+        android:color="?legacySurface" />
+
+    <padding
+        android:bottom="@dimen/border"
+        android:left="@dimen/border"
+        android:right="@dimen/border"
+        android:top="@dimen/border" />
+
+    <corners android:radius="@dimen/roundingMed" />
+</shape>

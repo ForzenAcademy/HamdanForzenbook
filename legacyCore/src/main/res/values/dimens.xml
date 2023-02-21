@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="strokeSmall1">1dp</dimen>
+    <dimen name="strokeSmall2">2dp</dimen>
+    <dimen name="strokeMed1">3dp</dimen>
+    <dimen name="strokeMed2">4dp</dimen>
+    <dimen name="strokeLarge1">5dp</dimen>
+    <dimen name="strokeLarge2">6dp</dimen>
+
+    <dimen name="roundingSmall">2dp</dimen>
+    <dimen name="roundingMed">4dp</dimen>
+    <dimen name="roundingLarge">8dp</dimen>
+    <dimen name="roundingBig">16dp</dimen>
+
+    <dimen name="gridx1">2dp</dimen>
+    <dimen name="gridx2">4dp</dimen>
+    <dimen name="gridx3">6dp</dimen>
+    <dimen name="gridx4">8dp</dimen>
+    <dimen name="gridx5">10dp</dimen>
+    <dimen name="gridx6">12dp</dimen>
+    <dimen name="gridx7">14dp</dimen>
+    <dimen name="gridx8">16dp</dimen>
+    <dimen name="gridx9">18dp</dimen>
+    <dimen name="gridx10">20dp</dimen>
+    <dimen name="gridx11">22dp</dimen>
+    <dimen name="gridx12">24dp</dimen>
+
+    <dimen name="border">2dp</dimen>
+
+    <dimen name="iconSize">160dp</dimen>
+
+    <dimen name="caption1">8sp</dimen>
+    <dimen name="caption2">12sp</dimen>
+    <dimen name="body1">16sp</dimen>
+    <dimen name="body2">20sp</dimen>
+    <dimen name="body3">24sp</dimen>
+    <dimen name="body4">28sp</dimen>
+    <dimen name="subtitle1">32sp</dimen>
+    <dimen name="subtitle2">36sp</dimen>
+    <dimen name="title1">40sp</dimen>
+    <dimen name="title2">44sp</dimen>
+
+</resources>

@@ -1,6 +1,5 @@
-package com.hamdan.forzenbook.applegacy.viewmodels
+package com.hamdan.forzenbook.legacy.core.viewmodels
 
-import android.util.Log
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetCredentialsFromNetworkUseCase
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetStoredCredentialsUseCase
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginStringValidationUseCase
@@ -23,7 +22,6 @@ class LegacyLoginViewModel @Inject constructor(
     getTokenFromDatabaseUseCase,
     requestValidationCode
 ) {
-
     private val _state: MutableStateFlow<LoginState> = MutableStateFlow(LoginState())
     val state: StateFlow<LoginState>
         get() = _state
@@ -33,23 +31,4 @@ class LegacyLoginViewModel @Inject constructor(
         set(value) {
             _state.value = value
         }
-
-    // TODO REMOVE THIS FUNCTION WHEN WORKING ON Legacy Login FA-100
-    // region removables
-    fun test() {
-        Log.v("Hamdan", "Hello")
-    }
-
-    data class Example(val ex: Int)
-
-    private val _test = MutableStateFlow(Example(0))
-    val testState: StateFlow<Example>
-        get() = _test
-
-    val temp = 5
-
-    fun testFunc() {
-        _test.value = testState.value.copy(ex = (testState.value.ex + temp))
-    }
-    // endregion
 }

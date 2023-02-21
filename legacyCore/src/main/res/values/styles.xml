@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="loginImageStyle">
+        <item name="android:layout_width">@dimen/iconSize</item>
+        <item name="android:layout_height">@dimen/iconSize</item>
+        <item name="android:src">@drawable/logo_render_full_notext</item>
+    </style>
+
+    <style name="inputFieldStyle" parent="ThemeOverlay.Material3.TextInputEditText">
+        <item name="colorControlActivated">@color/black</item>
+        <item name="colorControlNormal">@color/black</item>
+        <item name="android:textCursorDrawable">@drawable/black_cursor</item>
+    </style>
+
+    <style name="titleStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:lines">1</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">@dimen/title2</item>
+        <item name="android:textColor">?legacyOnBackground</item>
+        <item name="android:padding">@dimen/gridx3</item>
+    </style>
+
+    <style name="errorTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">?legacyOnBackground</item>
+        <item name="android:textSize">@dimen/body1</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:layout_marginHorizontal">@dimen/gridx5</item>
+        <item name="android:layout_marginVertical">@dimen/gridx3</item>
+    </style>
+
+    <style name="Theme.Forzenbook.colorBase" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:fontFamily">@font/mont_medium</item>
+        <item name="fontFamily">@font/mont_medium</item>
+
+        <item name="legacyBackground">@color/lion_yellow</item>
+
+        <item name="legacyPrimary">@color/black</item>
+        <item name="legacyOnPrimary">@color/white</item>
+        <item name="legacySecondaryVariant">@color/white</item>
+
+        <item name="legacySurface">@color/dark_gray</item>
+        <item name="legacyOnSurface">@color/white</item>
+        <item name="legacyOnError">@color/red</item>
+        <item name="legacyOnBackground">@color/black</item>
+
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+    </style>
+
+
+</resources>

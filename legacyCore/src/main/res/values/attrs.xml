@@ -9,4 +9,5 @@
     <attr name="legacyOnSurface" format="color" />
     <attr name="legacyOnError" format="color" />
     <attr name="legacyOnBackground" format="color" />
+
 </resources>

@@ -42,7 +42,7 @@
     <string name="login_button_text">Login</string>
     <string name="login_email_prompt">Email</string>
     <string name="login_email_error_format">Invalid email format</string>
-    <string name="login_email_error_length">Email length cannot be longer than 30 characters</string>
+    <string name="login_email_error_length">Email length cannot be longer than 64 characters</string>
     <string name="login_code_prompt">Code</string>
     <string name="login_code_error">Invalid Code</string>
     <string name="login_create_account_text">Create Account</string>

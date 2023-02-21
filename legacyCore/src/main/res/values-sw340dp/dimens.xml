@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Todo remove these resource files / move them to correct location FA-100 -->
+<resources>
+    
+    <dimen name="gridx1">4dp</dimen>
+    <dimen name="gridx2">8dp</dimen>
+    <dimen name="gridx3">12dp</dimen>
+    <dimen name="gridx4">16dp</dimen>
+    <dimen name="gridx5">20dp</dimen>
+    <dimen name="gridx6">24dp</dimen>
+    <dimen name="gridx7">28dp</dimen>
+    <dimen name="gridx8">32dp</dimen>
+    <dimen name="gridx9">36dp</dimen>
+    <dimen name="gridx10">40dp</dimen>
+    <dimen name="gridx11">44dp</dimen>
+    <dimen name="gridx12">48dp</dimen>
+
+    <dimen name="iconSize">200dp</dimen>
+
+</resources>
