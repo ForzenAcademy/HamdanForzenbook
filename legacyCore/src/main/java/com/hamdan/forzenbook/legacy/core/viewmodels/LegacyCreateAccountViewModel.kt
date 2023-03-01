@@ -1,4 +1,4 @@
-package com.hamdan.forzenbook.applegacy.viewmodels
+package com.hamdan.forzenbook.legacy.core.viewmodels
 
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountUseCase
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountValidationUseCase

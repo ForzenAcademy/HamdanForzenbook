@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.core.Entry
 import com.hamdan.forzenbook.core.LoginError
+import com.hamdan.forzenbook.core.stringForm
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginEntrys
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetCredentialsFromNetworkUseCase
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetStoredCredentialsUseCase
@@ -34,12 +35,13 @@ abstract class BaseLoginViewModel(
         code: Entry,
         isInputtingCode: Boolean,
     ) {
-        loginState = loginState.copy(
-            email = email,
-            code = code,
-            inputtingCode = isInputtingCode,
+        val stringStates = loginStringValidationUseCase(
+            loginState.copy(
+                email = email,
+                code = code,
+                inputtingCode = isInputtingCode,
+            ).toLoginEntrys()
         )
-        val stringStates = loginStringValidationUseCase(loginState.toLoginEntrys())
         loginState =
             loginState.copy(email = stringStates.email, code = stringStates.code)
     }
@@ -144,3 +146,13 @@ fun BaseLoginViewModel.LoginState.toLoginUiState(): LoginUiState =
         isLoading = this.isLoading,
         hasError = this.hasError
     )
+
+fun BaseLoginViewModel.LoginState.stringForm(): String {
+    val code: LoginError = this.code.error as LoginError
+    val email: LoginError = this.email.error as LoginError
+    return "text: ${this.email.text}, ${email.stringForm()} \n text: ${this.code.text}, ${code.stringForm()} " +
+        "\n inputting: ${this.inputtingCode} " +
+        "\n hasError: ${this.hasError}" +
+        "\n loading: ${this.isLoading}" +
+        "\n showdialog :${this.showInfoDialog}"
+}

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/lion_yellow">
+
+    <FrameLayout
+        android:id="@+id/loginLayoutHolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/loginLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+
+            <ImageView
+                android:id="@+id/loginImage"
+                style="@style/loginImageStyle"
+                android:contentDescription="@string/app_logo_image" />
+
+            <TextView
+                android:id="@+id/loginTitle"
+                android:layout_marginHorizontal="@dimen/gridx4"
+                style="@style/titleStyle"
+                android:text="@string/app_name" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputEmailBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/gridx2"
+                android:layout_marginStart="@dimen/gridx10"
+                android:layout_marginEnd="@dimen/gridx10"
+                android:hint="@string/login_email_prompt"
+                android:textColorHint="?legacyPrimary"
+                app:boxStrokeColor="?legacyPrimary"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="@dimen/strokeSmall2"
+                app:hintTextColor="?legacyPrimary"
+                app:placeholderTextColor="?legacyPrimary">
+
+                <!--this is the actual edit text which takes the input-->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputEmailText"
+                    style="@style/inputFieldStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/input_field_shape"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="?legacyOnBackground"
+                    android:textSize="@dimen/subtitle1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/emailErrorText"
+                style="@style/errorTextStyle" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputCodeBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/gridx2"
+                android:layout_marginStart="@dimen/gridx10"
+                android:layout_marginEnd="@dimen/gridx10"
+                android:hint="@string/login_code_prompt"
+                android:textColorHint="?legacyPrimary"
+                android:visibility="gone"
+                app:boxStrokeColor="?legacyPrimary"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="@dimen/strokeSmall2"
+                app:hintTextColor="?legacyPrimary"
+                app:placeholderTextColor="?legacyPrimary">
+
+                <!--this is the actual edit text which takes the input-->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputCodeText"
+                    style="@style/inputFieldStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/input_field_shape"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="?legacyOnBackground"
+                    android:textSize="@dimen/subtitle1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/codeErrorText"
+                style="@style/errorTextStyle" />
+
+            <FrameLayout
+                android:id="@+id/loginSubmitButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/gridx10"
+                android:layout_marginTop="@dimen/gridx7"
+                android:layout_marginEnd="@dimen/gridx10"
+                android:padding="@dimen/gridx4"
+                android:background="@drawable/button_state">
+
+                <TextView
+                    android:id="@+id/loginSubmitText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/login_button_text"
+                    android:textAlignment="center"
+                    android:textColor="?legacyOnPrimary"
+                    android:textSize="@dimen/subtitle1">
+
+                </TextView>
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/loginSubmitProgressIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:indeterminate="true"
+                    android:visibility="gone"
+                    app:indicatorColor="?legacyOnPrimary"
+                    app:trackColor="?legacyPrimary" />
+
+            </FrameLayout>
+
+            <Space
+                android:id="@+id/loginLinkPad"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/gridx4" />
+
+            <TextView
+                android:id="@+id/loginCreateAccountLink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/gridx4"
+                android:text="@string/login_create_account_text"
+                android:textAlignment="center"
+                android:paddingBottom="@dimen/gridx4"
+                android:textColor="?legacyOnBackground"
+                android:textSize="@dimen/subtitle1">
+
+            </TextView>
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/loginClickBlocker"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+
+</ScrollView>
