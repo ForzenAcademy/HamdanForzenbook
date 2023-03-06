@@ -77,8 +77,8 @@ abstract class BaseLoginViewModel(
                     // TODO here they would be considered succesful
                     // send off to where the user needs to see next, that location will retrieve token from DB
                     loginState = loginState.copy(
-                        email = Entry(text = "", error = LoginError.EmailError.Valid),
-                        code = Entry(text = "", error = LoginError.CodeError.Length),
+                        email = Entry(text = "", error = LoginError.EmailError.None),
+                        code = Entry(text = "", error = LoginError.CodeError.None),
                         showInfoDialog = false,
                         inputtingCode = false,
                         isLoading = false,
