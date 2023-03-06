@@ -7,12 +7,6 @@
         <item name="android:src">@drawable/logo_render_full_notext</item>
     </style>
 
-    <style name="inputFieldStyle" parent="ThemeOverlay.Material3.TextInputEditText">
-        <item name="colorControlActivated">@color/black</item>
-        <item name="colorControlNormal">@color/black</item>
-        <item name="android:textCursorDrawable">@drawable/black_cursor</item>
-    </style>
-
     <style name="titleStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -37,21 +31,82 @@
 
     <style name="Theme.Forzenbook.colorBase" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:fontFamily">@font/mont_medium</item>
+        <item name="colorPrimary">@color/black</item>
         <item name="fontFamily">@font/mont_medium</item>
-
         <item name="legacyBackground">@color/lion_yellow</item>
-
         <item name="legacyPrimary">@color/black</item>
         <item name="legacyOnPrimary">@color/white</item>
         <item name="legacySecondaryVariant">@color/white</item>
-
         <item name="legacySurface">@color/dark_gray</item>
         <item name="legacyOnSurface">@color/white</item>
         <item name="legacyOnError">@color/red</item>
         <item name="legacyOnBackground">@color/black</item>
-
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
     </style>
 
+    <style name="inputBodyStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginVertical">@dimen/gridx3</item>
+        <item name="android:layout_marginHorizontal">@dimen/gridx10</item>
+        <item name="android:textColorHint">?legacyPrimary</item>
+        <item name="boxStrokeColor">?legacyPrimary</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">@dimen/strokeSmall2</item>
+        <item name="hintTextColor">?legacyPrimary</item>
+        <item name="placeholderTextColor">?legacyPrimary</item>
+    </style>
+
+    <style name="inputFieldStyle" parent="ThemeOverlay.Material3.TextInputEditText">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="colorControlActivated">@color/black</item>
+        <item name="colorControlNormal">@color/black</item>
+        <item name="android:textCursorDrawable">@drawable/black_cursor</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">?legacyOnBackground</item>
+        <item name="android:textSize">@dimen/subtitle1</item>
+        <item name="android:background">@drawable/input_field_shape</item>
+    </style>
+
+    <style name="titleTextStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="buttonFrame">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginHorizontal">@dimen/gridx10</item>
+        <item name="android:layout_marginVertical">@dimen/gridx7</item>
+        <item name="android:background">@drawable/button_state</item>
+        <item name="android:padding">@dimen/gridx4</item>
+    </style>
+
+    <style name="buttonText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">?legacyOnPrimary</item>
+        <item name="android:textSize">@dimen/subtitle1</item>
+    </style>
+
+    <style name="buttonLoadIndicator">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:indeterminate">true</item>
+        <item name="android:visibility">gone</item>
+        <item name="indicatorColor">?legacyOnPrimary</item>
+        <item name="trackColor">?legacyPrimary</item>
+    </style>
+
+    <style name="clickBlocker">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:visibility">gone</item>
+    </style>
 
 </resources>

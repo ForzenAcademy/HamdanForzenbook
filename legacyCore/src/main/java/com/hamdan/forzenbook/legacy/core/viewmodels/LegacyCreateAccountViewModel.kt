@@ -12,9 +12,11 @@ import javax.inject.Inject
 class LegacyCreateAccountViewModel @Inject constructor(
     private val createAccountUseCase: CreateAccountUseCase,
     private val createAccountValidationUseCase: CreateAccountValidationUseCase,
-) : BaseCreateAccountViewModel(createAccountValidationUseCase, createAccountUseCase) {
-
-    private val _state = MutableStateFlow(createAccountState)
+) : BaseCreateAccountViewModel(
+    createAccountValidationUseCase,
+    createAccountUseCase
+) {
+    private val _state: MutableStateFlow<CreateAccountState> = MutableStateFlow(CreateAccountState())
     val state: StateFlow<CreateAccountState>
         get() = _state
 

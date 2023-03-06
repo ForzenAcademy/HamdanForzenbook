@@ -38,7 +38,8 @@ dependencies {
 
     //Modules
     api project(":legacyCore")
-    implementation project(":legacylogin")
+    implementation project(":legacyLogin")
+    implementation project(":legacyCreateAccount")
 
     // Hilt
     implementation "com.google.dagger:hilt-android:2.44"

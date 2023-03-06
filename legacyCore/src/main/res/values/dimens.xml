@@ -26,8 +26,9 @@
     <dimen name="gridx12">24dp</dimen>
 
     <dimen name="border">2dp</dimen>
-
     <dimen name="iconSize">160dp</dimen>
+    <dimen name="largeBottomPad">30dp</dimen>
+    <dimen name="topAppBarPad">80dp</dimen>
 
     <dimen name="caption1">8sp</dimen>
     <dimen name="caption2">12sp</dimen>

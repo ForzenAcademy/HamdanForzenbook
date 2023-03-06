@@ -1,7 +1,6 @@
 package com.hamdan.forzenbook.view.login
 
 import android.app.DatePickerDialog
-import android.content.Context
 import android.widget.DatePicker
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
@@ -42,6 +41,7 @@ import com.hamdan.forzenbook.compose.core.composables.SubmitButton
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
 import com.hamdan.forzenbook.core.Entry
 import com.hamdan.forzenbook.core.LoginError
+import com.hamdan.forzenbook.core.stringDate
 import com.hamdan.forzenbook.createaccount.core.view.CreateUiComposeState
 import com.hamdan.forzenbook.ui.core.R
 import java.util.Calendar
@@ -309,16 +309,4 @@ private fun Content(
             }.show()
         }
     }
-}
-
-private fun stringDate(month: Int, day: Int, year: Int, context: Context): String {
-    val date =
-        context.getString(R.string.create_account_date, month, day, year).split("-")
-    return date.joinToString("-") { it.leftPad() }
-}
-
-private fun String.leftPad(): String {
-    return if (this.length < 2) {
-        "0$this"
-    } else this
 }

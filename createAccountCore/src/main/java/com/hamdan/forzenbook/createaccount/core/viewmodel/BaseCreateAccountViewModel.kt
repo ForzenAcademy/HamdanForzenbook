@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.core.Entry
 import com.hamdan.forzenbook.core.LoginError
+import com.hamdan.forzenbook.core.stringForm
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountEntrys
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountResult
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountUseCase
@@ -66,15 +67,16 @@ abstract class BaseCreateAccountViewModel(
         email: Entry,
         location: Entry,
     ) {
-        createAccountState = createAccountState.copy(
-            firstName = firstName,
-            lastName = lastName,
-            birthDay = birthDay,
-            email = email,
-            location = location,
-        )
         val stringStates =
-            createAccountValidationUseCase(createAccountState.toCreateAccountEntrys())
+            createAccountValidationUseCase(
+                createAccountState.copy(
+                    firstName = firstName,
+                    lastName = lastName,
+                    birthDay = birthDay,
+                    email = email,
+                    location = location,
+                ).toCreateAccountEntrys()
+            )
         createAccountState = createAccountState.copy(
             firstName = stringStates.firstName,
             lastName = stringStates.lastName,
@@ -151,3 +153,17 @@ fun BaseCreateAccountViewModel.CreateAccountState.toCreateAccountUiState(): Crea
         isDateDialogOpen = this.isDateDialogOpen,
         isLoading = this.isLoading
     )
+
+fun BaseCreateAccountViewModel.CreateAccountState.stringForm(): String {
+    val first: LoginError = this.firstName.error as LoginError
+    val last: LoginError = this.lastName.error as LoginError
+    val birth: LoginError = this.birthDay.error as LoginError
+    val email: LoginError = this.email.error as LoginError
+    val location: LoginError = this.location.error as LoginError
+    return "text: ${this.firstName.text}, ${first.stringForm()} \n text: ${this.lastName.text}, ${last.stringForm()} " +
+        "text: ${this.birthDay.text}, ${birth.stringForm()} \n text: ${this.email.text}, ${email.stringForm()} " +
+        "text: ${this.location.text}, ${location.stringForm()}" +
+        "\n errorId: ${this.errorId}" +
+        "\n dialogOpen: ${this.isDateDialogOpen}" +
+        "\n loading: ${this.isLoading}"
+}
