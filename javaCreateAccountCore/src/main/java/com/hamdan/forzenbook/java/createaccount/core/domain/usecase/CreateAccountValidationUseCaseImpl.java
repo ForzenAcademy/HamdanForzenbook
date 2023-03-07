@@ -50,7 +50,7 @@ public class CreateAccountValidationUseCaseImpl implements CreateAccountValidati
         }
         if (state.getEmail().getText().length() > GlobalConstants.EMAIL_LENGTH_LIMIT) {
             emailError = ErrorOutcomes.LENGTH;
-        } else if (GeneralUtilityFunctions.validateEmail(state.getEmail().getText())) {
+        } else if (!GeneralUtilityFunctions.validateEmail(state.getEmail().getText())) {
             emailError = ErrorOutcomes.INVALID_FORMAT;
         } else {
             emailError = ErrorOutcomes.VALID;

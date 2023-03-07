@@ -2,7 +2,7 @@ package com.hamdan.forzenbook.java.createaccount.core.data.network;
 
 import java.sql.Date;
 
-import retrofit2.Response;
+import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
@@ -18,8 +18,8 @@ public interface CreateAccountService {
 
     @FormUrlEncoded
     @POST(CREATE_USER)
-    public Response<CreateAccountResponse> createUser(
-            @Field(EMAIL) String email,
+    public Call<CreateAccountResponse> createUser(
+            @Field(encoded = false, value = EMAIL) String email,
             @Field(BIRTH_DATE) Date birthDate,
             @Field(FIRST_NAME) String firstName,
             @Field(LAST_NAME) String lastName,

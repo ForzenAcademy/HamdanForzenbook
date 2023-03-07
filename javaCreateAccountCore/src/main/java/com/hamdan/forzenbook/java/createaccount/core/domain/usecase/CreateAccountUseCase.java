@@ -10,5 +10,5 @@ public interface CreateAccountUseCase {
             String birthDay,
             String email,
             String location
-    );
+    ) throws Exception;
 }
