@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Todo remove these resource files / move them to correct location FA-100 -->
 <resources>
     <attr name="legacyBackground" format="color" />
     <attr name="legacyPrimary" format="color" />

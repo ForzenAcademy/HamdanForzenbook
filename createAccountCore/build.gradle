@@ -33,7 +33,7 @@ android {
 }
 
 dependencies {
-    //Modules
+    // Modules
     implementation project(':core')
     implementation project(':uiCore')
 
