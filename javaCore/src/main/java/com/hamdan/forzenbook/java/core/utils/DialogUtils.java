@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 
 import com.hamdan.forzenbook.java.core.GeneralUtilityFunctions;
+import com.hamdan.forzenbook.ui.core.R;
 
 import java.util.Calendar;
 
@@ -45,7 +46,7 @@ public class DialogUtils {
         };
         DatePickerDialog dialog = new DatePickerDialog(
                 context,
-                com.hamdan.forzenbook.ui.core.R.style.MySpinnerDatePickerStyle,
+                R.style.MySpinnerDatePickerStyle,
                 dateSetListener,
                 selectedYear,
                 selectedMonth,

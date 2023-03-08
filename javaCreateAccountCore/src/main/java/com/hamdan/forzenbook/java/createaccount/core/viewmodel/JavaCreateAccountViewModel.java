@@ -187,7 +187,7 @@ public class JavaCreateAccountViewModel extends ViewModel {
                         result -> {
                             if (result == CreateAccountResult.CREATE_SUCCESS) {
                                 setState(new JavaCreateAccountState());
-                                // TODO add a onAccountCreateSuccess() here in some way
+                                // TODO add a onAccountCreateSuccess() here in some way FA-118
                             } else if (result == CreateAccountResult.CREATE_EXISTS) {
                                 setState(
                                         new JavaCreateAccountState(
