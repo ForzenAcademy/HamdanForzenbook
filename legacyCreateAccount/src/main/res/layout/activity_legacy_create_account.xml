@@ -11,6 +11,7 @@
         android:background="?legacyBackground">
 
         <Toolbar
+            android:id="@+id/createAccountLayoutToolBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:elevation="4dp"
@@ -51,7 +52,8 @@
                 <!--this is the actual edit text which takes the input-->
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/inputFirstNameText"
-                    style="@style/inputFieldStyle" />
+                    style="@style/inputFieldStyle"
+                    android:imeOptions="actionNext" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -68,7 +70,8 @@
                 <!--this is the actual edit text which takes the input-->
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/inputLastNameText"
-                    style="@style/inputFieldStyle" />
+                    style="@style/inputFieldStyle"
+                    android:imeOptions="actionNext" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -104,7 +107,8 @@
                 <!--this is the actual edit text which takes the input-->
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/inputEmailText"
-                    style="@style/inputFieldStyle" />
+                    style="@style/inputFieldStyle"
+                    android:imeOptions="actionNext" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -121,7 +125,8 @@
                 <!--this is the actual edit text which takes the input-->
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/inputLocationText"
-                    style="@style/inputFieldStyle" />
+                    style="@style/inputFieldStyle"
+                    android:imeOptions="actionDone" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

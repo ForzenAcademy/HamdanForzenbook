@@ -1,6 +1,7 @@
 package com.hamdan.forzenbook.legacy.createaccount
 
 import android.os.Bundle
+import android.view.inputmethod.EditorInfo
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
@@ -8,6 +9,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.core.LoginError
 import com.hamdan.forzenbook.legacy.core.view.utils.DialogUtils.datePickerDialog
+import com.hamdan.forzenbook.legacy.core.view.utils.DialogUtils.standardAlertDialog
 import com.hamdan.forzenbook.legacy.core.viewmodels.LegacyCreateAccountViewModel
 import com.hamdan.forzenbook.legacy.createaccount.databinding.ActivityLegacyCreateAccountBinding
 import com.hamdan.forzenbook.ui.core.R
@@ -16,10 +18,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-// TODO add IME actions in FA-104
-// TODO in FA-104 add a navigator call to go to login as the account create success lambda in the viewmodel
 @AndroidEntryPoint
 class LegacyCreateAccountActivity : ComponentActivity() {
+
     private val createAccountModel: LegacyCreateAccountViewModel by viewModels()
     private lateinit var binding: ActivityLegacyCreateAccountBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,11 +35,29 @@ class LegacyCreateAccountActivity : ComponentActivity() {
             var birthDateValue = ""
             var emailValue = ""
             var locationValue = ""
+            var submitable = false
 
             createAccountSubmitButton.isEnabled = false
             createAccountClickBlocker.setOnClickListener { }
 
             createAccountSubmitButton.setOnClickListener { createAccountModel.createAccount() }
+            createAccountLayoutToolBar.setNavigationOnClickListener {
+                createAccountModel.backIconPressed(this@LegacyCreateAccountActivity)
+            }
+
+            createAccountModel.onAccountCreateSuccess = {
+                createAccountModel.onAccountCreateFinish(this@LegacyCreateAccountActivity)
+            }
+
+            inputLocationText.setOnEditorActionListener { _, action, _ ->
+                if (action == EditorInfo.IME_ACTION_DONE) {
+                    if (submitable) {
+                        createAccountModel.createAccount()
+                        return@setOnEditorActionListener true
+                    }
+                }
+                return@setOnEditorActionListener false
+            }
 
             createAccountModel.viewModelScope.launch(Dispatchers.IO) {
                 createAccountModel.state.collect { state ->
@@ -49,6 +68,19 @@ class LegacyCreateAccountActivity : ComponentActivity() {
                             birthDateValue = birthDay.text
                             emailValue = email.text
                             locationValue = location.text
+
+                            submitable =
+                                (email.error.isValid() && birthDay.error.isValid() && location.error.isValid() && lastName.error.isValid() && firstName.error.isValid())
+
+                            errorId?.let {
+                                standardAlertDialog(
+                                    context = this@LegacyCreateAccountActivity,
+                                    title = getString(R.string.create_account_error_title),
+                                    body = getString(it),
+                                    buttonText = getString(R.string.create_account_confirm_error),
+                                    onDismiss = { createAccountModel.createAccountDismissErrorClicked() }
+                                )
+                            }
 
                             if (isLoading) {
                                 createAccountClickBlocker.isVisible = true
@@ -83,10 +115,7 @@ class LegacyCreateAccountActivity : ComponentActivity() {
                                 )
                             }
 
-                            // Todo add error dialog FA-104
-
-                            createAccountSubmitButton.isEnabled =
-                                (email.error.isValid() && birthDay.error.isValid() && location.error.isValid() && lastName.error.isValid() && firstName.error.isValid())
+                            createAccountSubmitButton.isEnabled = submitable
 
                             firstNameErrorText.apply {
                                 if (firstName.text.isNotEmpty() && !firstName.error.isValid()) {

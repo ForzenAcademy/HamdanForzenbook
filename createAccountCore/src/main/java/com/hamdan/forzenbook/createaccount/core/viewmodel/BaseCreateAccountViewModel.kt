@@ -30,7 +30,7 @@ abstract class BaseCreateAccountViewModel(
 
     protected abstract var createAccountState: CreateAccountState
 
-    lateinit var onAccountCreateSuccess: () -> Unit
+    var onAccountCreateSuccess: (() -> Unit)? = null
 
     fun createAccountDateDialogClicked() {
         createAccountShowDateDialog()
@@ -113,7 +113,7 @@ abstract class BaseCreateAccountViewModel(
                             isLoading = false
                         )
                         // send to login page
-                        onAccountCreateSuccess()
+                        onAccountCreateSuccess?.invoke()
                     }
                     CreateAccountResult.CREATE_EXISTS -> {
                         createAccountState = createAccountState.copy(

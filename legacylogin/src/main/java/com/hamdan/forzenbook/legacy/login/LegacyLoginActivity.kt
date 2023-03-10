@@ -1,6 +1,7 @@
 package com.hamdan.forzenbook.legacy.login
 
 import android.os.Bundle
+import android.view.inputmethod.EditorInfo
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
@@ -8,6 +9,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.core.LoginError
 import com.hamdan.forzenbook.legacy.core.view.utils.DialogUtils.standardAlertDialog
+import com.hamdan.forzenbook.legacy.core.view.utils.KeyboardUtils
 import com.hamdan.forzenbook.legacy.core.viewmodels.LegacyLoginViewModel
 import com.hamdan.forzenbook.legacy.login.databinding.ActivityLegacyLoginBinding
 import com.hamdan.forzenbook.ui.core.R
@@ -16,20 +18,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-// TODO add IME actions in FA-104
 @AndroidEntryPoint
 class LegacyLoginActivity : ComponentActivity() {
-    // TODO FA-104 add a click listener to send to Create Account on the createAccount text
+
     private lateinit var binding: ActivityLegacyLoginBinding
     private val loginModel: LegacyLoginViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityLegacyLoginBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
         binding.apply {
             var emailInputTextValue = ""
             var codeInputTextValue = ""
+            var loginSubmittable = false
             loginSubmitButton.isEnabled = false
             loginClickBlocker.setOnClickListener { } // only has an on click to actually block clicks
 
@@ -40,6 +43,29 @@ class LegacyLoginActivity : ComponentActivity() {
                 loginModel.loginClicked()
             }
 
+            loginCreateAccountLink.setOnClickListener {
+                loginModel.createAccountLinkPressed(this@LegacyLoginActivity)
+            }
+
+            inputEmailText.setOnEditorActionListener { _, action, _ ->
+                return@setOnEditorActionListener if (action == EditorInfo.IME_ACTION_DONE) {
+                    KeyboardUtils.hideKeyboard(this@LegacyLoginActivity, inputEmailText)
+                    loginModel.loginClicked()
+                    true
+                } else false
+            }
+
+            inputCodeText.setOnEditorActionListener { _, action, _ ->
+                if (action == EditorInfo.IME_ACTION_DONE) {
+                    if (loginSubmittable) {
+                        loginModel.loginClicked()
+                        KeyboardUtils.hideKeyboard(this@LegacyLoginActivity, inputCodeText)
+                        return@setOnEditorActionListener true
+                    }
+                }
+                return@setOnEditorActionListener false
+            }
+
             loginModel.viewModelScope.launch(Dispatchers.IO) {
                 loginModel.state.collect { state ->
                     withContext(Dispatchers.Main) {
@@ -47,6 +73,7 @@ class LegacyLoginActivity : ComponentActivity() {
 
                             emailInputTextValue = email.text
                             codeInputTextValue = code.text
+                            loginSubmittable = email.error.isValid() && code.error.isValid()
 
                             loginSubmitButton.isEnabled = if (!inputtingCode) {
                                 email.error.isValid()
@@ -68,13 +95,13 @@ class LegacyLoginActivity : ComponentActivity() {
                                 }
                             }
                             if (inputtingCode) {
+                                inputEmailBody.isVisible = false
+                                emailErrorText.isVisible = false
                                 inputCodeBody.isVisible = true
                                 codeErrorText.isVisible =
-                                    if (code.text.isNotEmpty() && !code.error.isValid()) {
+                                    if (code.text.isNotEmpty() && !code.error.isValid())
                                         code.error == LoginError.CodeError.Length
-                                    } else {
-                                        false
-                                    }
+                                    else false
                             } else {
                                 codeErrorText.isVisible = false
                                 inputCodeBody.isVisible = false
@@ -83,8 +110,7 @@ class LegacyLoginActivity : ComponentActivity() {
                             if (isLoading) {
                                 loginClickBlocker.isVisible = true
                                 loginSubmitText.isVisible = false
-                                loginSubmitProgressIndicator.isVisible =
-                                    true
+                                loginSubmitProgressIndicator.isVisible = true
                             } else {
                                 loginClickBlocker.isVisible = false
                                 loginSubmitText.isVisible = true
@@ -95,7 +121,6 @@ class LegacyLoginActivity : ComponentActivity() {
                                     email.error.isValid() && code.error.isValid()
                                 }
                             }
-
                             if (showInfoDialog) {
                                 standardAlertDialog(
                                     this@LegacyLoginActivity,
@@ -106,7 +131,6 @@ class LegacyLoginActivity : ComponentActivity() {
                                     loginModel.loginDismissInfoClicked()
                                 }
                             }
-
                             if (hasError) {
                                 standardAlertDialog(
                                     this@LegacyLoginActivity,
