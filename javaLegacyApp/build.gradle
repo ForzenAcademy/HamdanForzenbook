@@ -32,10 +32,10 @@ android {
 }
 
 dependencies {
-    // TODO FA-114 / 116 remove these
-    implementation project(':javaCore')
-    implementation project(':javaCreateAccountCore')
-    implementation project(':javaLoginCore')
+    // Modules
+    implementation project(":uiCore")
+    implementation project(":legacyCore")
+    implementation project(":javaCreateAccount")
 
     // Hilt
     implementation "com.google.dagger:hilt-android:2.44"

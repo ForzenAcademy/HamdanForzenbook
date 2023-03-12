@@ -15,7 +15,8 @@ public class JavaCreateAccountState {
     final private Entry birthDay;
     final private Entry email;
     final private Entry location;
-    final private boolean isDateDialogOpen;
+    final private boolean isDateDialogOpen; // boolean to let state know if a dialog is already open
+    final private boolean openDateDialog;   // boolean to let state know to open a dialog
     final private boolean isLoading;
 
     public JavaCreateAccountState(
@@ -26,6 +27,7 @@ public class JavaCreateAccountState {
             Entry inEmail,
             Entry inLocation,
             boolean dialogState,
+            boolean openDialogState,
             boolean loadingState
     ) {
         errorId = id;
@@ -35,6 +37,7 @@ public class JavaCreateAccountState {
         location = inLocation;
         email = inEmail;
         isDateDialogOpen = dialogState;
+        openDateDialog = openDialogState;
         isLoading = loadingState;
     }
 
@@ -46,6 +49,7 @@ public class JavaCreateAccountState {
         location = new Entry("", new UserEntryError());
         email = new Entry("", new UserEntryError());
         isDateDialogOpen = false;
+        openDateDialog = false;
         isLoading = false;
     }
 
@@ -79,11 +83,15 @@ public class JavaCreateAccountState {
         return location;
     }
 
-    public boolean getDateDialogOpen() {
-        return isDateDialogOpen;
+    public boolean getOpenDateDialog() {
+        return openDateDialog;
     }
 
     public boolean getLoading() {
         return isLoading;
+    }
+
+    public boolean getIsDateDialogOpen() {
+        return isDateDialogOpen;
     }
 }

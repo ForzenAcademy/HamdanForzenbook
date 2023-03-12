@@ -83,6 +83,8 @@ class LegacyCreateAccountActivity : ComponentActivity() {
                                 )
                             }
 
+                            // Todo add error dialog FA-104
+
                             createAccountSubmitButton.isEnabled =
                                 (email.error.isValid() && birthDay.error.isValid() && location.error.isValid() && lastName.error.isValid() && firstName.error.isValid())
 

@@ -68,8 +68,9 @@ public class JavaCreateAccountViewModel extends ViewModel {
                 viewableState().getFirstName(),
                 viewableState().getLastName(),
                 viewableState().getBirthDay(),
-                viewableState().getLocation(),
                 viewableState().getEmail(),
+                viewableState().getLocation(),
+                false,
                 false,
                 viewableState().getLoading()
         ));
@@ -82,8 +83,25 @@ public class JavaCreateAccountViewModel extends ViewModel {
                         viewableState().getFirstName(),
                         viewableState().getLastName(),
                         viewableState().getBirthDay(),
-                        viewableState().getLocation(),
                         viewableState().getEmail(),
+                        viewableState().getLocation(),
+                        viewableState().getIsDateDialogOpen(),
+                        true,
+                        viewableState().getLoading()
+                )
+        );
+    }
+
+    public void onDateDialogCreate(){
+        setState(
+                new JavaCreateAccountState(
+                        viewableState().getErrorId(),
+                        viewableState().getFirstName(),
+                        viewableState().getLastName(),
+                        viewableState().getBirthDay(),
+                        viewableState().getEmail(),
+                        viewableState().getLocation(),
+                        true,
                         true,
                         viewableState().getLoading()
                 )
@@ -97,28 +115,29 @@ public class JavaCreateAccountViewModel extends ViewModel {
                         viewableState().getFirstName(),
                         viewableState().getLastName(),
                         viewableState().getBirthDay(),
-                        viewableState().getLocation(),
                         viewableState().getEmail(),
-                        viewableState().getDateDialogOpen(),
+                        viewableState().getLocation(),
+                        viewableState().getIsDateDialogOpen(),
+                        viewableState().getOpenDateDialog(),
                         viewableState().getLoading()
                 )
         );
     }
 
     public void updateCreateAccountTextAndErrors(
-            Entry firstName,
-            Entry lastName,
-            Entry birthDay,
-            Entry email,
-            Entry location
+            String firstName,
+            String lastName,
+            String birthDay,
+            String email,
+            String location
     ) {
         CreateAccountEntrys stringStates = createAccountValidationUseCase.invoke(
                 toCreateAccountEntrys(
-                        firstName,
-                        lastName,
-                        birthDay,
-                        email,
-                        location)
+                        new Entry(firstName, state.getValue().getFirstName().getError()),
+                        new Entry(lastName, state.getValue().getLastName().getError()),
+                        new Entry(birthDay, state.getValue().getBirthDay().getError()),
+                        new Entry(email, state.getValue().getEmail().getError()),
+                        new Entry(location, state.getValue().getLocation().getError()))
         );
         setState(
                 new JavaCreateAccountState(
@@ -126,9 +145,10 @@ public class JavaCreateAccountViewModel extends ViewModel {
                         stringStates.getFirstName(),
                         stringStates.getLastName(),
                         stringStates.getBirthDay(),
-                        stringStates.getLocation(),
                         stringStates.getEmail(),
-                        viewableState().getDateDialogOpen(),
+                        stringStates.getLocation(),
+                        viewableState().getIsDateDialogOpen(),
+                        viewableState().getOpenDateDialog(),
                         viewableState().getLoading()
                 )
         );
@@ -141,9 +161,10 @@ public class JavaCreateAccountViewModel extends ViewModel {
                         viewableState().getFirstName(),
                         viewableState().getLastName(),
                         viewableState().getBirthDay(),
-                        viewableState().getLocation(),
                         viewableState().getEmail(),
-                        viewableState().getDateDialogOpen(),
+                        viewableState().getLocation(),
+                        viewableState().getIsDateDialogOpen(),
+                        viewableState().getOpenDateDialog(),
                         true
                 )
         );
@@ -174,9 +195,10 @@ public class JavaCreateAccountViewModel extends ViewModel {
                                                 viewableState().getFirstName(),
                                                 viewableState().getLastName(),
                                                 viewableState().getBirthDay(),
-                                                viewableState().getLocation(),
                                                 viewableState().getEmail(),
-                                                viewableState().getDateDialogOpen(),
+                                                viewableState().getLocation(),
+                                                viewableState().getIsDateDialogOpen(),
+                                                viewableState().getOpenDateDialog(),
                                                 false
                                         )
                                 );
@@ -187,9 +209,10 @@ public class JavaCreateAccountViewModel extends ViewModel {
                                                 viewableState().getFirstName(),
                                                 viewableState().getLastName(),
                                                 viewableState().getBirthDay(),
-                                                viewableState().getLocation(),
                                                 viewableState().getEmail(),
-                                                viewableState().getDateDialogOpen(),
+                                                viewableState().getLocation(),
+                                                viewableState().getIsDateDialogOpen(),
+                                                viewableState().getOpenDateDialog(),
                                                 false
                                         )
                                 );
@@ -202,15 +225,15 @@ public class JavaCreateAccountViewModel extends ViewModel {
                                             viewableState().getFirstName(),
                                             viewableState().getLastName(),
                                             viewableState().getBirthDay(),
-                                            viewableState().getLocation(),
                                             viewableState().getEmail(),
-                                            viewableState().getDateDialogOpen(),
+                                            viewableState().getLocation(),
+                                            viewableState().getIsDateDialogOpen(),
+                                            viewableState().getOpenDateDialog(),
                                             false
                                     )
                             );
                         }
                 );
-
     }
 
     @NonNull

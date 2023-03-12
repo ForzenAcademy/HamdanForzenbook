@@ -16,7 +16,6 @@ public class CreateAccountRepositoryImpl implements CreateAccountRepository {
     final private int INPUT_ERROR = 400;
     final private CreateAccountService service;
 
-
     public CreateAccountRepositoryImpl(CreateAccountService service) {
         this.service = service;
     }
@@ -25,7 +24,7 @@ public class CreateAccountRepositoryImpl implements CreateAccountRepository {
     public void createUser(String firstName, String lastName, String birthDay, String email, String location) throws Exception {
         Response<CreateAccountResponse> response = service.createUser(
                 email, Date.valueOf(birthDay), firstName, lastName, location
-        );
+        ).execute();
         if (!response.isSuccessful()) {
             if (response.code() == USER_EXISTS) throw (new AccountException("User Already Exists"));
             else if (response.code() == INPUT_ERROR) {

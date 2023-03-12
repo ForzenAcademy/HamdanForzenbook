@@ -10,9 +10,14 @@ public class Entry {
         text = initText;
         error = initError;
     }
-    public Entry(){
+
+    public Entry() {
         text = "";
         error = new UserEntryError();
+    }
+
+    public boolean isValid() {
+        return error.isValid();
     }
 
     @NonNull
@@ -33,7 +38,7 @@ public class Entry {
         this.error = error;
     }
 
-    public Entry(String initText, ErrorOutcomes initError){
+    public Entry(String initText, ErrorOutcomes initError) {
         text = initText;
         error = new UserEntryError(initError);
     }
