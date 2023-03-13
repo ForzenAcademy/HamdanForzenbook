@@ -5,6 +5,8 @@ import com.hamdan.forzenbook.java.login.core.data.repository.LoginRepository;
 import com.hamdan.forzenbook.java.login.core.data.repository.NullTokenException;
 import com.hamdan.forzenbook.java.login.core.data.repository.User;
 
+import java.io.IOException;
+
 public class LoginGetCredentialsFromNetworkUseCaseImpl implements LoginGetCredentialsFromNetworkUseCase {
 
     final private LoginRepository repository;
@@ -14,7 +16,7 @@ public class LoginGetCredentialsFromNetworkUseCaseImpl implements LoginGetCreden
     }
 
     @Override
-    public void invoke(String email, String code) throws NullTokenException, FailTokenRetrievalException {
+    public void invoke(String email, String code) throws NullTokenException, FailTokenRetrievalException, IOException {
         User userState = repository.getToken(email, code);
         if (userState == User.LOGGED_IN) {
             // TODO logged in path when homepage implemented

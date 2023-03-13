@@ -33,8 +33,9 @@ android {
 
 dependencies {
     // Modules
-    implementation project(":uiCore")
-    implementation project(":legacyCore")
+    implementation project(':uiCore')
+    implementation project(':javaLogin')
+    implementation project(':legacyCore')
     implementation project(":javaCreateAccount")
 
     // Hilt

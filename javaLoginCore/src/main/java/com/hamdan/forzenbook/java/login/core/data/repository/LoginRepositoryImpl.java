@@ -7,6 +7,8 @@ import com.hamdan.forzenbook.java.login.core.data.database.LoginDao;
 import com.hamdan.forzenbook.java.login.core.data.network.LoginResponse;
 import com.hamdan.forzenbook.java.login.core.data.network.LoginService;
 
+import java.io.IOException;
+
 import retrofit2.Response;
 
 public class LoginRepositoryImpl implements LoginRepository {
@@ -19,17 +21,16 @@ public class LoginRepositoryImpl implements LoginRepository {
     }
 
     @Override
-    public void requestValidation(String email) {
-        service.requestValidation(email);
+    public void requestValidation(String email) throws IOException {
+        service.requestValidation(email).execute();
     }
 
     @Override
     @NonNull
-    public User getToken(@Nullable String email, @Nullable String code) throws NullTokenException, FailTokenRetrievalException {
+    public User getToken(@Nullable String email, @Nullable String code) throws NullTokenException, FailTokenRetrievalException, IOException {
         if (email == null && code == null) return getTokenFromDatabase();
         else return getTokenFromNetwork(email, code);
     }
-
 
     @NonNull
     private User getTokenFromDatabase() {
@@ -39,8 +40,8 @@ public class LoginRepositoryImpl implements LoginRepository {
     }
 
     @NonNull
-    private User getTokenFromNetwork(String email, String code) throws FailTokenRetrievalException, NullTokenException {
-        Response<LoginResponse> response = service.getToken(email, code);
+    private User getTokenFromNetwork(String email, String code) throws FailTokenRetrievalException, NullTokenException, IOException {
+        Response<LoginResponse> response = service.getToken(email, code).execute();
         if (response.isSuccessful()) {
             if (response.body() == null) {
                 throw new FailTokenRetrievalException("Failed to get Token");

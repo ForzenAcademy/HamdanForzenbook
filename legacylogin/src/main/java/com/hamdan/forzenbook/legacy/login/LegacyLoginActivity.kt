@@ -36,9 +36,6 @@ class LegacyLoginActivity : ComponentActivity() {
             loginSubmitButton.isEnabled = false
             loginClickBlocker.setOnClickListener { } // only has an on click to actually block clicks
 
-            emailErrorText.text = getString(R.string.login_email_error_format)
-            codeErrorText.text = getString(R.string.login_code_error)
-
             loginSubmitButton.setOnClickListener {
                 loginModel.loginClicked()
             }

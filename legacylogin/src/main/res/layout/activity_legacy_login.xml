@@ -62,6 +62,7 @@
 
             <TextView
                 android:id="@+id/codeErrorText"
+                android:text="@string/login_code_error"
                 style="@style/errorTextStyle" />
 
             <FrameLayout

@@ -19,7 +19,7 @@ public class LoginStringValidationUseCaseImpl implements LoginStringValidationUs
         ErrorOutcomes codeError;
         if (state.getEmail().getText().length() > EMAIL_LENGTH_LIMIT) {
             emailError = ErrorOutcomes.LENGTH;
-        } else if (GeneralUtilityFunctions.validateEmail(state.getEmail().getText())) {
+        } else if (!GeneralUtilityFunctions.validateEmail(state.getEmail().getText())) {
             emailError = ErrorOutcomes.INVALID_FORMAT;
         } else emailError = ErrorOutcomes.VALID;
 

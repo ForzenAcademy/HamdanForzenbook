@@ -1,6 +1,10 @@
 package com.hamdan.forzenbook.java.login.core.domain.usecase;
 
+import android.util.Log;
+
 import com.hamdan.forzenbook.java.login.core.data.repository.LoginRepository;
+
+import java.io.IOException;
 
 public class LoginValidationUseCaseImpl implements LoginValidationUseCase {
 
@@ -11,7 +15,7 @@ public class LoginValidationUseCaseImpl implements LoginValidationUseCase {
     }
 
     @Override
-    public void invoke(String email) {
+    public void invoke(String email) throws IOException {
         repository.requestValidation(email);
     }
 }

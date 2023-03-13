@@ -48,18 +48,18 @@ public class JavaLoginViewModel extends ViewModel {
         _state.onNext(inState);
     }
 
-    private void updateLoginTexts(Entry email, Entry code, Boolean isInputtingCode) {
+    public void updateLoginTexts(String email, String code) {
         LoginEntrys stringStates = loginStringValidationUseCase.invoke(
                 new LoginEntrys(
-                        viewableState().getEmail(),
-                        viewableState().getCode()
+                        new Entry(email, viewableState().getEmail().getError()),
+                        new Entry(code, viewableState().getCode().getError())
                 )
         );
         setState(
                 new JavaLoginState(
                         stringStates.getEmail(),
                         stringStates.getCode(),
-                        viewableState().getShowInfoDialog(),
+                        viewableState().shouldShowInfoDialog(),
                         viewableState().getInputtingCode(),
                         viewableState().getLoading(),
                         viewableState().getHasError()
@@ -79,11 +79,11 @@ public class JavaLoginViewModel extends ViewModel {
         );
     }
 
-    private void loginDismissErrorClicked() {
+    public void loginDismissErrorClicked() {
         loginNormalView();
     }
 
-    private void loginDismissInfoClicked() {
+    public void loginDismissInfoClicked() {
         loginNormalView();
     }
 
@@ -92,7 +92,7 @@ public class JavaLoginViewModel extends ViewModel {
                 new JavaLoginState(
                         viewableState().getEmail(),
                         viewableState().getCode(),
-                        viewableState().getShowInfoDialog(),
+                        viewableState().shouldShowInfoDialog(),
                         true,
                         true,
                         false
@@ -108,17 +108,21 @@ public class JavaLoginViewModel extends ViewModel {
                 .observeOn(Schedulers.io())
                 .subscribe(
                         state -> {
-                            if (state) setState(new JavaLoginState());
-                            else setState(
-                                    new JavaLoginState(
-                                            viewableState().getEmail(),
-                                            viewableState().getCode(),
-                                            false,
-                                            true,
-                                            false,
-                                            true
-                                    )
-                            );
+                            if (state) {
+                                setState(new JavaLoginState());
+                            }
+                            else{
+                                setState(
+                                        new JavaLoginState(
+                                                viewableState().getEmail(),
+                                                viewableState().getCode(),
+                                                false,
+                                                true,
+                                                false,
+                                                true
+                                        )
+                                );
+                            }
                         },
                         error -> {
                             setState(
@@ -141,7 +145,7 @@ public class JavaLoginViewModel extends ViewModel {
                 new JavaLoginState(
                         viewableState().getEmail(),
                         viewableState().getCode(),
-                        viewableState().getShowInfoDialog(),
+                        viewableState().shouldShowInfoDialog(),
                         viewableState().getInputtingCode(),
                         true,
                         viewableState().getHasError()
@@ -173,7 +177,7 @@ public class JavaLoginViewModel extends ViewModel {
                                         new JavaLoginState(
                                                 viewableState().getEmail(),
                                                 viewableState().getCode(),
-                                                viewableState().getShowInfoDialog(),
+                                                viewableState().shouldShowInfoDialog(),
                                                 false,
                                                 false,
                                                 true
@@ -186,7 +190,7 @@ public class JavaLoginViewModel extends ViewModel {
                                     new JavaLoginState(
                                             viewableState().getEmail(),
                                             viewableState().getCode(),
-                                            viewableState().getShowInfoDialog(),
+                                            viewableState().shouldShowInfoDialog(),
                                             false,
                                             false,
                                             true

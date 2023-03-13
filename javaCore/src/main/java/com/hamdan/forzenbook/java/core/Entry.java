@@ -16,10 +16,6 @@ public class Entry {
         error = new UserEntryError();
     }
 
-    public boolean isValid() {
-        return error.isValid();
-    }
-
     @NonNull
     public String getText() {
         return text;
@@ -41,5 +37,9 @@ public class Entry {
     public Entry(String initText, ErrorOutcomes initError) {
         text = initText;
         error = new UserEntryError(initError);
+    }
+
+    public boolean isValid() {
+        return error.isValid();
     }
 }

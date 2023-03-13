@@ -8,7 +8,7 @@ import com.hamdan.forzenbook.java.core.ErrorOutcomes;
 public class JavaLoginState {
     final private Entry email;
     final private Entry code;
-    final private boolean showInfoDialog;
+    final private boolean shouldShowInfoDialog;
     final private boolean inputtingCode;
     final private boolean isLoading;
     final private boolean hasError;
@@ -16,7 +16,7 @@ public class JavaLoginState {
     public JavaLoginState() {
         email = new Entry("", ErrorOutcomes.NONE);
         code = new Entry("", ErrorOutcomes.NONE);
-        showInfoDialog = false;
+        shouldShowInfoDialog = false;
         inputtingCode = false;
         isLoading = false;
         hasError = false;
@@ -25,7 +25,7 @@ public class JavaLoginState {
     public JavaLoginState(Entry inEmail, Entry inCode, Boolean dialogState, Boolean codeState, Boolean loading, Boolean errorState) {
         email = inEmail;
         code = inCode;
-        showInfoDialog = dialogState;
+        shouldShowInfoDialog = dialogState;
         inputtingCode = codeState;
         isLoading = loading;
         hasError = errorState;
@@ -41,8 +41,8 @@ public class JavaLoginState {
         return code;
     }
 
-    public boolean getShowInfoDialog() {
-        return showInfoDialog;
+    public boolean shouldShowInfoDialog() {
+        return shouldShowInfoDialog;
     }
 
     public boolean getInputtingCode() {
