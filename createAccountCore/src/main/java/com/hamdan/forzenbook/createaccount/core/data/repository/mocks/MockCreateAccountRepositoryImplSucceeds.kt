@@ -6,13 +6,11 @@ import com.hamdan.forzenbook.createaccount.core.data.repository.CreateAccountRep
 class MockCreateAccountRepositoryImplSucceeds(
     createAccountService: CreateAccountService
 ) : CreateAccountRepository {
-
     override suspend fun createUser(
         firstName: String,
         lastName: String,
         birthDay: String,
         email: String,
         location: String
-    ) {
-    }
+    ) {}
 }

@@ -36,7 +36,8 @@
                 <!--this is the actual edit text which takes the input-->
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/inputEmailText"
-                    style="@style/inputFieldStyle" />
+                    style="@style/inputFieldStyle"
+                    android:imeOptions="actionDone" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -54,7 +55,8 @@
                 <!--this is the actual edit text which takes the input-->
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/inputCodeText"
-                    style="@style/inputFieldStyle" />
+                    style="@style/inputFieldStyle"
+                    android:imeOptions="actionDone" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -68,8 +70,8 @@
 
                 <TextView
                     android:id="@+id/loginSubmitText"
-                    android:text="@string/login_button_text"
-                    style="buttonText" />
+                    style="@style/buttonText"
+                    android:text="@string/login_button_text" />
 
                 <com.google.android.material.progressindicator.CircularProgressIndicator
                     android:id="@+id/loginSubmitProgressIndicator"
@@ -97,7 +99,7 @@
 
         <FrameLayout
             android:id="@+id/loginClickBlocker"
-            style="clickBlocker" />
+            style="@style/clickBlocker" />
 
     </FrameLayout>
 

@@ -1,5 +1,7 @@
 package com.hamdan.forzenbook.legacy.core.viewmodels
 
+import android.content.Context
+import com.hamdan.forzenbook.legacy.core.view.Navigator
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetCredentialsFromNetworkUseCase
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetStoredCredentialsUseCase
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginStringValidationUseCase
@@ -16,6 +18,7 @@ class LegacyLoginViewModel @Inject constructor(
     private val getTokenFromNetworkUseCase: LoginGetCredentialsFromNetworkUseCase,
     private val getTokenFromDatabaseUseCase: LoginGetStoredCredentialsUseCase,
     private val requestValidationCode: LoginValidationUseCase,
+    private val navigator: Navigator,
 ) : BaseLoginViewModel(
     loginStringValidationUseCase,
     getTokenFromNetworkUseCase,
@@ -31,4 +34,12 @@ class LegacyLoginViewModel @Inject constructor(
         set(value) {
             _state.value = value
         }
+
+    fun createAccountLinkPressed(context: Context) {
+        navigateToCreateAccount(context)
+    }
+
+    private fun navigateToCreateAccount(context: Context) {
+        navigator.navigateToCreateAccount(context)
+    }
 }
