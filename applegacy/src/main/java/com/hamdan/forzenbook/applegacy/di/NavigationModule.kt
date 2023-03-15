@@ -10,6 +10,7 @@ import dagger.hilt.android.components.ViewModelComponent
 @InstallIn(ViewModelComponent::class)
 @Module
 object NavigationModule {
+
     @Provides
     fun providesNavigationImpl(): Navigator = NavigatorImpl()
 }

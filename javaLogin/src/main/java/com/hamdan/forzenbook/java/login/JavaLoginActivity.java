@@ -11,8 +11,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.hamdan.forzenbook.java.core.ErrorOutcomes;
 import com.hamdan.forzenbook.java.core.utils.DialogUtils;
 import com.hamdan.forzenbook.java.login.core.viewmodel.JavaLoginViewModel;
-import com.hamdan.forzenbook.legacy.login.databinding.ActivityLegacyLoginBinding;
 import com.hamdan.forzenbook.ui.core.R;
+import com.hamdan.forzenbook.ui.core.databinding.ActivityLegacyLoginBinding;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -40,6 +40,7 @@ public class JavaLoginActivity extends ComponentActivity {
         binding.loginClickBlocker.setOnClickListener(blank -> {
         });  //purposely empty to prevent clicks when its enabled
 
+        binding.loginCreateAccountLink.setOnClickListener(listener -> model.createAccountLinkPressed(this));
 
         binding.loginSubmitButton.setOnClickListener(listener -> model.loginClicked());
 
@@ -69,10 +70,12 @@ public class JavaLoginActivity extends ComponentActivity {
                             }
 
                             if (state.getInputtingCode()) {
+                                binding.inputEmailBody.setVisibility(View.GONE);
+                                binding.emailErrorText.setVisibility(View.GONE);
                                 binding.inputCodeBody.setVisibility(View.VISIBLE);
                                 if (state.getCode().isValid() && !state.getCode().getText().isEmpty() && state.getCode().getError().getState() == ErrorOutcomes.LENGTH) {
                                     binding.codeErrorText.setVisibility(View.VISIBLE);
-                                }else{
+                                } else {
                                     binding.codeErrorText.setVisibility(View.GONE);
                                 }
                             } else {
@@ -158,7 +161,7 @@ public class JavaLoginActivity extends ComponentActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(disposable!= null){
+        if (disposable != null) {
             disposable.dispose();
         }
     }

@@ -1,9 +1,12 @@
 package com.hamdan.forzenbook.java.createaccount.core.viewmodel;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
 import com.hamdan.forzenbook.java.core.Entry;
+import com.hamdan.forzenbook.java.core.NavigatorJava;
 import com.hamdan.forzenbook.java.createaccount.core.domain.usecase.CreateAccountEntrys;
 import com.hamdan.forzenbook.java.createaccount.core.domain.usecase.CreateAccountResult;
 import com.hamdan.forzenbook.java.createaccount.core.domain.usecase.CreateAccountUseCase;
@@ -27,10 +30,13 @@ public class JavaCreateAccountViewModel extends ViewModel {
 
     private final BehaviorSubject<JavaCreateAccountState> state = BehaviorSubject.createDefault(new JavaCreateAccountState());
 
+    private final NavigatorJava navigator;
+
     @Inject
-    public JavaCreateAccountViewModel(CreateAccountValidationUseCase createAccountValidationUseCase, CreateAccountUseCase createAccountUseCase) {
+    public JavaCreateAccountViewModel(CreateAccountValidationUseCase createAccountValidationUseCase, CreateAccountUseCase createAccountUseCase, NavigatorJava navigator) {
         this.createAccountValidationUseCase = createAccountValidationUseCase;
         this.createAccountUseCase = createAccountUseCase;
+        this.navigator = navigator;
     }
 
     public Flowable<JavaCreateAccountState> getState() {
@@ -40,6 +46,18 @@ public class JavaCreateAccountViewModel extends ViewModel {
     @NonNull
     private JavaCreateAccountState viewableState() {
         return state.getValue();
+    }
+
+    public void backButtonPressed(Context context) {
+        navigateToLogin(context);
+    }
+
+    private void succeedCreation(Context context) {
+        navigateToLogin(context);
+    }
+
+    private void navigateToLogin(Context context) {
+        navigator.navigateToLogin(context);
     }
 
     private void setState(JavaCreateAccountState inState) {
@@ -92,7 +110,7 @@ public class JavaCreateAccountViewModel extends ViewModel {
         );
     }
 
-    public void onDateDialogCreate(){
+    public void onDateDialogCreate() {
         setState(
                 new JavaCreateAccountState(
                         viewableState().getErrorId(),
@@ -154,7 +172,10 @@ public class JavaCreateAccountViewModel extends ViewModel {
         );
     }
 
-    public void createAccount() {
+    public void createAccountClicked(Context context){
+        createAccount(context);
+    }
+    private void createAccount(Context context) {
         setState(
                 new JavaCreateAccountState(
                         null,
@@ -187,7 +208,7 @@ public class JavaCreateAccountViewModel extends ViewModel {
                         result -> {
                             if (result == CreateAccountResult.CREATE_SUCCESS) {
                                 setState(new JavaCreateAccountState());
-                                // TODO add a onAccountCreateSuccess() here in some way FA-118
+                                succeedCreation(context);
                             } else if (result == CreateAccountResult.CREATE_EXISTS) {
                                 setState(
                                         new JavaCreateAccountState(

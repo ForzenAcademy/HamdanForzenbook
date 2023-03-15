@@ -11,8 +11,8 @@ import com.hamdan.forzenbook.core.LoginError
 import com.hamdan.forzenbook.legacy.core.view.utils.DialogUtils.standardAlertDialog
 import com.hamdan.forzenbook.legacy.core.view.utils.KeyboardUtils
 import com.hamdan.forzenbook.legacy.core.viewmodels.LegacyLoginViewModel
-import com.hamdan.forzenbook.legacy.login.databinding.ActivityLegacyLoginBinding
 import com.hamdan.forzenbook.ui.core.R
+import com.hamdan.forzenbook.ui.core.databinding.ActivityLegacyLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
