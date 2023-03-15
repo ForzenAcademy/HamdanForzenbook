@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Forzenbook">
         <activity
-            android:name="com.hamdan.forzenbook.java.createaccount.JavaCreateAccountActivity"
+            android:name="com.hamdan.forzenbook.java.login.JavaLoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
