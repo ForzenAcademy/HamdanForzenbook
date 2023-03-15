@@ -26,6 +26,7 @@ abstract class BaseCreateAccountViewModel(
         val location: Entry = Entry("", LoginError.LocationError.None),
         val isDateDialogOpen: Boolean = false,
         val isLoading: Boolean = false,
+        val accountCreated: Boolean = false,
     )
 
     protected abstract var createAccountState: CreateAccountState
@@ -86,7 +87,11 @@ abstract class BaseCreateAccountViewModel(
         )
     }
 
-    fun createAccount() {
+    fun createAccountButtonClicked() {
+        createAccount()
+    }
+
+    private fun createAccount() {
         viewModelScope.launch {
             createAccountState.let {
                 createAccountState = createAccountState.copy(
@@ -110,7 +115,8 @@ abstract class BaseCreateAccountViewModel(
                             birthDay = Entry(text = "", error = LoginError.BirthDateError.TooYoung),
                             email = Entry(text = "", error = LoginError.EmailError.Valid),
                             location = Entry(text = "", error = LoginError.LocationError.Length),
-                            isLoading = false
+                            isLoading = false,
+                            accountCreated = true,
                         )
                         // send to login page
                         onAccountCreateSuccess?.invoke()
@@ -139,7 +145,7 @@ fun BaseCreateAccountViewModel.CreateAccountState.toCreateAccountEntrys(): Creat
         lastName = this.lastName,
         birthDay = this.birthDay,
         email = this.email,
-        location = this.location
+        location = this.location,
     )
 
 fun BaseCreateAccountViewModel.CreateAccountState.toCreateAccountUiState(): CreateUiComposeState =
@@ -151,7 +157,8 @@ fun BaseCreateAccountViewModel.CreateAccountState.toCreateAccountUiState(): Crea
         email = this.email,
         location = this.location,
         isDateDialogOpen = this.isDateDialogOpen,
-        isLoading = this.isLoading
+        isLoading = this.isLoading,
+        accountCreated = this.accountCreated,
     )
 
 fun BaseCreateAccountViewModel.CreateAccountState.stringForm(): String {

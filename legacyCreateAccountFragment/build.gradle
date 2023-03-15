@@ -28,13 +28,18 @@ android {
     kotlinOptions {
         jvmTarget = '11'
     }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
 
     // Modules
     implementation project(":createAccountCore")
+    implementation project(":legacyCore")
     implementation project(":uiCore")
+    implementation project(":core")
 
     // Kotlin Fragment
     implementation "androidx.fragment:fragment-ktx:1.5.5"

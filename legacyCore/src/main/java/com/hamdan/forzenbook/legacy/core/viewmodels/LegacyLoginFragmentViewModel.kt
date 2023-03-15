@@ -1,7 +1,6 @@
 package com.hamdan.forzenbook.legacy.core.viewmodels
 
-import android.content.Context
-import com.hamdan.forzenbook.legacy.core.view.Navigator
+import com.hamdan.forzenbook.legacy.core.view.FragmentNavigator
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetCredentialsFromNetworkUseCase
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetStoredCredentialsUseCase
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginStringValidationUseCase
@@ -13,12 +12,12 @@ import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class LegacyLoginViewModel @Inject constructor(
+class LegacyLoginFragmentViewModel @Inject constructor(
     private val loginStringValidationUseCase: LoginStringValidationUseCase,
     private val getTokenFromNetworkUseCase: LoginGetCredentialsFromNetworkUseCase,
     private val getTokenFromDatabaseUseCase: LoginGetStoredCredentialsUseCase,
     private val requestValidationCode: LoginValidationUseCase,
-    private val navigator: Navigator,
+    private val navigator: FragmentNavigator,
 ) : BaseLoginViewModel(
     loginStringValidationUseCase,
     getTokenFromNetworkUseCase,
@@ -35,15 +34,15 @@ class LegacyLoginViewModel @Inject constructor(
             _state.value = value
         }
 
-    fun login(context: Context) {
+    fun login() {
         // Todo use navigator to navigate to main page FA-Jamie please make ticket big sadge
     }
 
-    fun createAccountLinkPressed(context: Context) {
-        navigateToCreateAccount(context)
+    fun createAccountLinkPressed() {
+        navigateToCreateAccount()
     }
 
-    private fun navigateToCreateAccount(context: Context) {
-        navigator.navigateToCreateAccount(context)
+    private fun navigateToCreateAccount() {
+        navigator.navigateToCreateAccount()
     }
 }

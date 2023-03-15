@@ -10,4 +10,5 @@ data class LoginUiState(
     val inputtingCode: Boolean = false,
     val isLoading: Boolean = false,
     val hasError: Boolean = false,
+    val loggedIn: Boolean = false,
 )

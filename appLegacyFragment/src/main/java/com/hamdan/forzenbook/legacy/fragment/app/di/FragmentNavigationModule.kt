@@ -1,7 +1,9 @@
 package com.hamdan.forzenbook.legacy.fragment.app.di
 
-import android.content.Context
+import com.hamdan.forzenbook.legacy.core.view.FragmentNavigator
 import com.hamdan.forzenbook.legacy.core.view.Navigator
+import com.hamdan.forzenbook.legacy.fragment.app.view.FragmentNavigatorImpl
+import com.hamdan.forzenbook.legacy.fragment.app.view.NavigatorImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,16 +14,9 @@ import dagger.hilt.android.components.ViewModelComponent
 object FragmentNavigationModule {
 
     @Provides
-    fun providesFragmentNavigator(): Navigator = NavigatorImpl()
-}
+    fun providesFragmentNavigator(): FragmentNavigator = FragmentNavigatorImpl()
 
-// Todo remove this impl and create an actual one FA-126
-// Todo the impl should perform a transaction for the fragments
-
-class NavigatorImpl() : Navigator {
-    override fun navigateToLogin(context: Context) {
-    }
-
-    override fun navigateToCreateAccount(context: Context) {
-    }
+    @Provides
+    fun providesNavigatorImpl(): Navigator = NavigatorImpl()
+    // this is an empty impl as the Fragments do not need a normal Navigator
 }

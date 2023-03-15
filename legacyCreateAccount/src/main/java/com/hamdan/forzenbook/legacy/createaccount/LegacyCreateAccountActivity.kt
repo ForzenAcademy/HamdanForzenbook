@@ -40,19 +40,15 @@ class LegacyCreateAccountActivity : ComponentActivity() {
             createAccountSubmitButton.isEnabled = false
             createAccountClickBlocker.setOnClickListener { }
 
-            createAccountSubmitButton.setOnClickListener { createAccountModel.createAccount() }
+            createAccountSubmitButton.setOnClickListener { createAccountModel.createAccountButtonClicked(this@LegacyCreateAccountActivity) }
             createAccountLayoutToolBar.setNavigationOnClickListener {
                 createAccountModel.backIconPressed(this@LegacyCreateAccountActivity)
-            }
-
-            createAccountModel.onAccountCreateSuccess = {
-                createAccountModel.onAccountCreateFinish(this@LegacyCreateAccountActivity)
             }
 
             inputLocationText.setOnEditorActionListener { _, action, _ ->
                 if (action == EditorInfo.IME_ACTION_DONE) {
                     if (submitable) {
-                        createAccountModel.createAccount()
+                        createAccountModel.createAccountButtonClicked(this@LegacyCreateAccountActivity)
                         return@setOnEditorActionListener true
                     }
                 }
@@ -165,7 +161,6 @@ class LegacyCreateAccountActivity : ComponentActivity() {
                                     isVisible = false
                                 }
                             }
-
                             locationErrorText.isVisible =
                                 location.error == LoginError.LocationError.Length
                         }

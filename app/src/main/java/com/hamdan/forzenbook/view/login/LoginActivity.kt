@@ -9,11 +9,11 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.hamdan.forzenbook.compose.core.LocalNavController
 import com.hamdan.forzenbook.compose.core.theme.ForzenBookTheme
 import com.hamdan.forzenbook.createaccount.core.viewmodel.toCreateAccountUiState
 import com.hamdan.forzenbook.login.compose.MainLoginContent
 import com.hamdan.forzenbook.login.core.viewmodel.toLoginUiState
-import com.hamdan.forzenbook.view.LocalNavController
 import com.hamdan.forzenbook.view.NavigationDestinations
 import com.hamdan.forzenbook.viewmodels.CreateAccountViewModel
 import com.hamdan.forzenbook.viewmodels.LoginViewModel
@@ -78,16 +78,11 @@ class LoginActivity : ComponentActivity() {
                                 onDateSubmission = { createAccountViewModel.createAccountDateDialogSubmitClicked() },
                                 onDateDismiss = { createAccountViewModel.createAccountDateDialogDismiss() },
                                 onSubmission = {
-                                    createAccountViewModel.createAccount()
-                                }
-                            ) {
-                                navController.navigateUp()
-                            }
+                                    createAccountViewModel.createAccountButtonClicked()
+                                },
+                            )
                         }
                     }
-                }
-                createAccountViewModel.onAccountCreateSuccess = {
-                    navController.navigateUp()
                 }
             }
         }

@@ -39,6 +39,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import com.hamdan.forzenbook.compose.core.LocalNavController
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
 import com.hamdan.forzenbook.ui.core.R
 
@@ -193,8 +194,8 @@ fun LoginBackgroundColumn(modifier: Modifier = Modifier, content: @Composable ()
 @Composable
 fun LoginTopBar(
     topText: String,
-    onNavigateUp: () -> Unit,
 ) {
+    val navigator = LocalNavController.current
     TopAppBar(
         title = {
             Text(
@@ -209,7 +210,7 @@ fun LoginTopBar(
         modifier = Modifier.fillMaxWidth(),
         backgroundColor = ForzenbookTheme.colors.colors.background,
         navigationIcon = {
-            IconButton(onClick = { onNavigateUp() }) {
+            IconButton(onClick = { navigator?.navigateUp() }) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
                     contentDescription = stringResource(id = R.string.back_arrow),

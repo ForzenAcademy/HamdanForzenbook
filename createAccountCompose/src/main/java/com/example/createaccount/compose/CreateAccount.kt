@@ -30,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.hamdan.forzenbook.compose.core.LocalNavController
 import com.hamdan.forzenbook.compose.core.composables.ErrorText
 import com.hamdan.forzenbook.compose.core.composables.ForzenbookDialog
 import com.hamdan.forzenbook.compose.core.composables.InputField
@@ -57,16 +58,16 @@ fun CreateAccountContent(
     onDateSubmission: () -> Unit,
     onDateDismiss: () -> Unit,
     onSubmission: () -> Unit,
-    onNavigateUp: () -> Unit,
 ) {
+    val navigator = LocalNavController.current
+    LaunchedEffect(state.accountCreated) {
+        if (state.accountCreated) {
+            navigator?.navigateUp()
+        }
+    }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = {
-            LoginTopBar(
-                topText = stringResource(R.string.top_bar_text_create_account),
-                onNavigateUp = onNavigateUp
-            )
-        },
+        topBar = { LoginTopBar(topText = stringResource(R.string.top_bar_text_create_account)) },
     ) { padding ->
         LoginBackgroundColumn(modifier = Modifier.padding(padding)) {
             Content(

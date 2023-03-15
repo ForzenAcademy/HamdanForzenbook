@@ -6,6 +6,7 @@ import android.content.Context
 import android.widget.DatePicker
 import com.hamdan.forzenbook.core.stringDate
 import com.hamdan.forzenbook.legacy.core.view.FragmentAlertDialog
+import com.hamdan.forzenbook.legacy.core.view.FragmentDatePickerDialog
 import com.hamdan.forzenbook.ui.core.R
 import java.util.Calendar
 
@@ -74,12 +75,16 @@ object DialogUtils {
         body: String,
         buttonText: String,
         onDismiss: () -> Unit,
-    ): FragmentAlertDialog {
-        return FragmentAlertDialog(
-            title,
-            body,
-            buttonText,
-            onDismiss,
-        )
-    }
+    ): FragmentAlertDialog = FragmentAlertDialog(
+        title, body, buttonText, onDismiss,
+    )
+
+    fun fragmentDatePicker(
+        birthDate: String,
+        onTextChange: (String) -> Unit,
+        onDateSubmission: () -> Unit,
+        onDateDismiss: () -> Unit
+    ): FragmentDatePickerDialog = FragmentDatePickerDialog(
+        birthDate, onTextChange, onDateSubmission, onDateDismiss
+    )
 }

@@ -13,7 +13,7 @@ import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.core.LoginError
 import com.hamdan.forzenbook.legacy.core.view.utils.DialogUtils
 import com.hamdan.forzenbook.legacy.core.view.utils.KeyboardUtils
-import com.hamdan.forzenbook.legacy.core.viewmodels.LegacyLoginViewModel
+import com.hamdan.forzenbook.legacy.core.viewmodels.LegacyLoginFragmentViewModel
 import com.hamdan.forzenbook.ui.core.R
 import com.hamdan.forzenbook.ui.core.databinding.ActivityLegacyLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,7 +23,7 @@ import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
-    private val loginModel: LegacyLoginViewModel by activityViewModels()
+    private val loginModel: LegacyLoginFragmentViewModel by activityViewModels()
     private lateinit var binding: ActivityLegacyLoginBinding
 
     override fun onCreateView(
@@ -52,7 +52,7 @@ class LoginFragment : Fragment() {
             loginCreateAccountLink.setOnClickListener {
                 // Todo change the navigator Impl in the app module to perform a transaction to swap to create account
                 // Todo FA 126
-                loginModel.createAccountLinkPressed(context)
+                loginModel.createAccountLinkPressed()
             }
 
             inputEmailText.setOnEditorActionListener { _, action, _ ->
@@ -78,7 +78,10 @@ class LoginFragment : Fragment() {
                 loginModel.state.collect { state ->
                     withContext(Dispatchers.Main) {
                         state.apply {
-
+                            if (this.loggedIn) {
+                                loginModel.login()
+                                return@withContext
+                            }
                             emailInputTextValue = email.text
                             codeInputTextValue = code.text
                             loginSubmittable = email.error.isValid() && code.error.isValid()
