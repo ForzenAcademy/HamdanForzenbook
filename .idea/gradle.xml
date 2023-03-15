@@ -12,6 +12,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/appLegacyFragment" />
             <option value="$PROJECT_DIR$/applegacy" />
             <option value="$PROJECT_DIR$/composeCore" />
             <option value="$PROJECT_DIR$/core" />
@@ -25,7 +26,9 @@
             <option value="$PROJECT_DIR$/javaLoginCore" />
             <option value="$PROJECT_DIR$/legacyCore" />
             <option value="$PROJECT_DIR$/legacyCreateAccount" />
+            <option value="$PROJECT_DIR$/legacyCreateAccountFragment" />
             <option value="$PROJECT_DIR$/legacyLogin" />
+            <option value="$PROJECT_DIR$/legacyLoginFragment" />
             <option value="$PROJECT_DIR$/loginCompose" />
             <option value="$PROJECT_DIR$/loginCore" />
             <option value="$PROJECT_DIR$/uiCore" />
