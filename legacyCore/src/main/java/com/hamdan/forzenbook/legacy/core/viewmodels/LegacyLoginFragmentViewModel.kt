@@ -1,5 +1,6 @@
 package com.hamdan.forzenbook.legacy.core.viewmodels
 
+import androidx.fragment.app.FragmentManager
 import com.hamdan.forzenbook.legacy.core.view.FragmentNavigator
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetCredentialsFromNetworkUseCase
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetStoredCredentialsUseCase
@@ -38,11 +39,11 @@ class LegacyLoginFragmentViewModel @Inject constructor(
         // Todo use navigator to navigate to main page FA-Jamie please make ticket big sadge
     }
 
-    fun createAccountLinkPressed() {
-        navigateToCreateAccount()
+    fun createAccountLinkPressed(fragmentManager: FragmentManager) {
+        navigateToCreateAccount(fragmentManager)
     }
 
-    private fun navigateToCreateAccount() {
-        navigator.navigateToCreateAccount()
+    private fun navigateToCreateAccount(fragmentManager: FragmentManager) {
+        navigator.navigateToCreateAccount(fragmentManager)
     }
 }

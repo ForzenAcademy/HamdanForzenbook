@@ -10,6 +10,5 @@ class LegacyFragmentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_legacy_fragment)
-        // Todo adjust anything needed here in FA-126, though there shouldn't be
     }
 }
