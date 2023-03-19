@@ -25,30 +25,40 @@
             <TextView
                 android:id="@+id/loginTitle"
                 style="@style/titleStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/gridx4"
                 android:text="@string/app_name" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/inputEmailBody"
                 style="@style/inputBodyStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="@string/login_email_prompt">
 
                 <!--this is the actual edit text which takes the input-->
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/inputEmailText"
                     style="@style/inputFieldStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:imeOptions="actionDone" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/emailErrorText"
-                style="@style/errorTextStyle" />
+                style="@style/errorTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/inputCodeBody"
                 style="@style/inputBodyStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="@string/login_code_prompt"
                 android:visibility="gone">
 
@@ -56,27 +66,37 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/inputCodeText"
                     style="@style/inputFieldStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:imeOptions="actionDone" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/codeErrorText"
-                android:text="@string/login_code_error"
-                style="@style/errorTextStyle" />
+                style="@style/errorTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/login_code_error" />
 
             <FrameLayout
                 android:id="@+id/loginSubmitButton"
-                style="@style/buttonFrame">
+                style="@style/buttonFrame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/loginSubmitText"
                     style="@style/buttonText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="@string/login_button_text" />
 
                 <com.google.android.material.progressindicator.CircularProgressIndicator
                     android:id="@+id/loginSubmitProgressIndicator"
-                    style="@style/buttonLoadIndicator" />
+                    style="@style/buttonLoadIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
             </FrameLayout>
 
@@ -100,7 +120,9 @@
 
         <FrameLayout
             android:id="@+id/loginClickBlocker"
-            style="@style/clickBlocker" />
+            style="@style/clickBlocker"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </FrameLayout>
 

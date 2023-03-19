@@ -11,8 +11,8 @@ import com.hamdan.forzenbook.core.LoginError
 import com.hamdan.forzenbook.legacy.core.view.utils.DialogUtils.datePickerDialog
 import com.hamdan.forzenbook.legacy.core.view.utils.DialogUtils.standardAlertDialog
 import com.hamdan.forzenbook.legacy.core.viewmodels.LegacyCreateAccountViewModel
-import com.hamdan.forzenbook.legacy.createaccount.databinding.ActivityLegacyCreateAccountBinding
 import com.hamdan.forzenbook.ui.core.R
+import com.hamdan.forzenbook.ui.core.databinding.ActivityLegacyCreateAccountBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

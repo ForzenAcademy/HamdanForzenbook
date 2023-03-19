@@ -13,8 +13,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.hamdan.forzenbook.java.core.ErrorOutcomes;
 import com.hamdan.forzenbook.java.core.utils.DialogUtils;
 import com.hamdan.forzenbook.java.createaccount.core.viewmodel.JavaCreateAccountViewModel;
-import com.hamdan.forzenbook.legacy.createaccount.databinding.ActivityLegacyCreateAccountBinding;
 import com.hamdan.forzenbook.ui.core.R;
+import com.hamdan.forzenbook.ui.core.databinding.ActivityLegacyCreateAccountBinding;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -24,7 +24,6 @@ import io.reactivex.rxjava3.disposables.Disposable;
 public class JavaCreateAccountActivity extends ComponentActivity {
     private JavaCreateAccountViewModel model;
     private ActivityLegacyCreateAccountBinding binding;
-
     private String firstNameValue = "";
     private String lastNameValue = "";
     private String birthDateValue = "";
@@ -40,13 +39,13 @@ public class JavaCreateAccountActivity extends ComponentActivity {
         FrameLayout view = binding.getRoot();
         setContentView(view);
 
-
         binding.createAccountSubmitButton.setEnabled(false);
         binding.createAccountClickBlocker.setOnClickListener(blank -> {
         });  //purposely empty to prevent clicks when its enabled
 
+        binding.createAccountLayoutToolBar.setNavigationOnClickListener(listener -> model.backButtonPressed(this));
 
-        binding.createAccountSubmitButton.setOnClickListener(listener -> model.createAccount());
+        binding.createAccountSubmitButton.setOnClickListener(listener -> model.createAccountClicked(this));
 
         disposable = model.getState()
                 .subscribeOn(AndroidSchedulers.mainThread())

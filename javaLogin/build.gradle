@@ -34,7 +34,6 @@ android {
 
 dependencies {
     //Modules
-    implementation project(":legacyLogin")
     implementation project(":javaLoginCore")
     implementation project(":javaCore")
     implementation project(":uiCore")

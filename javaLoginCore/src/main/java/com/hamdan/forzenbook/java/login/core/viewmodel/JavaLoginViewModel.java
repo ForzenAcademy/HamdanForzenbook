@@ -1,8 +1,11 @@
 package com.hamdan.forzenbook.java.login.core.viewmodel;
 
+import android.content.Context;
+
 import androidx.lifecycle.ViewModel;
 
 import com.hamdan.forzenbook.java.core.Entry;
+import com.hamdan.forzenbook.java.core.NavigatorJava;
 import com.hamdan.forzenbook.java.login.core.domain.LoginEntrys;
 import com.hamdan.forzenbook.java.login.core.domain.usecase.LoginGetCredentialsFromNetworkUseCase;
 import com.hamdan.forzenbook.java.login.core.domain.usecase.LoginGetStoredCredentialsUseCase;
@@ -25,15 +28,17 @@ public class JavaLoginViewModel extends ViewModel {
     private final LoginGetCredentialsFromNetworkUseCase getTokenFromNetworkUseCase;
     private final LoginGetStoredCredentialsUseCase getTokenFromDatabaseUseCase;
     private final LoginValidationUseCase requestValidationCode;
+    private final NavigatorJava navigator;
 
     private final BehaviorSubject<JavaLoginState> _state = BehaviorSubject.createDefault(new JavaLoginState());
 
     @Inject
-    public JavaLoginViewModel(LoginStringValidationUseCase loginStringValidationUseCase, LoginGetCredentialsFromNetworkUseCase getTokenFromNetworkUseCase, LoginGetStoredCredentialsUseCase getTokenFromDatabaseUseCase, LoginValidationUseCase requestValidationCode) {
+    public JavaLoginViewModel(LoginStringValidationUseCase loginStringValidationUseCase, LoginGetCredentialsFromNetworkUseCase getTokenFromNetworkUseCase, LoginGetStoredCredentialsUseCase getTokenFromDatabaseUseCase, LoginValidationUseCase requestValidationCode, NavigatorJava navigatorJava ) { //,
         this.loginStringValidationUseCase = loginStringValidationUseCase;
         this.getTokenFromNetworkUseCase = getTokenFromNetworkUseCase;
         this.getTokenFromDatabaseUseCase = getTokenFromDatabaseUseCase;
         this.requestValidationCode = requestValidationCode;
+        this.navigator = navigatorJava;
     }
 
     public Flowable<JavaLoginState> getState() {
@@ -46,6 +51,14 @@ public class JavaLoginViewModel extends ViewModel {
 
     private void setState(JavaLoginState inState) {
         _state.onNext(inState);
+    }
+
+    public void createAccountLinkPressed(Context context) {
+        navigateToCreateAccount(context);
+    }
+
+    private void navigateToCreateAccount(Context context) {
+        navigator.navigateToCreateAccount(context);
     }
 
     public void updateLoginTexts(String email, String code) {
@@ -110,8 +123,7 @@ public class JavaLoginViewModel extends ViewModel {
                         state -> {
                             if (state) {
                                 setState(new JavaLoginState());
-                            }
-                            else{
+                            } else {
                                 setState(
                                         new JavaLoginState(
                                                 viewableState().getEmail(),

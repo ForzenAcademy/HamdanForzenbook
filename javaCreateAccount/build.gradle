@@ -34,7 +34,6 @@ android {
 
 dependencies {
     //Modules
-    implementation project(":legacyCreateAccount")
     implementation project(":javaCreateAccountCore")
     implementation project(":javaCore")
     implementation project(":uiCore")
