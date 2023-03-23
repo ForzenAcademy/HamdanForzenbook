@@ -88,30 +88,31 @@ private fun Content(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    InputField(
-        label = stringResource(R.string.login_email_prompt),
-        value = email,
-        onValueChange = {
-            email = it
-            onTextChange(Entry(email, emailError), Entry(code, codeError), isInputtingCode)
-        },
-        imeAction = if (isInputtingCode) ImeAction.Next else ImeAction.Done,
-        onNext = { focusManager.moveFocus(FocusDirection.Down) },
-        onDone = {
-            keyboardController?.hide()
-            if (emailError.isValid()) {
-                onSubmission()
+    if (!isInputtingCode) {
+        InputField(
+            label = stringResource(R.string.login_email_prompt),
+            value = email,
+            onValueChange = {
+                email = it
+                onTextChange(Entry(email, emailError), Entry(code, codeError), isInputtingCode)
+            },
+            imeAction = if (isInputtingCode) ImeAction.Next else ImeAction.Done,
+            onNext = { focusManager.moveFocus(FocusDirection.Down) },
+            onDone = {
+                keyboardController?.hide()
+                if (emailError.isValid()) {
+                    onSubmission()
+                }
+            },
+        )
+        if (email.isNotEmpty() && !emailError.isValid()) {
+            if (emailError == LoginError.EmailError.Length) {
+                ErrorText(error = stringResource(R.string.login_email_error_length))
+            } else if (emailError == LoginError.EmailError.InvalidFormat) {
+                ErrorText(error = stringResource(R.string.login_email_error_format))
             }
-        },
-    )
-    if (email.isNotEmpty() && !emailError.isValid()) {
-        if (emailError == LoginError.EmailError.Length) {
-            ErrorText(error = stringResource(R.string.login_email_error_length))
-        } else if (emailError == LoginError.EmailError.InvalidFormat) {
-            ErrorText(error = stringResource(R.string.login_email_error_format))
         }
-    }
-    if (isInputtingCode) {
+    } else {
         InputField(
             label = stringResource(R.string.login_code_prompt), value = code,
             onValueChange = {
