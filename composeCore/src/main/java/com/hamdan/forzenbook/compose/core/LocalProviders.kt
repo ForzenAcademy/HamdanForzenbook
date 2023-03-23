@@ -1,9 +1,13 @@
 package com.hamdan.forzenbook.compose.core
 
 import androidx.compose.material.darkColors
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.navigation.NavHostController
+
+val LocalNavController = compositionLocalOf<NavHostController?> { null }
 
 /**
  * this Default Typography is just used as a default that will be overriden in the theme

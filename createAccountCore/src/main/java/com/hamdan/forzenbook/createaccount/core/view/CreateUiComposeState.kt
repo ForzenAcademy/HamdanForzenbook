@@ -12,4 +12,5 @@ data class CreateUiComposeState(
     val location: Entry = Entry("", LoginError.LocationError.None),
     val isDateDialogOpen: Boolean = false,
     val isLoading: Boolean = false,
+    val accountCreated: Boolean = false,
 )

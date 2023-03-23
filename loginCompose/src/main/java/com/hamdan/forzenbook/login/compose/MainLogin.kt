@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -17,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import com.hamdan.forzenbook.compose.core.LocalNavController
 import com.hamdan.forzenbook.compose.core.composables.ErrorText
 import com.hamdan.forzenbook.compose.core.composables.ForzenbookDialog
 import com.hamdan.forzenbook.compose.core.composables.InputField
@@ -40,6 +42,13 @@ fun MainLoginContent(
     onSubmission: () -> Unit,
     onCreateAccountPress: () -> Unit,
 ) {
+    val navigator = LocalNavController.current
+    LaunchedEffect(state.loggedIn) {
+        if (state.loggedIn) {
+            // Todo when a main page is implemented create a navigation to it here
+        }
+    }
+
     LoginBackgroundColumn {
         Image(
             modifier = Modifier.size(ForzenbookTheme.dimens.iconSizeLarge),
@@ -58,7 +67,7 @@ fun MainLoginContent(
             onErrorDismiss = onErrorDismiss,
             onTextChange = onTextChange,
             onSubmission = onSubmission,
-            onCreateAccountPress = onCreateAccountPress
+            onCreateAccountPress = onCreateAccountPress,
         )
     }
     if (state.isLoading) {

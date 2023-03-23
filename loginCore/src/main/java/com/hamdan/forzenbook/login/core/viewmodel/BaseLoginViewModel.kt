@@ -26,6 +26,7 @@ abstract class BaseLoginViewModel(
         val inputtingCode: Boolean = false,
         val isLoading: Boolean = false,
         val hasError: Boolean = false,
+        val loggedIn: Boolean = false,
     )
 
     protected abstract var loginState: LoginState
