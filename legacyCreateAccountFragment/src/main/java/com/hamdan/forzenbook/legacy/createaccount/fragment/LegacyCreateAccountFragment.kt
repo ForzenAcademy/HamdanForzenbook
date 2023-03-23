@@ -47,17 +47,16 @@ class LegacyCreateAccountFragment : Fragment() {
             createAccountClickBlocker.setOnClickListener { }
 
             createAccountSubmitButton.setOnClickListener {
-                createAccountModel.createAccountButtonClicked()
+                createAccountModel.createAccountButtonClicked(parentFragmentManager)
             }
             createAccountLayoutToolBar.setNavigationOnClickListener {
-                // Todo implement a Navigator for transactions when setting up hookup FA-126
-                createAccountModel.backIconPressed()
+                createAccountModel.backIconPressed(parentFragmentManager)
             }
 
             inputLocationText.setOnEditorActionListener { _, action, _ ->
                 if (action == EditorInfo.IME_ACTION_DONE) {
                     if (submitable) {
-                        createAccountModel.createAccountButtonClicked()
+                        createAccountModel.createAccountButtonClicked(parentFragmentManager)
                         return@setOnEditorActionListener true
                     }
                 }

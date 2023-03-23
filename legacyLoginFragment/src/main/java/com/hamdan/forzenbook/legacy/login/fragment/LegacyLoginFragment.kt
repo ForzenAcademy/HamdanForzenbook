@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
-class LoginFragment : Fragment() {
+class LegacyLoginFragment : Fragment() {
     private val loginModel: LegacyLoginFragmentViewModel by activityViewModels()
     private lateinit var binding: ActivityLegacyLoginBinding
 
@@ -50,9 +50,7 @@ class LoginFragment : Fragment() {
             }
 
             loginCreateAccountLink.setOnClickListener {
-                // Todo change the navigator Impl in the app module to perform a transaction to swap to create account
-                // Todo FA 126
-                loginModel.createAccountLinkPressed()
+                loginModel.createAccountLinkPressed(parentFragmentManager)
             }
 
             inputEmailText.setOnEditorActionListener { _, action, _ ->

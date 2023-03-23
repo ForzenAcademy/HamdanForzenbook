@@ -1,17 +1,13 @@
 package com.hamdan.forzenbook.createaccount.core.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.core.Entry
 import com.hamdan.forzenbook.core.LoginError
 import com.hamdan.forzenbook.core.stringForm
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountEntrys
-import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountResult
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountUseCase
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountValidationUseCase
 import com.hamdan.forzenbook.createaccount.core.view.CreateUiComposeState
-import com.hamdan.forzenbook.ui.core.R
-import kotlinx.coroutines.launch
 
 abstract class BaseCreateAccountViewModel(
     private val createAccountValidationUseCase: CreateAccountValidationUseCase,
@@ -30,8 +26,6 @@ abstract class BaseCreateAccountViewModel(
     )
 
     protected abstract var createAccountState: CreateAccountState
-
-    var onAccountCreateSuccess: (() -> Unit)? = null
 
     fun createAccountDateDialogClicked() {
         createAccountShowDateDialog()
@@ -85,57 +79,6 @@ abstract class BaseCreateAccountViewModel(
             email = stringStates.email,
             location = stringStates.location,
         )
-    }
-
-    fun createAccountButtonClicked() {
-        createAccount()
-    }
-
-    private fun createAccount() {
-        viewModelScope.launch {
-            createAccountState.let {
-                createAccountState = createAccountState.copy(
-                    isLoading = true,
-                )
-                val split = it.birthDay.text.split("-")
-                // convert date back to a readable format for the sql on the server
-                val actualDate = "${split[2]}-${split[0]}-${split[1]}"
-                val result = createAccountUseCase(
-                    firstName = it.firstName.text,
-                    lastName = it.lastName.text,
-                    birthDay = actualDate,
-                    email = it.email.text,
-                    location = it.location.text,
-                )
-                when (result) {
-                    CreateAccountResult.CREATE_SUCCESS -> {
-                        createAccountState = createAccountState.copy(
-                            firstName = Entry(text = "", error = LoginError.NameError.Length),
-                            lastName = Entry(text = "", error = LoginError.NameError.Length),
-                            birthDay = Entry(text = "", error = LoginError.BirthDateError.TooYoung),
-                            email = Entry(text = "", error = LoginError.EmailError.Valid),
-                            location = Entry(text = "", error = LoginError.LocationError.Length),
-                            isLoading = false,
-                            accountCreated = true,
-                        )
-                        // send to login page
-                        onAccountCreateSuccess?.invoke()
-                    }
-                    CreateAccountResult.CREATE_EXISTS -> {
-                        createAccountState = createAccountState.copy(
-                            errorId = R.string.create_account_error_user_exists,
-                            isLoading = false,
-                        )
-                    }
-                    CreateAccountResult.CREATE_FAILURE -> {
-                        createAccountState = createAccountState.copy(
-                            errorId = R.string.create_account_error_generic,
-                            isLoading = false,
-                        )
-                    }
-                }
-            }
-        }
     }
 }
 
