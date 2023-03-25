@@ -30,7 +30,7 @@ abstract class BaseLoginViewModel(
     }
 
     enum class LoginInputType {
-        EMAIL, CODE
+        EMAIL, CODE,
     }
 
     sealed interface LoginState {
@@ -61,7 +61,9 @@ abstract class BaseLoginViewModel(
         }
     }
 
-    fun updateText(entry: Entry) {
+    fun updateText(
+        entry: Entry,
+    ) {
         if (loginState.getContent() is LoginContent.Email) {
             updateLoginEmail(entry)
         } else {
@@ -69,19 +71,23 @@ abstract class BaseLoginViewModel(
         }
     }
 
-    private fun updateLoginEmail(email: Entry) {
+    private fun updateLoginEmail(
+        email: Entry,
+    ) {
         val newEmail = Entry(
             email.text,
             if (email.text.length > GlobalConstants.EMAIL_LENGTH_LIMIT) {
                 EntryError.EmailError.Length
             } else if (!validateEmail(email.text)) {
                 EntryError.EmailError.InvalidFormat
-            } else EntryError.EmailError.Valid
+            } else EntryError.EmailError.Valid,
         )
         loginState = LoginState.Content(LoginContent.Email(newEmail))
     }
 
-    private fun updateLoginCode(code: Entry) {
+    private fun updateLoginCode(
+        code: Entry,
+    ) {
         val newCode = code.copy(
             error = if (code.text.length > CODE_LENGTH_MAX) {
                 EntryError.CodeError.Length

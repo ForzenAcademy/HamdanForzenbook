@@ -3,6 +3,7 @@ package com.hamdan.forzenbook.view
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.navigation.compose.NavHost
@@ -10,6 +11,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.hamdan.forzenbook.compose.core.LocalNavController
 import com.hamdan.forzenbook.compose.core.theme.ForzenBookTheme
+import com.hamdan.forzenbook.core.getBitmapFromUri
+import com.hamdan.forzenbook.core.launchGalleryImageGetter
 import com.hamdan.forzenbook.createaccount.compose.CreateAccountContent
 import com.hamdan.forzenbook.login.compose.MainLoginContent
 import com.hamdan.forzenbook.post.compose.Post
@@ -27,6 +30,19 @@ class ForzenbookActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val launcher = registerForActivityResult(ActivityResultContracts.GetContent()) {
+            it?.let {
+                getBitmapFromUri(
+                    it,
+                    this,
+                    {
+                        postViewModel.updateImage(null)
+                    },
+                ) {
+                    postViewModel.updateImage(it.path)
+                }
+            }
+        }
         loginViewModel.checkLoggedIn(this)
         setContent {
             ForzenBookTheme {
@@ -34,7 +50,7 @@ class ForzenbookActivity : ComponentActivity() {
                 CompositionLocalProvider(LocalNavController provides navController) {
                     NavHost(
                         navController = navController,
-                        startDestination = NavigationDestinations.LOGIN_PAGE
+                        startDestination = NavigationDestinations.POST_PAGE,
                     ) {
                         composable(NavigationDestinations.LOGIN_PAGE) {
                             MainLoginContent(
@@ -74,7 +90,7 @@ class ForzenbookActivity : ComponentActivity() {
                                 onDateSubmission = { createAccountViewModel.createAccountDateDialogSubmitClicked() },
                                 onDateDismiss = { createAccountViewModel.createAccountDateDialogDismiss() },
                                 onSubmission = { createAccountViewModel.createAccountClicked() },
-                                onNavigateUp = { createAccountViewModel.navigateUpPressed() }
+                                onNavigateUp = { createAccountViewModel.navigateUpPressed() },
                             )
                         }
                         composable(NavigationDestinations.POST_PAGE) {
@@ -82,7 +98,8 @@ class ForzenbookActivity : ComponentActivity() {
                                 state = postViewModel.state.value,
                                 onTextChange = { postViewModel.updateText(it) },
                                 onToggleClicked = { postViewModel.toggleClicked() },
-                                onDialogDismiss = { postViewModel.dialogDismissClicked() }
+                                onDialogDismiss = { postViewModel.dialogDismissClicked() },
+                                onGalleryClicked = { launchGalleryImageGetter(launcher) },
                             ) {
                                 postViewModel.sendPostClicked()
                             }

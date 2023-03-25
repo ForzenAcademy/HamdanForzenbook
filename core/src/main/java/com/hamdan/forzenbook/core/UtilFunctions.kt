@@ -3,6 +3,7 @@ package com.hamdan.forzenbook.core
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import androidx.activity.result.ActivityResultLauncher
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
@@ -20,8 +21,7 @@ fun validateEmail(email: String): Boolean {
 }
 
 fun stringDate(month: Int, day: Int, year: Int, context: Context): String {
-    val date =
-        context.getString(R.string.create_account_date, month, day, year).split("-")
+    val date = context.getString(R.string.create_account_date, month, day, year).split("-")
     return date.joinToString("-") { it.leftPad() }
 }
 
@@ -35,7 +35,6 @@ fun getBitmapFromUri(
     uri: Uri,
     context: Context,
     onError: () -> Unit,
-    onBitmapLoaded: (Bitmap) -> Unit,
     onImageSaved: (File) -> Unit
 ) {
     Glide
@@ -52,7 +51,6 @@ fun getBitmapFromUri(
                     FileOutputStream(tempFile).use { fos ->
                         resource.compress(Bitmap.CompressFormat.JPEG, 100, fos)
                     }
-                    onBitmapLoaded(resource)
                     onImageSaved(tempFile)
                 } catch (e: IOException) {
                     e.printStackTrace()
@@ -62,4 +60,9 @@ fun getBitmapFromUri(
         })
 }
 
-private fun createTemporaryImageFile(): File = File.createTempFile(GlobalConstants.TEMPORARY_FILENAME, ".jpg")
+private fun createTemporaryImageFile(): File =
+    File.createTempFile(GlobalConstants.TEMPORARY_FILENAME, ".jpg")
+
+fun launchGalleryImageGetter(contentLauncher: ActivityResultLauncher<String>) {
+    contentLauncher.launch("image/*")
+}

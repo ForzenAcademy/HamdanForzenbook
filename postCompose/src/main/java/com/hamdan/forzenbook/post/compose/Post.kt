@@ -1,12 +1,15 @@
 package com.hamdan.forzenbook.post.compose
 
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Scaffold
@@ -17,6 +20,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -27,10 +31,13 @@ import com.hamdan.forzenbook.compose.core.composables.ForzenbookTopAppBar
 import com.hamdan.forzenbook.compose.core.composables.LoadingOverlay
 import com.hamdan.forzenbook.compose.core.composables.PillToggleSwitch
 import com.hamdan.forzenbook.compose.core.composables.PostTextField
+import com.hamdan.forzenbook.compose.core.composables.SubmitButton
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
 import com.hamdan.forzenbook.compose.core.theme.dimens
 import com.hamdan.forzenbook.post.core.viewmodel.BasePostViewModel
-import com.hamdan.forzenbook.post.core.viewmodel.getText
+import com.hamdan.forzenbook.post.core.viewmodel.asContentOrNull
+import com.hamdan.forzenbook.post.core.viewmodel.asImageOrNull
+import com.hamdan.forzenbook.post.core.viewmodel.asTextOrNull
 import com.hamdan.forzenbook.ui.core.R
 
 @Composable
@@ -39,6 +46,7 @@ fun Post(
     onTextChange: (String) -> Unit,
     onDialogDismiss: () -> Unit,
     onToggleClicked: () -> Unit,
+    onGalleryClicked: () -> Unit,
     onSendClicked: () -> Unit,
 ) {
     when (true) {
@@ -54,10 +62,10 @@ fun Post(
             } else {
                 ImagePostContent(
                     state = state,
-                    onToggleClicked = onToggleClicked
-                ) {
-                    onSendClicked()
-                }
+                    onToggleClicked = onToggleClicked,
+                    onSendClicked = onSendClicked,
+                    onGalleryClicked = onGalleryClicked
+                )
             }
         }
         (state is BasePostViewModel.PostState.Loading) -> {
@@ -85,7 +93,8 @@ private fun TextPostContent(
     StandardContent(
         state = state,
         onToggleClicked = onToggleClicked,
-        onSendClicked = onSendClicked
+        onSendClicked = onSendClicked,
+        selected = state.asContentOrNull() is BasePostViewModel.PostContent.Text
     ) { padding ->
         BackgroundColumn(
             modifier = Modifier
@@ -96,11 +105,12 @@ private fun TextPostContent(
                 },
         ) {
             PostTextField(
-                state.getText(),
-                focusRequester
-            ) {
-                onTextChange(it)
-            }
+                text = state.asTextOrNull()?.text ?: "",
+                focusRequester = focusRequester,
+                onValueChange = {
+                    onTextChange(it)
+                }
+            )
         }
     }
 }
@@ -110,16 +120,32 @@ private fun ImagePostContent(
     state: BasePostViewModel.PostState,
     onToggleClicked: () -> Unit,
     onSendClicked: () -> Unit,
+    onGalleryClicked: () -> Unit,
 ) {
     StandardContent(
         state = state,
         onToggleClicked = onToggleClicked,
-        onSendClicked = onSendClicked
+        onSendClicked = onSendClicked,
+        selected = state.asContentOrNull() is BasePostViewModel.PostContent.Text
     ) { padding ->
         BackgroundColumn(
             modifier = Modifier
                 .padding(padding),
         ) {
+            Spacer(modifier = Modifier.height(ForzenbookTheme.dimens.grid.x2))
+            SubmitButton(
+                label = stringResource(id = R.string.post_gallery_button_text),
+                enabled = true
+            ) {
+                onGalleryClicked()
+            }
+            state.asImageOrNull()?.filePath?.apply {
+                Image(
+                    bitmap = BitmapFactory.decodeFile(this).asImageBitmap(),
+                    contentDescription = stringResource(id = R.string.post_send_image),
+                    modifier = Modifier.padding(ForzenbookTheme.dimens.grid.x2)
+                )
+            }
         }
     }
 }
@@ -151,6 +177,7 @@ private fun StandardContent(
     state: BasePostViewModel.PostState,
     onToggleClicked: () -> Unit,
     onSendClicked: () -> Unit,
+    selected: Boolean = false,
     content: @Composable (PaddingValues) -> Unit,
 ) {
     val navigator = LocalNavController.current
@@ -182,7 +209,7 @@ private fun StandardContent(
                     leftDescriptionRes = R.string.text_toggle_text,
                     imageRightRes = R.drawable.baseline_image_24,
                     rightDescriptionRes = R.string.text_toggle_image,
-                    selected = (state as BasePostViewModel.PostState.Content).content is BasePostViewModel.PostContent.Text,
+                    selected = selected,
                 ) {
                     onToggleClicked()
                 }

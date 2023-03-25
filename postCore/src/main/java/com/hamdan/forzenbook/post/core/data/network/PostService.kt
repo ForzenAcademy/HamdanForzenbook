@@ -1,10 +1,14 @@
 package com.hamdan.forzenbook.post.core.data.network
 
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Header
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 
 interface PostService {
 
@@ -15,15 +19,13 @@ interface PostService {
         @Field(TYPE) type: String,
         @Field(BODY) body: String,
     ): Response<Void>
-
-//    // Todo implement Image Post when more details given
-//    @Multipart
-//    @POST(POST)
-//    suspend fun sendImagePost(
-//        @Header("token") token: String,
-//        @Part(TYPE) type: RequestBody,
-//        @Part image: MultipartBody.Part,
-//    ): Response<Void>
+    @Multipart
+    @POST(POST)
+    suspend fun sendImagePost(
+        @Header("token") token: String,
+        @Part(TYPE) type: RequestBody,
+        @Part image: MultipartBody.Part,
+    ): Response<Void>
 
     companion object {
         private const val TYPE = "postType"
