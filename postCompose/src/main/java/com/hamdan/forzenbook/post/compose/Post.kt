@@ -12,7 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Scaffold
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,7 +34,7 @@ import com.hamdan.forzenbook.compose.core.composables.PillToggleSwitch
 import com.hamdan.forzenbook.compose.core.composables.PostTextField
 import com.hamdan.forzenbook.compose.core.composables.SubmitButton
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
-import com.hamdan.forzenbook.compose.core.theme.dimens
+import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.dimens
 import com.hamdan.forzenbook.post.core.viewmodel.BasePostViewModel
 import com.hamdan.forzenbook.post.core.viewmodel.asContentOrNull
 import com.hamdan.forzenbook.post.core.viewmodel.asImageOrNull
@@ -172,6 +173,7 @@ private fun LoadingContent() {
     LoadingOverlay()
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun StandardContent(
     state: BasePostViewModel.PostState,

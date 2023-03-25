@@ -39,7 +39,6 @@ android {
 
 dependencies {
     implementation project(':uiCore')
-
     // Navigation
     implementation "androidx.navigation:navigation-compose:2.5.3"
 
@@ -48,7 +47,7 @@ dependencies {
     implementation "androidx.activity:activity-compose:1.6.1"
     implementation "androidx.compose.ui:ui:$compose_ui_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
-    implementation 'androidx.compose.material:material:1.3.1'
+    api("androidx.compose.material3:material3:1.0.1")
     implementation 'androidx.navigation:navigation-runtime-ktx:2.5.3'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:1.3.3"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"

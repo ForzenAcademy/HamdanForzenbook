@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -25,7 +25,8 @@ import com.hamdan.forzenbook.compose.core.composables.LoginTitleSection
 import com.hamdan.forzenbook.compose.core.composables.PreventScreenActionsDuringLoad
 import com.hamdan.forzenbook.compose.core.composables.SubmitButton
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
-import com.hamdan.forzenbook.compose.core.theme.dimens
+import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.dimens
+import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.typography
 import com.hamdan.forzenbook.core.Entry
 import com.hamdan.forzenbook.core.EntryError
 import com.hamdan.forzenbook.login.core.viewmodel.BaseLoginViewModel
@@ -168,7 +169,7 @@ private fun MainContent(
     Spacer(modifier = Modifier.height(ForzenbookTheme.dimens.grid.x5))
     Text(
         text = stringResource(R.string.login_create_account_text),
-        fontSize = ForzenbookTheme.typography.h2.fontSize,
+        style = ForzenbookTheme.typography.bodyLarge,
         modifier = Modifier
             .clickable {
                 onCreateAccountPress()

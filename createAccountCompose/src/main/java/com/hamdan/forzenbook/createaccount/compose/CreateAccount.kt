@@ -10,14 +10,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -28,7 +29,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.hamdan.forzenbook.compose.core.LocalNavController
@@ -41,7 +41,8 @@ import com.hamdan.forzenbook.compose.core.composables.LoadingButton
 import com.hamdan.forzenbook.compose.core.composables.PreventScreenActionsDuringLoad
 import com.hamdan.forzenbook.compose.core.composables.SubmitButton
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
-import com.hamdan.forzenbook.compose.core.theme.dimens
+import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.dimens
+import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.typography
 import com.hamdan.forzenbook.core.Entry
 import com.hamdan.forzenbook.core.EntryError
 import com.hamdan.forzenbook.core.stringDate
@@ -106,6 +107,7 @@ fun CreateAccountContent(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ContentWrapper(content: @Composable ColumnScope.() -> Unit) {
     Scaffold(
@@ -118,7 +120,7 @@ private fun ContentWrapper(content: @Composable ColumnScope.() -> Unit) {
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun MainContent(
     stateFirstName: Entry = Entry("", EntryError.NameError.None),
@@ -213,15 +215,15 @@ private fun MainContent(
         },
         enabled = false,
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            backgroundColor = Color.White,
+            containerColor = Color.White,
             disabledTextColor = ForzenbookTheme.colors.colors.onBackground,
             disabledPlaceholderColor = ForzenbookTheme.colors.colors.onBackground,
             disabledLabelColor = ForzenbookTheme.colors.colors.onBackground,
             // For Icons
-            disabledLeadingIconColor = MaterialTheme.colors.primary,
-            disabledTrailingIconColor = MaterialTheme.colors.secondary
+            disabledLeadingIconColor = MaterialTheme.colorScheme.primary,
+            disabledTrailingIconColor = MaterialTheme.colorScheme.secondary
         ),
-        textStyle = TextStyle(fontSize = ForzenbookTheme.typography.h2.fontSize),
+        textStyle = ForzenbookTheme.typography.headlineMedium,
         maxLines = ONE_LINE,
     )
     if (birthDate.isNotEmpty() && !stateBirthDate.error.isValid()) {

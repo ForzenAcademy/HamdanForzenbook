@@ -1,0 +1,29 @@
+package com.hamdan.forzenbook.mainpage.core.data.database
+
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.hamdan.forzenbook.mainpage.core.data.database.UserEntity.Companion.TABLE_NAME
+
+@Entity(tableName = TABLE_NAME)
+data class UserEntity(
+    @ColumnInfo(name = USER_ID) val userId: Int,
+    @ColumnInfo(name = USER_ICON) val userIcon: String?,
+    @ColumnInfo(name = USER_NAME) val name: String,
+    @ColumnInfo(name = LOCATION) val location: String,
+    @ColumnInfo(name = ENTRY_DATE) val timestamp: Long,
+) {
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = DATABASE_ID)
+    var userDbId: Int = 0
+
+    companion object {
+        const val TABLE_NAME = "user"
+        const val DATABASE_ID = "user_database_id"
+        const val USER_ID = "user_user_id"
+        const val USER_ICON = "user_icon"
+        const val USER_NAME = "user_name"
+        const val LOCATION = "user_location"
+        const val ENTRY_DATE = "user_timestamp"
+    }
+}

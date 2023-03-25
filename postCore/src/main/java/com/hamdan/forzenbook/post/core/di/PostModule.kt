@@ -14,12 +14,14 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 
 @InstallIn(ViewModelComponent::class)
 @Module
 object PostModule {
     // Todo fill out with any items needed to be injected by dagger for PostViewModel
     @Provides
+    @Named(MODULE_NAME)
     fun providesPostRetrofit(): Retrofit {
         return Retrofit.Builder()
             .baseUrl(LOGIN_BASE_URL)
@@ -28,7 +30,7 @@ object PostModule {
     }
 
     @Provides
-    fun providesPostService(retrofit: Retrofit): PostService {
+    fun providesPostService(@Named(MODULE_NAME) retrofit: Retrofit): PostService {
         return retrofit.create(PostService::class.java)
     }
 
@@ -46,4 +48,6 @@ object PostModule {
     fun providesSendTextPostUseCase(repository: PostRepository): SendTextPostUseCase {
         return SendTextPostUseCaseImpl(repository)
     }
+
+    private const val MODULE_NAME = "post"
 }
