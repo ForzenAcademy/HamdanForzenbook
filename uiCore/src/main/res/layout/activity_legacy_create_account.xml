@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:elevation="4dp"
-            android:navigationIcon="@drawable/ic_baseline_arrow_back_24"
+            android:navigationIcon="@drawable/back_arrow"
             android:paddingEnd="@dimen/gridx9">
 
             <TextView

@@ -40,6 +40,7 @@ import com.hamdan.forzenbook.compose.core.composables.InputField
 import com.hamdan.forzenbook.compose.core.composables.LoadingButton
 import com.hamdan.forzenbook.compose.core.composables.PreventScreenActionsDuringLoad
 import com.hamdan.forzenbook.compose.core.composables.SubmitButton
+import com.hamdan.forzenbook.compose.core.composables.TitleText
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.dimens
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.typography
@@ -112,7 +113,7 @@ fun CreateAccountContent(
 private fun ContentWrapper(content: @Composable ColumnScope.() -> Unit) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { ForzenbookTopAppBar(topText = stringResource(R.string.top_bar_text_create_account)) },
+        topBar = { ForzenbookTopAppBar(titleSection = { TitleText(text = stringResource(R.string.top_bar_text_create_account)) }) },
     ) { padding ->
         BackgroundColumn(modifier = Modifier.padding(padding)) {
             content()
