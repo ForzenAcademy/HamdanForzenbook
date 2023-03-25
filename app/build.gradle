@@ -51,12 +51,14 @@ android {
 dependencies {
 
     //Modules
-    implementation project(":createAccountCore")
     implementation project(':composeCore')
     implementation project(':core')
     implementation project(':loginCore')
     implementation project(':loginCompose')
+    implementation project(":createAccountCore")
     implementation project(':createAccountCompose')
+    implementation project(':postCore')
+    implementation project(':postCompose')
 
     // MockK
     testImplementation("io.mockk:mockk:1.13.4")

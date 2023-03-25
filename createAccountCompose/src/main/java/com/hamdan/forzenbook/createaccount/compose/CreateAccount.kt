@@ -1,4 +1,4 @@
-package com.hamdan.forzenbook.view.login
+package com.hamdan.forzenbook.createaccount.compose
 
 import android.app.DatePickerDialog
 import android.widget.DatePicker
@@ -33,10 +33,10 @@ import androidx.compose.ui.unit.dp
 import com.hamdan.forzenbook.compose.core.LocalNavController
 import com.hamdan.forzenbook.compose.core.composables.ErrorText
 import com.hamdan.forzenbook.compose.core.composables.ForzenbookDialog
+import com.hamdan.forzenbook.compose.core.composables.ForzenbookTopAppBar
 import com.hamdan.forzenbook.compose.core.composables.InputField
 import com.hamdan.forzenbook.compose.core.composables.LoadingButton
 import com.hamdan.forzenbook.compose.core.composables.LoginBackgroundColumn
-import com.hamdan.forzenbook.compose.core.composables.LoginTopBar
 import com.hamdan.forzenbook.compose.core.composables.PreventScreenActionsDuringLoad
 import com.hamdan.forzenbook.compose.core.composables.SubmitButton
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
@@ -67,7 +67,7 @@ fun CreateAccountContent(
     }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { LoginTopBar(topText = stringResource(R.string.top_bar_text_create_account)) },
+        topBar = { ForzenbookTopAppBar(topText = stringResource(R.string.top_bar_text_create_account)) },
     ) { padding ->
         LoginBackgroundColumn(modifier = Modifier.padding(padding)) {
             Content(
