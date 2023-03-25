@@ -27,6 +27,7 @@ class ForzenbookActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        loginViewModel.checkLoggedIn(this)
         setContent {
             ForzenBookTheme {
                 val navController = rememberNavController()
@@ -48,7 +49,7 @@ class ForzenbookActivity : ComponentActivity() {
                                     loginViewModel.updateText(entry)
                                 },
                                 onSubmission = {
-                                    loginViewModel.loginClicked()
+                                    loginViewModel.loginClicked(this@ForzenbookActivity)
                                 }
                             ) {
                                 navController.navigate(NavigationDestinations.CREATE_ACCOUNT_PAGE)

@@ -1,10 +1,13 @@
 package com.hamdan.forzenbook.login.core.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.core.Entry
 import com.hamdan.forzenbook.core.EntryError
 import com.hamdan.forzenbook.core.GlobalConstants
+import com.hamdan.forzenbook.core.GlobalConstants.TOKEN_KEY
+import com.hamdan.forzenbook.core.GlobalConstants.TOKEN_PREFERENCE_LOCATION
 import com.hamdan.forzenbook.core.validateEmail
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetCredentialsFromNetworkUseCase
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetStoredCredentialsUseCase
@@ -12,9 +15,9 @@ import com.hamdan.forzenbook.login.core.domain.usecase.LoginValidationUseCase
 import kotlinx.coroutines.launch
 
 abstract class BaseLoginViewModel(
-    private val getTokenFromNetworkUseCase: LoginGetCredentialsFromNetworkUseCase,
-    private val getTokenFromDatabaseUseCase: LoginGetStoredCredentialsUseCase,
-    private val requestValidationCode: LoginValidationUseCase,
+    private val loginGetCredentialsFromNetworkUseCase: LoginGetCredentialsFromNetworkUseCase,
+    private val loginGetStoredCredentialsUseCase: LoginGetStoredCredentialsUseCase,
+    private val loginValidationUseCase: LoginValidationUseCase,
 ) : ViewModel() {
 
     sealed interface LoginContent {
@@ -46,6 +49,17 @@ abstract class BaseLoginViewModel(
     }
 
     protected abstract var loginState: LoginState
+
+    fun checkLoggedIn(context: Context) {
+        viewModelScope.launch {
+            try {
+                saveTokenToPreferences(context, loginGetStoredCredentialsUseCase())
+                loginState = LoginState.LoggedIn
+            } catch (e: Exception) {
+                loginState = LoginState.Content(LoginContent.Email())
+            }
+        }
+    }
 
     fun updateText(entry: Entry) {
         if (loginState.getContent() is LoginContent.Email) {
@@ -98,18 +112,18 @@ abstract class BaseLoginViewModel(
             LoginState.Content((loginState.getContent() as LoginContent.Code).copy(showInfoDialog = false))
     }
 
-    private fun submitLogin() {
+    private fun submitLogin(context: Context) {
         viewModelScope.launch {
             (loginState.getContent() as LoginContent.Code).let {
                 val email = it.email
                 val code = it.code.text
                 loginState = LoginState.Loading(LoginInputType.CODE, email)
                 try {
-                    getTokenFromNetworkUseCase(email, code)
-                    // TODO here they would be considered succesful
-                    // send off to where the user needs to see next, that location will retrieve token from DB
+                    saveTokenToPreferences(
+                        context,
+                        loginGetCredentialsFromNetworkUseCase(email, code)
+                    )
                     loginState = LoginState.LoggedIn
-                    // for now we will show a reseted page
                 } catch (e: Exception) {
                     loginState = LoginState.Error(LoginInputType.CODE, email)
                 }
@@ -122,7 +136,7 @@ abstract class BaseLoginViewModel(
             (loginState.getContent() as LoginContent.Email).let {
                 loginState = LoginState.Loading(LoginInputType.EMAIL, it.email.text)
                 loginState = try {
-                    requestValidationCode(it.email.text)
+                    loginValidationUseCase(it.email.text)
                     LoginState.Content(LoginContent.Code(it.email.text, showInfoDialog = true))
                 } catch (e: Exception) {
                     LoginState.Error(LoginInputType.EMAIL, it.email.text)
@@ -131,11 +145,18 @@ abstract class BaseLoginViewModel(
         }
     }
 
-    fun loginClicked() {
+    fun loginClicked(context: Context) {
         if (loginState.getContent() is LoginContent.Code) {
-            submitLogin()
+            submitLogin(context)
         } else {
             requestLoginValidationCode()
+        }
+    }
+
+    private fun saveTokenToPreferences(context: Context, token: String) {
+        context.getSharedPreferences(TOKEN_PREFERENCE_LOCATION, Context.MODE_PRIVATE).edit().apply {
+            putString(TOKEN_KEY, token)
+            apply()
         }
     }
 

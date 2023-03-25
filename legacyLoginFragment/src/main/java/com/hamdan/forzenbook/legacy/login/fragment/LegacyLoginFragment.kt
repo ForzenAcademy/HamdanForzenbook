@@ -47,7 +47,7 @@ class LegacyLoginFragment : Fragment() {
             loginClickBlocker.setOnClickListener { } // only has an on click to actually block clicks
 
             loginSubmitButton.setOnClickListener {
-                loginModel.loginClicked()
+                loginModel.loginClicked(context)
             }
 
             loginCreateAccountLink.setOnClickListener {
@@ -57,7 +57,7 @@ class LegacyLoginFragment : Fragment() {
             inputEmailText.setOnEditorActionListener { _, action, _ ->
                 return@setOnEditorActionListener if (action == EditorInfo.IME_ACTION_DONE) {
                     KeyboardUtils.hideKeyboard(context, inputEmailText)
-                    loginModel.loginClicked()
+                    loginModel.loginClicked(context)
                     true
                 } else false
             }
@@ -65,13 +65,15 @@ class LegacyLoginFragment : Fragment() {
             inputCodeText.setOnEditorActionListener { _, action, _ ->
                 if (action == EditorInfo.IME_ACTION_DONE) {
                     if (loginSubmittable) {
-                        loginModel.loginClicked()
+                        loginModel.loginClicked(context)
                         KeyboardUtils.hideKeyboard(context, inputCodeText)
                         return@setOnEditorActionListener true
                     }
                 }
                 return@setOnEditorActionListener false
             }
+
+            loginModel.checkLoggedIn(context)
 
             loginModel.viewModelScope.launch(Dispatchers.IO) {
                 loginModel.state.collect { state ->

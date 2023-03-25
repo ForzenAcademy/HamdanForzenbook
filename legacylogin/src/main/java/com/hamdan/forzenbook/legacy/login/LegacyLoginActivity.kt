@@ -34,10 +34,11 @@ class LegacyLoginActivity : ComponentActivity() {
         binding.apply {
             var loginSubmittable = false
             loginSubmitButton.isEnabled = false
+            val context = this@LegacyLoginActivity
             loginClickBlocker.setOnClickListener { } // only has an on click to actually block clicks
 
             loginSubmitButton.setOnClickListener {
-                loginModel.loginClicked()
+                loginModel.loginClicked(context)
             }
 
             loginCreateAccountLink.setOnClickListener {
@@ -47,7 +48,7 @@ class LegacyLoginActivity : ComponentActivity() {
             inputEmailText.setOnEditorActionListener { _, action, _ ->
                 return@setOnEditorActionListener if (action == EditorInfo.IME_ACTION_DONE) {
                     KeyboardUtils.hideKeyboard(this@LegacyLoginActivity, inputEmailText)
-                    loginModel.loginClicked()
+                    loginModel.loginClicked(context)
                     true
                 } else false
             }
@@ -55,13 +56,15 @@ class LegacyLoginActivity : ComponentActivity() {
             inputCodeText.setOnEditorActionListener { _, action, _ ->
                 if (action == EditorInfo.IME_ACTION_DONE) {
                     if (loginSubmittable) {
-                        loginModel.loginClicked()
+                        loginModel.loginClicked(context)
                         KeyboardUtils.hideKeyboard(this@LegacyLoginActivity, inputCodeText)
                         return@setOnEditorActionListener true
                     }
                 }
                 return@setOnEditorActionListener false
             }
+
+            loginModel.checkLoggedIn(context)
 
             loginModel.viewModelScope.launch(Dispatchers.IO) {
                 loginModel.state.collect { state ->
