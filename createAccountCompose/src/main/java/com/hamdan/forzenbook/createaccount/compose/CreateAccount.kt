@@ -269,7 +269,7 @@ private fun Content(
         ForzenbookDialog(
             title = stringResource(R.string.create_account_error_title),
             body = stringResource(stateError),
-            buttonText = stringResource(id = R.string.create_account_confirm_error),
+            buttonText = stringResource(id = R.string.generic_dialog_confirm),
             onDismiss = onErrorDismiss
         )
     }

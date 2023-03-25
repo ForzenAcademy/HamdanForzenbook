@@ -123,7 +123,7 @@ class LegacyLoginActivity : ComponentActivity() {
                                     this@LegacyLoginActivity,
                                     getString(R.string.login_info_title),
                                     getString(R.string.login_info),
-                                    getString(R.string.login_confirm_info)
+                                    getString(R.string.generic_dialog_confirm)
                                 ) {
                                     loginModel.loginDismissInfoClicked()
                                 }
@@ -133,7 +133,7 @@ class LegacyLoginActivity : ComponentActivity() {
                                     this@LegacyLoginActivity,
                                     getString(R.string.login_error_title),
                                     getString(R.string.login_error),
-                                    getString(R.string.login_confirm_error)
+                                    getString(R.string.generic_dialog_confirm)
                                 ) {
                                     loginModel.loginDismissErrorClicked()
                                 }

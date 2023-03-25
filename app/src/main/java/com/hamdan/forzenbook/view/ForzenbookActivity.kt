@@ -15,9 +15,10 @@ import com.hamdan.forzenbook.createaccount.core.viewmodel.toCreateAccountUiState
 import com.hamdan.forzenbook.login.compose.MainLoginContent
 import com.hamdan.forzenbook.login.core.viewmodel.toLoginUiState
 import com.hamdan.forzenbook.post.compose.PostContent
-import com.hamdan.forzenbook.view.NavigationDestinations
+import com.hamdan.forzenbook.post.core.viewmodel.toUiState
 import com.hamdan.forzenbook.viewmodels.CreateAccountViewModel
 import com.hamdan.forzenbook.viewmodels.LoginViewModel
+import com.hamdan.forzenbook.viewmodels.PostViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,6 +26,7 @@ class ForzenbookActivity : ComponentActivity() {
 
     private val loginViewModel: LoginViewModel by viewModels()
     private val createAccountViewModel: CreateAccountViewModel by viewModels()
+    private val postViewModel: PostViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +83,14 @@ class ForzenbookActivity : ComponentActivity() {
                             )
                         }
                         composable(NavigationDestinations.POST_PAGE) {
-                            PostContent()
+                            PostContent(
+                                state = postViewModel.state.value.toUiState(),
+                                onTextChange = { postViewModel.updateText(it) },
+                                onToggleClicked = { postViewModel.toggleClicked() },
+                                onDialogDismiss = { postViewModel.dialogDismissClicked() }
+                            ) {
+                                postViewModel.sendPostClicked()
+                            }
                         }
                     }
                 }

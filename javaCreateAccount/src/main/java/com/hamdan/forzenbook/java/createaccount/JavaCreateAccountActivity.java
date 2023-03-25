@@ -91,7 +91,7 @@ public class JavaCreateAccountActivity extends ComponentActivity {
 
                             if (state.getErrorId() != null) {
                                 DialogUtils.standardAlertDialog(this, getString(R.string.create_account_error_title), getString(state.getErrorId()),
-                                        getString(R.string.login_confirm_error), () -> model.createAccountDismissErrorClicked());
+                                        getString(R.string.generic_dialog_confirm), () -> model.createAccountDismissErrorClicked());
                             }
 
                             binding.createAccountSubmitButton.setEnabled(

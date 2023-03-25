@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -21,25 +20,35 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.hamdan.forzenbook.compose.core.LocalNavController
+import com.hamdan.forzenbook.compose.core.composables.ForzenbookDialog
 import com.hamdan.forzenbook.compose.core.composables.ForzenbookTopAppBar
+import com.hamdan.forzenbook.compose.core.composables.LoadingScreen
 import com.hamdan.forzenbook.compose.core.composables.LoginBackgroundColumn
 import com.hamdan.forzenbook.compose.core.composables.PillToggleSwitch
 import com.hamdan.forzenbook.compose.core.composables.PostTextField
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
 import com.hamdan.forzenbook.compose.core.theme.dimens
+import com.hamdan.forzenbook.post.core.view.PostUiComposeState
+import com.hamdan.forzenbook.post.core.viewmodel.toBoolean
 import com.hamdan.forzenbook.ui.core.R
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun PostContent() {
+fun PostContent(
+    state: PostUiComposeState,
+    onTextChange: (String) -> Unit,
+    onDialogDismiss: () -> Unit,
+    onToggleClicked: () -> Unit,
+    onSendClicked: () -> Unit,
+) {
     val navigator = LocalNavController.current
-    val text = remember { mutableStateOf("") }
+    val text = state.postText
     val focusRequester = remember { FocusRequester() }
     val keyboard = LocalSoftwareKeyboardController.current
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            ForzenbookTopAppBar(topText = stringResource(R.string.top_bar_text_post)) {
+            ForzenbookTopAppBar(topText = stringResource(R.string.post_top_bar_text)) {
                 Image(
                     painterResource(id = R.drawable.baseline_send_24),
                     contentDescription = stringResource(id = R.string.post_send_icon),
@@ -47,7 +56,7 @@ fun PostContent() {
                     modifier = Modifier
                         .padding(ForzenbookTheme.dimens.grid.x3)
                         .size(ForzenbookTheme.dimens.imageSizes.medium)
-                        .clickable {},
+                        .clickable { onSendClicked() },
                 )
             }
         },
@@ -64,8 +73,9 @@ fun PostContent() {
                     leftDescriptionRes = R.string.text_toggle_text,
                     imageRightRes = R.drawable.baseline_image_24,
                     rightDescriptionRes = R.string.text_toggle_image,
+                    selected = state.postType.toBoolean(),
                 ) {
-                    // Todo implement
+                    onToggleClicked()
                 }
             }
         }
@@ -78,9 +88,21 @@ fun PostContent() {
                     focusRequester.requestFocus()
                 },
         ) {
-            PostTextField(text.value, focusRequester) {
-                text.value = it
+            PostTextField(text, focusRequester) {
+                onTextChange(it)
             }
+        }
+    }
+    if (state.isLoading) {
+        LoadingScreen()
+    }
+    if (state.hasError) {
+        ForzenbookDialog(
+            title = stringResource(id = R.string.generic_error_title),
+            body = stringResource(id = R.string.post_error),
+            buttonText = stringResource(id = R.string.generic_dialog_confirm),
+        ) {
+            onDialogDismiss()
         }
     }
 }

@@ -37,8 +37,6 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -179,7 +177,7 @@ fun LoadingButton() {
 }
 
 @Composable
-fun PreventScreenActionsDuringLoad() {
+fun PreventScreenActionsDuringLoad(content: (@Composable () -> Unit)? = null) {
     // put an invisible box on the screen that will take clicks and do nothing
     Box(
         modifier = Modifier
@@ -190,7 +188,20 @@ fun PreventScreenActionsDuringLoad() {
                 indication = null,
                 onClick = {},
             ),
-    )
+        contentAlignment = Alignment.Center,
+    ) {
+        content?.invoke()
+    }
+}
+
+@Composable
+fun LoadingScreen(indicatorColor: Color = ForzenbookTheme.colors.colors.primary) {
+    PreventScreenActionsDuringLoad {
+        CircularProgressIndicator(
+            color = indicatorColor,
+            modifier = Modifier.height(ForzenbookTheme.dimens.grid.x10)
+        )
+    }
 }
 
 @Composable
@@ -281,19 +292,17 @@ fun PillToggleSwitch(
     @StringRes leftDescriptionRes: Int,
     @DrawableRes imageRightRes: Int,
     @StringRes rightDescriptionRes: Int,
+    // false is the default, indicates left is the selected item
     selected: Boolean = false,
     enabledColor: Color = ForzenbookTheme.colors.colors.primary,
     disabledColor: Color = ForzenbookTheme.colors.colors.background,
     onToggle: () -> Unit,
 ) {
-    // false is the default, indicates left is the selected item
-    val selection = remember { mutableStateOf(selected) }
     val rowShape = RoundedCornerShape(ForzenbookTheme.dimens.grid.x3)
     Row(
         modifier = Modifier
             .clip(rowShape)
             .clickable {
-                selection.value = !selection.value
                 onToggle()
             }
             .border(ForzenbookTheme.dimens.grid.x1, enabledColor, rowShape)
@@ -306,12 +315,12 @@ fun PillToggleSwitch(
                         bottomStart = ForzenbookTheme.dimens.grid.x3
                     )
                 )
-                .background(if (selection.value) enabledColor else disabledColor)
+                .background(if (selected) enabledColor else disabledColor)
         ) {
             Image(
                 painterResource(id = imageLeftRes),
                 contentDescription = stringResource(id = leftDescriptionRes),
-                colorFilter = ColorFilter.tint(if (selection.value) disabledColor else enabledColor),
+                colorFilter = ColorFilter.tint(if (selected) disabledColor else enabledColor),
                 modifier = Modifier
                     .padding(
                         vertical = ForzenbookTheme.dimens.grid.x3,
@@ -328,12 +337,12 @@ fun PillToggleSwitch(
                         bottomEnd = ForzenbookTheme.dimens.grid.x3
                     )
                 )
-                .background(if (!selection.value) enabledColor else disabledColor)
+                .background(if (!selected) enabledColor else disabledColor)
         ) {
             Image(
                 painterResource(id = imageRightRes),
                 contentDescription = stringResource(id = rightDescriptionRes),
-                colorFilter = ColorFilter.tint(if (!selection.value) disabledColor else enabledColor),
+                colorFilter = ColorFilter.tint(if (!selected) disabledColor else enabledColor),
                 modifier = Modifier
                     .padding(
                         vertical = ForzenbookTheme.dimens.grid.x3,
