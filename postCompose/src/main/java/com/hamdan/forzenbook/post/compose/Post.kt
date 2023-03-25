@@ -25,7 +25,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import com.hamdan.forzenbook.compose.core.LocalNavController
 import com.hamdan.forzenbook.compose.core.composables.BackgroundColumn
 import com.hamdan.forzenbook.compose.core.composables.ForzenbookDialog
 import com.hamdan.forzenbook.compose.core.composables.ForzenbookTopAppBar
@@ -73,7 +72,7 @@ fun Post(
             LoadingContent()
         }
         (state is BasePostViewModel.PostState.Error) -> {
-            ErrorContent(state, onDialogDismiss)
+            ErrorContent(onDialogDismiss)
         }
         else -> {
             throw Exception("Illegal unknown state")
@@ -92,7 +91,6 @@ private fun TextPostContent(
     val focusRequester = remember { FocusRequester() }
     val keyboard = LocalSoftwareKeyboardController.current
     StandardContent(
-        state = state,
         onToggleClicked = onToggleClicked,
         onSendClicked = onSendClicked,
         selected = state.asContentOrNull() is BasePostViewModel.PostContent.Text
@@ -124,7 +122,6 @@ private fun ImagePostContent(
     onGalleryClicked: () -> Unit,
 ) {
     StandardContent(
-        state = state,
         onToggleClicked = onToggleClicked,
         onSendClicked = onSendClicked,
         selected = state.asContentOrNull() is BasePostViewModel.PostContent.Text
@@ -153,10 +150,9 @@ private fun ImagePostContent(
 
 @Composable
 private fun ErrorContent(
-    state: BasePostViewModel.PostState,
     onDialogDismiss: () -> Unit,
 ) {
-    StandardContent(state = state, onSendClicked = {}, onToggleClicked = {}) {
+    StandardContent {
         BackgroundColumn(Modifier.padding(it)) {}
     }
     ForzenbookDialog(
@@ -176,13 +172,11 @@ private fun LoadingContent() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun StandardContent(
-    state: BasePostViewModel.PostState,
-    onToggleClicked: () -> Unit,
-    onSendClicked: () -> Unit,
+    onToggleClicked: () -> Unit = {},
+    onSendClicked: () -> Unit = {},
     selected: Boolean = false,
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    val navigator = LocalNavController.current
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {

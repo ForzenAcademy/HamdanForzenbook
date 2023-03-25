@@ -37,6 +37,7 @@ dependencies {
     //Modules
     implementation project(':core')
     implementation project(':uiCore')
+    implementation project(':data')
 
     // Room
     implementation "androidx.room:room-runtime:2.5.0"

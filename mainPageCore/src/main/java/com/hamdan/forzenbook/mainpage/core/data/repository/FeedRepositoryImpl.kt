@@ -1,9 +1,10 @@
 package com.hamdan.forzenbook.mainpage.core.data.repository
 
-import com.hamdan.forzenbook.mainpage.core.data.database.FeedDao
-import com.hamdan.forzenbook.mainpage.core.data.database.UserDao
+import com.hamdan.forzenbook.data.daos.FeedDao
+import com.hamdan.forzenbook.data.daos.UserDao
+import com.hamdan.forzenbook.data.entities.Postable
 import com.hamdan.forzenbook.mainpage.core.data.network.FeedService
-import com.hamdan.forzenbook.mainpage.core.data.network.toFeedEntity
+import com.hamdan.forzenbook.mainpage.core.data.network.toPostEntity
 import com.hamdan.forzenbook.mainpage.core.data.network.toUserEntity
 
 class FeedRepositoryImpl(
@@ -32,7 +33,7 @@ class FeedRepositoryImpl(
                 }
                 var post = feedDao.getSpecificPostId(it.postId)
                 if (post.isEmpty()) {
-                    feedDao.insert(it.toFeedEntity())
+                    feedDao.insert(it.toPostEntity())
                     post = feedDao.getSpecificPostId(it.postId)
                 }
                 if (post.isNotEmpty() && user.isNotEmpty()) {
@@ -48,7 +49,4 @@ class FeedRepositoryImpl(
     /* Todo
     We will need to account for the fact we will be given 10 things to be shown by the service at a time
      */
-    companion object {
-        const val DAY_IN_MILLIS: Long = 86400000
-    }
 }

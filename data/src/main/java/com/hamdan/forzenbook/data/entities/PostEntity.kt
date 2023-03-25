@@ -1,12 +1,12 @@
-package com.hamdan.forzenbook.mainpage.core.data.database
+package com.hamdan.forzenbook.data.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.hamdan.forzenbook.mainpage.core.data.database.FeedEntity.Companion.TABLE_NAME
+import com.hamdan.forzenbook.data.entities.PostEntity.Companion.TABLE_NAME
 
 @Entity(tableName = TABLE_NAME)
-data class FeedEntity(
+data class PostEntity(
     @ColumnInfo(name = POST_ID) val postId: Int,
     @ColumnInfo(name = USER_ID) val userId: Int,
     @ColumnInfo(name = BODY) val body: String,

@@ -13,7 +13,7 @@ class FeedViewModel @Inject constructor(
 ) : BaseFeedViewModel(
     loadPostsUseCase
 ) {
-    private val _state: MutableState<FeedState> = mutableStateOf(FeedState.Content(listOf()))
+    private val _state: MutableState<FeedState> = mutableStateOf(FeedState.Content())
     val state: MutableState<FeedState>
         get() = _state
 

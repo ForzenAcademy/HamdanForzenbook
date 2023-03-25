@@ -1,9 +1,9 @@
-package com.hamdan.forzenbook.mainpage.core.data.network
+package com.hamdan.forzenbook.search.core.data.network
 
 import com.google.gson.annotations.SerializedName
 import com.hamdan.forzenbook.data.entities.PostEntity
 
-data class FeedResponse(
+data class SearchResponse(
     @SerializedName("post_id") val postId: Int,
     @SerializedName("user_id") val userId: Int,
     @SerializedName("body") val body: String,
@@ -11,7 +11,7 @@ data class FeedResponse(
     @SerializedName("created_at") val created: String,
 )
 
-fun FeedResponse.toPostEntity(): PostEntity {
+fun SearchResponse.toFeedEntity(): PostEntity {
     return PostEntity(
         postId = this.postId,
         userId = this.userId,
