@@ -31,10 +31,3 @@ val LocalReplacementColors = staticCompositionLocalOf {
         colors = darkColors()
     )
 }
-
-/**
- * normalDimens is just used as a default that will be overriden in the theme
- */
-val LocalDimens = staticCompositionLocalOf {
-    com.hamdan.forzenbook.compose.core.theme.normalDimens()
-}

@@ -9,7 +9,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import com.hamdan.forzenbook.compose.core.LocalDimens
+import androidx.compose.ui.unit.dp
 import com.hamdan.forzenbook.compose.core.LocalReplacementColors
 import com.hamdan.forzenbook.compose.core.LocalReplacementTypography
 
@@ -55,18 +55,9 @@ fun ForzenBookTheme(content: @Composable () -> Unit) {
     } else {
         ReplacementColors(lightTheme)
     }
-    val adaptiveDimens: Dimens =
-        if (LocalConfiguration.current.screenWidthDp <= SMALL_SCREEN_DP_WIDTH) {
-            // small screens
-            smallDimens()
-        } else {
-            // average
-            normalDimens()
-        }
     CompositionLocalProvider(
         LocalReplacementTypography provides replacementTypography,
         LocalReplacementColors provides replacementColors,
-        LocalDimens provides adaptiveDimens
     ) {
         MaterialTheme(
             colors = replacementColors.colors,
@@ -76,6 +67,19 @@ fun ForzenBookTheme(content: @Composable () -> Unit) {
     }
 }
 
+private val NormalGrid = GridDimensions(
+    4.dp, 8.dp, 12.dp, 16.dp, 20.dp, 24.dp, 28.dp, 32.dp, 36.dp, 40.dp,
+    44.dp, 48.dp, 52.dp, 56.dp, 60.dp, 64.dp, 68.dp, 72.dp, 76.dp, 80.dp,
+)
+
+private val SmallGrid = GridDimensions(
+    2.dp, 4.dp, 6.dp, 8.dp, 10.dp, 12.dp, 14.dp, 16.dp, 18.dp, 20.dp,
+    22.dp, 24.dp, 26.dp, 28.dp, 30.dp, 32.dp, 34.dp, 36.dp, 38.dp, 40.dp,
+)
+
+private val NormalImages = ImageSizes(40.dp, 60.dp, 200.dp)
+private val SmallImages = ImageSizes(40.dp, 60.dp, 160.dp)
+
 object ForzenbookTheme {
     val typography: ReplacementTypography
         @Composable
@@ -83,7 +87,22 @@ object ForzenbookTheme {
     val colors: ReplacementColors
         @Composable
         get() = LocalReplacementColors.current
-    val dimens: Dimens
-        @Composable
-        get() = LocalDimens.current
 }
+
+val ForzenbookTheme.dimens: Dimens
+    @Composable
+    get() = if (LocalConfiguration.current.screenWidthDp <= SMALL_SCREEN_DP_WIDTH) {
+        // small screens
+        Dimens(
+            SmallGrid,
+            NormalGrid,
+            SmallImages
+        )
+    } else {
+        // average
+        Dimens(
+            NormalGrid,
+            NormalGrid,
+            NormalImages
+        )
+    }

@@ -40,6 +40,7 @@ import com.hamdan.forzenbook.compose.core.composables.LoginBackgroundColumn
 import com.hamdan.forzenbook.compose.core.composables.PreventScreenActionsDuringLoad
 import com.hamdan.forzenbook.compose.core.composables.SubmitButton
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
+import com.hamdan.forzenbook.compose.core.theme.dimens
 import com.hamdan.forzenbook.core.Entry
 import com.hamdan.forzenbook.core.LoginError
 import com.hamdan.forzenbook.core.stringDate
@@ -174,8 +175,8 @@ private fun Content(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                horizontal = ForzenbookTheme.dimens.largePad_2,
-                vertical = ForzenbookTheme.dimens.smallPad_1
+                horizontal = ForzenbookTheme.dimens.grid.x10,
+                vertical = ForzenbookTheme.dimens.grid.x2
             )
             .clickable {
                 onDateFieldClick()
@@ -185,7 +186,7 @@ private fun Content(
                 imageVector = Icons.Default.DateRange,
                 contentDescription = stringResource(id = R.string.calendar_icon),
                 modifier = Modifier
-                    .size(ForzenbookTheme.dimens.iconSizeSmall)
+                    .size(ForzenbookTheme.dimens.imageSizes.small)
             )
         },
         enabled = false,
@@ -253,7 +254,7 @@ private fun Content(
             ErrorText(error = stringResource(R.string.create_account_location_error))
         }
     }
-    Spacer(modifier = Modifier.height(ForzenbookTheme.dimens.smallPad_2))
+    Spacer(modifier = Modifier.height(ForzenbookTheme.dimens.grid.x3))
     if (isLoading) {
         LoadingButton()
     } else {

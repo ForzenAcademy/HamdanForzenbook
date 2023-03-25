@@ -1,4 +1,4 @@
-package com.hamdan.forzenbook.view.login
+package com.hamdan.forzenbook.view
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

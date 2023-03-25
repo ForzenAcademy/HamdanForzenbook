@@ -28,6 +28,7 @@ import com.hamdan.forzenbook.compose.core.composables.LoginTitleSection
 import com.hamdan.forzenbook.compose.core.composables.PreventScreenActionsDuringLoad
 import com.hamdan.forzenbook.compose.core.composables.SubmitButton
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
+import com.hamdan.forzenbook.compose.core.theme.dimens
 import com.hamdan.forzenbook.core.Entry
 import com.hamdan.forzenbook.core.LoginError
 import com.hamdan.forzenbook.login.core.view.LoginUiState
@@ -51,7 +52,7 @@ fun MainLoginContent(
 
     LoginBackgroundColumn {
         Image(
-            modifier = Modifier.size(ForzenbookTheme.dimens.iconSizeLarge),
+            modifier = Modifier.size(ForzenbookTheme.dimens.imageSizes.large),
             painter = painterResource(id = R.drawable.logo_render_full_notext),
             contentDescription = stringResource(id = R.string.lion_icon),
         )
@@ -143,7 +144,7 @@ private fun Content(
             }
         }
     }
-    Spacer(modifier = Modifier.height(ForzenbookTheme.dimens.mediumPad_1))
+    Spacer(modifier = Modifier.height(ForzenbookTheme.dimens.grid.x5))
     if (isLoading) {
         LoadingButton()
     } else {
@@ -157,7 +158,7 @@ private fun Content(
             }
         )
     }
-    Spacer(modifier = Modifier.height(ForzenbookTheme.dimens.mediumPad_1))
+    Spacer(modifier = Modifier.height(ForzenbookTheme.dimens.grid.x5))
     Text(
         text = stringResource(R.string.login_create_account_text),
         fontSize = ForzenbookTheme.typography.h2.fontSize,
@@ -165,7 +166,7 @@ private fun Content(
             .clickable {
                 onCreateAccountPress()
             }
-            .padding(ForzenbookTheme.dimens.smallPad_2)
+            .padding(ForzenbookTheme.dimens.grid.x3)
     )
     if (hasError) {
         ForzenbookDialog(
