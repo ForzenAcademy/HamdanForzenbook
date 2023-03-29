@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace 'com.example.createaccount.compose'
+    namespace 'com.hamdan.forzenbook.createaccount.compose'
     compileSdk 33
 
     defaultConfig {

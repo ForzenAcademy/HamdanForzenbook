@@ -8,6 +8,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 class Dimens(
+    stroke: Dp,
     smallPad_1: Dp,
     smallPad_2: Dp,
     mediumPad_1: Dp,
@@ -23,6 +24,7 @@ class Dimens(
     buttonPadVertical_1: Dp,
     buttonPadVertical_2: Dp,
 ) {
+    var borderStroke by mutableStateOf(stroke, structuralEqualityPolicy())
     var smallPad_1 by mutableStateOf(smallPad_1, structuralEqualityPolicy())
     var smallPad_2 by mutableStateOf(smallPad_2, structuralEqualityPolicy())
     var mediumPad_1 by mutableStateOf(mediumPad_1, structuralEqualityPolicy())
@@ -40,6 +42,7 @@ class Dimens(
 }
 
 fun normalDimens(
+    stroke: Dp = StrokeValues.stroke2,
     smallPad_1: Dp = PaddingValues.smallPad_2,
     smallPad_2: Dp = PaddingValues.smallPad_3,
     mediumPad_1: Dp = PaddingValues.medPad_2,
@@ -55,6 +58,7 @@ fun normalDimens(
     buttonPadVertical_1: Dp = PaddingValues.smallPad_2,
     buttonPadVertical_2: Dp = PaddingValues.medPad_2,
 ): Dimens = Dimens(
+    stroke,
     smallPad_1,
     smallPad_2,
     mediumPad_1,
@@ -72,6 +76,7 @@ fun normalDimens(
 )
 
 fun smallDimens(
+    stroke: Dp = StrokeValues.stroke1,
     smallPad_1: Dp = PaddingValues.smallPad_1,
     smallPad_2: Dp = PaddingValues.smallPad_2,
     mediumPad_1: Dp = PaddingValues.medPad_1,
@@ -87,6 +92,7 @@ fun smallDimens(
     buttonPadVertical_1: Dp = PaddingValues.smallPad_1,
     buttonPadVertical_2: Dp = PaddingValues.medPad_1,
 ): Dimens = Dimens(
+    stroke,
     smallPad_1,
     smallPad_2,
     mediumPad_1,
@@ -136,4 +142,9 @@ object IconSizeValues {
     val big_2 = 180.dp
     val giga_1 = 200.dp
     val giga_2 = 220.dp
+}
+
+object StrokeValues {
+    val stroke1 = 2.dp
+    val stroke2 = 4.dp
 }

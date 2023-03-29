@@ -1,7 +1,6 @@
 package com.hamdan.forzenbook.view.login
 
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -11,30 +10,31 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.hamdan.forzenbook.compose.core.LocalNavController
 import com.hamdan.forzenbook.compose.core.theme.ForzenBookTheme
+import com.hamdan.forzenbook.createaccount.compose.CreateAccountContent
 import com.hamdan.forzenbook.createaccount.core.viewmodel.toCreateAccountUiState
 import com.hamdan.forzenbook.login.compose.MainLoginContent
 import com.hamdan.forzenbook.login.core.viewmodel.toLoginUiState
+import com.hamdan.forzenbook.post.compose.PostContent
 import com.hamdan.forzenbook.view.NavigationDestinations
 import com.hamdan.forzenbook.viewmodels.CreateAccountViewModel
 import com.hamdan.forzenbook.viewmodels.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class LoginActivity : ComponentActivity() {
+class ForzenbookActivity : ComponentActivity() {
 
     private val loginViewModel: LoginViewModel by viewModels()
     private val createAccountViewModel: CreateAccountViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         setContent {
             ForzenBookTheme {
                 val navController = rememberNavController()
                 CompositionLocalProvider(LocalNavController provides navController) {
                     NavHost(
                         navController = navController,
-                        startDestination = NavigationDestinations.LOGIN_PAGE
+                        startDestination = NavigationDestinations.POST_PAGE
                     ) {
                         composable(NavigationDestinations.LOGIN_PAGE) {
                             MainLoginContent(
@@ -56,10 +56,10 @@ class LoginActivity : ComponentActivity() {
                                     loginViewModel.loginClicked()
                                 }
                             ) {
-                                navController.navigate(NavigationDestinations.CREATE_ACCOUNT)
+                                navController.navigate(NavigationDestinations.CREATE_ACCOUNT_PAGE)
                             }
                         }
-                        composable(NavigationDestinations.CREATE_ACCOUNT) {
+                        composable(NavigationDestinations.CREATE_ACCOUNT_PAGE) {
                             CreateAccountContent(
                                 state = createAccountViewModel.state.value.toCreateAccountUiState(),
                                 onErrorDismiss = {
@@ -77,10 +77,11 @@ class LoginActivity : ComponentActivity() {
                                 onDateFieldClick = { createAccountViewModel.createAccountDateDialogClicked() },
                                 onDateSubmission = { createAccountViewModel.createAccountDateDialogSubmitClicked() },
                                 onDateDismiss = { createAccountViewModel.createAccountDateDialogDismiss() },
-                                onSubmission = {
-                                    createAccountViewModel.createAccountButtonClicked()
-                                },
+                                onSubmission = { createAccountViewModel.createAccountClicked() },
                             )
+                        }
+                        composable(NavigationDestinations.POST_PAGE) {
+                            PostContent()
                         }
                     }
                 }

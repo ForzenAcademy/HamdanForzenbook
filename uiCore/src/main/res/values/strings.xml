@@ -47,10 +47,17 @@
     <string name="login_code_error">Invalid Code</string>
     <string name="login_create_account_text">Create Account</string>
     <!--
+    Post Page
+    -->
+    <string name="top_bar_text_post">Create Post</string>
+    <!--
     Content Descriptions
     -->
     <string name="lion_icon">Yellow lion</string>
     <string name="back_arrow">Back Arrow</string>
     <string name="calendar_icon">Calendar</string>
     <string name="app_logo_image">app logo Image</string>
+    <string name="text_toggle_text">Toggle to Text</string>
+    <string name="text_toggle_image">Toggle to Image</string>
+    <string name="post_send_icon">Send Icon</string>
 </resources>

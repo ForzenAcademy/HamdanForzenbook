@@ -1,16 +1,24 @@
 package com.hamdan.forzenbook.compose.core.composables
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -29,9 +37,16 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -178,12 +193,16 @@ fun PreventScreenActionsDuringLoad() {
 }
 
 @Composable
-fun LoginBackgroundColumn(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+fun LoginBackgroundColumn(
+    modifier: Modifier = Modifier,
+    scrollState: ScrollState = rememberScrollState(),
+    content: @Composable () -> Unit
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(ForzenbookTheme.colors.colors.background)
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(scrollState)
             .imePadding(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -192,8 +211,9 @@ fun LoginBackgroundColumn(modifier: Modifier = Modifier, content: @Composable ()
 }
 
 @Composable
-fun LoginTopBar(
+fun ForzenbookTopAppBar(
     topText: String,
+    actions: @Composable (() -> Unit)? = null
 ) {
     val navigator = LocalNavController.current
     TopAppBar(
@@ -219,7 +239,8 @@ fun LoginTopBar(
             }
         },
         actions = {
-            Icon(
+            if (actions != null) actions()
+            else Icon(
                 imageVector = Icons.Filled.ArrowBack,
                 contentDescription = stringResource(id = R.string.back_arrow),
                 tint = Color.Transparent,
@@ -250,5 +271,92 @@ fun ForzenbookDialog(title: String, body: String, buttonText: String, onDismiss:
             )
         },
         modifier = Modifier.padding(ForzenbookTheme.dimens.mediumPad_1)
+    )
+}
+
+@Composable
+fun PillToggleSwitch(
+    @DrawableRes imageLeftRes: Int,
+    @StringRes leftDescriptionRes: Int,
+    @DrawableRes imageRightRes: Int,
+    @StringRes rightDescriptionRes: Int,
+    selected: Boolean = false,
+    enabledColor: Color = ForzenbookTheme.colors.colors.primary,
+    disabledColor: Color = ForzenbookTheme.colors.colors.background,
+    onToggle: () -> Unit,
+) {
+    // false is the default, indicates left is the selected item
+    val selection = remember { mutableStateOf(selected) }
+    val rowShape = RoundedCornerShape(ForzenbookTheme.dimens.smallPad_2)
+    Row(
+        modifier = Modifier
+            .clip(rowShape)
+            .clickable {
+                selection.value = !selection.value
+                onToggle()
+            }
+            .border(ForzenbookTheme.dimens.borderStroke, enabledColor, rowShape)
+    ) {
+        Box(
+            modifier = Modifier
+                .clip(
+                    RoundedCornerShape(
+                        topStart = ForzenbookTheme.dimens.smallPad_2,
+                        bottomStart = ForzenbookTheme.dimens.smallPad_2
+                    )
+                )
+                .background(if (selection.value) enabledColor else disabledColor)
+        ) {
+            Image(
+                painterResource(id = imageLeftRes),
+                contentDescription = stringResource(id = leftDescriptionRes),
+                colorFilter = ColorFilter.tint(if (selection.value) disabledColor else enabledColor),
+                modifier = Modifier
+                    .padding(
+                        vertical = ForzenbookTheme.dimens.smallPad_2,
+                        horizontal = ForzenbookTheme.dimens.mediumPad_2
+                    )
+                    .size(ForzenbookTheme.dimens.iconSizeMedium),
+            )
+        }
+        Box(
+            modifier = Modifier
+                .clip(
+                    RoundedCornerShape(
+                        topEnd = ForzenbookTheme.dimens.smallPad_2,
+                        bottomEnd = ForzenbookTheme.dimens.smallPad_2
+                    )
+                )
+                .background(if (!selection.value) enabledColor else disabledColor)
+        ) {
+            Image(
+                painterResource(id = imageRightRes),
+                contentDescription = stringResource(id = rightDescriptionRes),
+                colorFilter = ColorFilter.tint(if (!selection.value) disabledColor else enabledColor),
+                modifier = Modifier
+                    .padding(
+                        vertical = ForzenbookTheme.dimens.smallPad_2,
+                        horizontal = ForzenbookTheme.dimens.mediumPad_2
+                    )
+                    .size(ForzenbookTheme.dimens.iconSizeMedium),
+            )
+        }
+    }
+}
+
+@Composable
+fun PostTextField(text: String, focusRequester: FocusRequester, onValueChange: (String) -> Unit) {
+    TextField(
+        value = text,
+        onValueChange = onValueChange,
+        modifier = Modifier.focusRequester(focusRequester),
+        colors = TextFieldDefaults.textFieldColors(
+            backgroundColor = Color.Transparent,
+            focusedLabelColor = Color.Transparent,
+            unfocusedLabelColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+        ),
+        textStyle = ForzenbookTheme.typography.h2
     )
 }
