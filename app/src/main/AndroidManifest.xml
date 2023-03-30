@@ -18,7 +18,7 @@
         android:windowSoftInputMode="adjustResize"
         tools:targetApi="33">
         <activity
-            android:name=".view.login.ForzenbookActivity"
+            android:name=".view.ForzenbookActivity"
             android:exported="true"
             android:theme="@style/Theme.Forzenbook"
             android:windowSoftInputMode="adjustResize">

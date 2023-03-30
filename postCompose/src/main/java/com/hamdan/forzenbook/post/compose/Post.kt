@@ -26,6 +26,7 @@ import com.hamdan.forzenbook.compose.core.composables.LoginBackgroundColumn
 import com.hamdan.forzenbook.compose.core.composables.PillToggleSwitch
 import com.hamdan.forzenbook.compose.core.composables.PostTextField
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
+import com.hamdan.forzenbook.compose.core.theme.dimens
 import com.hamdan.forzenbook.ui.core.R
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -44,8 +45,8 @@ fun PostContent() {
                     contentDescription = stringResource(id = R.string.post_send_icon),
                     colorFilter = ColorFilter.tint(ForzenbookTheme.colors.colors.primary),
                     modifier = Modifier
-                        .padding(ForzenbookTheme.dimens.smallPad_2)
-                        .size(ForzenbookTheme.dimens.iconSizeMedium)
+                        .padding(ForzenbookTheme.dimens.grid.x3)
+                        .size(ForzenbookTheme.dimens.imageSizes.medium)
                         .clickable {},
                 )
             }
@@ -54,7 +55,7 @@ fun PostContent() {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = ForzenbookTheme.dimens.smallPad_1),
+                    .padding(vertical = ForzenbookTheme.dimens.grid.x2),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
             ) {
@@ -64,7 +65,7 @@ fun PostContent() {
                     imageRightRes = R.drawable.baseline_image_24,
                     rightDescriptionRes = R.string.text_toggle_image,
                 ) {
-                    TODO()
+                    // Todo implement
                 }
             }
         }

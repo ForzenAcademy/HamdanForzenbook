@@ -56,6 +56,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import com.hamdan.forzenbook.compose.core.LocalNavController
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
+import com.hamdan.forzenbook.compose.core.theme.dimens
 import com.hamdan.forzenbook.ui.core.R
 
 private const val ONE_LINE = 1
@@ -65,7 +66,7 @@ fun LoginTitleSection(title: String) {
     Text(
         text = title,
         fontSize = ForzenbookTheme.typography.h1.fontSize,
-        modifier = Modifier.padding(ForzenbookTheme.dimens.smallPad_2),
+        modifier = Modifier.padding(ForzenbookTheme.dimens.grid.x3),
         maxLines = ONE_LINE,
         overflow = TextOverflow.Ellipsis,
     )
@@ -94,8 +95,8 @@ fun InputField(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                horizontal = ForzenbookTheme.dimens.buttonPadHorizontal_2,
-                vertical = ForzenbookTheme.dimens.buttonPadVertical_1,
+                horizontal = ForzenbookTheme.dimens.grid.x10,
+                vertical = ForzenbookTheme.dimens.grid.x2,
             ),
         label = { Text(text = label) },
         value = value,
@@ -121,8 +122,8 @@ fun ErrorText(error: String) {
         textAlign = TextAlign.Center,
         modifier = Modifier
             .padding(
-                horizontal = ForzenbookTheme.dimens.mediumPad_1,
-                vertical = ForzenbookTheme.dimens.smallPad_2,
+                horizontal = ForzenbookTheme.dimens.grid.x5,
+                vertical = ForzenbookTheme.dimens.grid.x3,
             )
     )
 }
@@ -131,8 +132,8 @@ fun ErrorText(error: String) {
 fun SubmitButton(onSubmission: () -> Unit, label: String, enabled: Boolean) {
     Button(
         modifier = Modifier
-            .padding(horizontal = ForzenbookTheme.dimens.buttonPadHorizontal_2)
-            .height(ForzenbookTheme.dimens.buttonHeight)
+            .padding(horizontal = ForzenbookTheme.dimens.grid.x10)
+            .height(ForzenbookTheme.dimens.grid.x20)
             .fillMaxWidth(),
         onClick = {
             onSubmission()
@@ -160,14 +161,14 @@ fun SubmitButton(onSubmission: () -> Unit, label: String, enabled: Boolean) {
 fun LoadingButton() {
     Button(
         modifier = Modifier
-            .padding(horizontal = ForzenbookTheme.dimens.buttonPadHorizontal_2)
-            .height(ForzenbookTheme.dimens.buttonHeight)
+            .padding(horizontal = ForzenbookTheme.dimens.grid.x10)
+            .height(ForzenbookTheme.dimens.grid.x20)
             .fillMaxWidth(),
         onClick = {},
         content = {
             CircularProgressIndicator(
                 color = ForzenbookTheme.colors.colors.onPrimary,
-                modifier = Modifier.height(ForzenbookTheme.dimens.largePad_2)
+                modifier = Modifier.height(ForzenbookTheme.dimens.grid.x10)
             )
         },
         colors = ButtonDefaults.buttonColors(
@@ -264,13 +265,13 @@ fun ForzenbookDialog(title: String, body: String, buttonText: String, onDismiss:
                 text = buttonText,
                 modifier = Modifier
                     .padding(
-                        end = ForzenbookTheme.dimens.smallPad_1,
-                        bottom = ForzenbookTheme.dimens.smallPad_1
+                        end = ForzenbookTheme.dimens.grid.x2,
+                        bottom = ForzenbookTheme.dimens.grid.x2
                     )
                     .clickable { onDismiss() },
             )
         },
-        modifier = Modifier.padding(ForzenbookTheme.dimens.mediumPad_1)
+        modifier = Modifier.padding(ForzenbookTheme.dimens.grid.x5)
     )
 }
 
@@ -287,7 +288,7 @@ fun PillToggleSwitch(
 ) {
     // false is the default, indicates left is the selected item
     val selection = remember { mutableStateOf(selected) }
-    val rowShape = RoundedCornerShape(ForzenbookTheme.dimens.smallPad_2)
+    val rowShape = RoundedCornerShape(ForzenbookTheme.dimens.grid.x3)
     Row(
         modifier = Modifier
             .clip(rowShape)
@@ -295,14 +296,14 @@ fun PillToggleSwitch(
                 selection.value = !selection.value
                 onToggle()
             }
-            .border(ForzenbookTheme.dimens.borderStroke, enabledColor, rowShape)
+            .border(ForzenbookTheme.dimens.grid.x1, enabledColor, rowShape)
     ) {
         Box(
             modifier = Modifier
                 .clip(
                     RoundedCornerShape(
-                        topStart = ForzenbookTheme.dimens.smallPad_2,
-                        bottomStart = ForzenbookTheme.dimens.smallPad_2
+                        topStart = ForzenbookTheme.dimens.grid.x3,
+                        bottomStart = ForzenbookTheme.dimens.grid.x3
                     )
                 )
                 .background(if (selection.value) enabledColor else disabledColor)
@@ -313,18 +314,18 @@ fun PillToggleSwitch(
                 colorFilter = ColorFilter.tint(if (selection.value) disabledColor else enabledColor),
                 modifier = Modifier
                     .padding(
-                        vertical = ForzenbookTheme.dimens.smallPad_2,
-                        horizontal = ForzenbookTheme.dimens.mediumPad_2
+                        vertical = ForzenbookTheme.dimens.grid.x3,
+                        horizontal = ForzenbookTheme.dimens.grid.x6
                     )
-                    .size(ForzenbookTheme.dimens.iconSizeMedium),
+                    .size(ForzenbookTheme.dimens.imageSizes.medium),
             )
         }
         Box(
             modifier = Modifier
                 .clip(
                     RoundedCornerShape(
-                        topEnd = ForzenbookTheme.dimens.smallPad_2,
-                        bottomEnd = ForzenbookTheme.dimens.smallPad_2
+                        topEnd = ForzenbookTheme.dimens.grid.x3,
+                        bottomEnd = ForzenbookTheme.dimens.grid.x3
                     )
                 )
                 .background(if (!selection.value) enabledColor else disabledColor)
@@ -335,10 +336,10 @@ fun PillToggleSwitch(
                 colorFilter = ColorFilter.tint(if (!selection.value) disabledColor else enabledColor),
                 modifier = Modifier
                     .padding(
-                        vertical = ForzenbookTheme.dimens.smallPad_2,
-                        horizontal = ForzenbookTheme.dimens.mediumPad_2
+                        vertical = ForzenbookTheme.dimens.grid.x3,
+                        horizontal = ForzenbookTheme.dimens.grid.x6
                     )
-                    .size(ForzenbookTheme.dimens.iconSizeMedium),
+                    .size(ForzenbookTheme.dimens.imageSizes.medium),
             )
         }
     }
