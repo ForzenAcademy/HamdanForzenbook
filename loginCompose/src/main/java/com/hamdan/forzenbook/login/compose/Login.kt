@@ -11,135 +11,146 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import com.hamdan.forzenbook.compose.core.LocalNavController
+import com.hamdan.forzenbook.compose.core.composables.BackgroundColumn
 import com.hamdan.forzenbook.compose.core.composables.ErrorText
 import com.hamdan.forzenbook.compose.core.composables.ForzenbookDialog
 import com.hamdan.forzenbook.compose.core.composables.InputField
 import com.hamdan.forzenbook.compose.core.composables.LoadingButton
-import com.hamdan.forzenbook.compose.core.composables.LoginBackgroundColumn
 import com.hamdan.forzenbook.compose.core.composables.LoginTitleSection
 import com.hamdan.forzenbook.compose.core.composables.PreventScreenActionsDuringLoad
 import com.hamdan.forzenbook.compose.core.composables.SubmitButton
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
 import com.hamdan.forzenbook.compose.core.theme.dimens
 import com.hamdan.forzenbook.core.Entry
-import com.hamdan.forzenbook.core.LoginError
-import com.hamdan.forzenbook.login.core.view.LoginUiState
+import com.hamdan.forzenbook.core.EntryError
+import com.hamdan.forzenbook.login.core.viewmodel.BaseLoginViewModel
+import com.hamdan.forzenbook.login.core.viewmodel.getContent
 import com.hamdan.forzenbook.ui.core.R
 
 @Composable
 fun MainLoginContent(
-    state: LoginUiState,
+    state: BaseLoginViewModel.LoginState,
     onInfoDismiss: () -> Unit,
     onErrorDismiss: () -> Unit,
-    onTextChange: (Entry, Entry, Boolean) -> Unit,
+    onTextChange: (Entry) -> Unit,
     onSubmission: () -> Unit,
     onCreateAccountPress: () -> Unit,
 ) {
     val navigator = LocalNavController.current
-    LaunchedEffect(state.loggedIn) {
-        if (state.loggedIn) {
-            // Todo when a main page is implemented create a navigation to it here
-        }
-    }
-
-    LoginBackgroundColumn {
+    BackgroundColumn {
         Image(
             modifier = Modifier.size(ForzenbookTheme.dimens.imageSizes.large),
             painter = painterResource(id = R.drawable.logo_render_full_notext),
             contentDescription = stringResource(id = R.string.lion_icon),
         )
         LoginTitleSection(stringResource(id = R.string.app_name))
-        Content(
-            stateEmail = state.email,
-            stateCode = state.code,
-            isInputtingCode = state.inputtingCode,
-            hasError = state.hasError,
-            showInfo = state.showInfoDialog,
-            isLoading = state.isLoading,
-            onInfoDismiss = onInfoDismiss,
-            onErrorDismiss = onErrorDismiss,
-            onTextChange = onTextChange,
-            onSubmission = onSubmission,
-            onCreateAccountPress = onCreateAccountPress,
-        )
+        when (state) {
+            is BaseLoginViewModel.LoginState.Content -> {
+                state.getContent().let {
+                    MainContent(
+                        subject = if (it is BaseLoginViewModel.LoginContent.Email) it.email else (it as BaseLoginViewModel.LoginContent.Code).code,
+                        showInfo = if (it is BaseLoginViewModel.LoginContent.Code) it.showInfoDialog else false,
+                        inputType = if (it is BaseLoginViewModel.LoginContent.Email) BaseLoginViewModel.LoginInputType.EMAIL else BaseLoginViewModel.LoginInputType.CODE,
+                        onTextChange = onTextChange,
+                        onSubmission = onSubmission,
+                        onCreateAccountPress = onCreateAccountPress,
+                        onInfoDismiss = if (it is BaseLoginViewModel.LoginContent.Email) {
+                            {}
+                        } else {
+                            onInfoDismiss
+                        }
+                    )
+                }
+            }
+            is BaseLoginViewModel.LoginState.Error -> {
+                ErrorContent(state.loginInputType, onErrorDismiss)
+            }
+            is BaseLoginViewModel.LoginState.Loading -> {
+                LoadingContent(loginType = state.loginInputType)
+                PreventScreenActionsDuringLoad()
+            }
+            BaseLoginViewModel.LoginState.LoggedIn -> {
+                LaunchedEffect(Unit) {
+                    // Todo when a main page is implemented create a navigation to it here
+                }
+            }
+            else -> {
+                throw Exception("Illegal unknown state")
+            }
+        }
     }
-    if (state.isLoading) {
-        PreventScreenActionsDuringLoad()
-    }
+}
+
+@Composable
+private fun LoadingContent(
+    loginType: BaseLoginViewModel.LoginInputType,
+) {
+    MainContent(inputType = loginType, isLoading = true)
+}
+
+@Composable
+private fun ErrorContent(
+    loginType: BaseLoginViewModel.LoginInputType,
+    onErrorDismiss: () -> Unit,
+) {
+    MainContent(inputType = loginType)
+    ForzenbookDialog(
+        title = stringResource(R.string.login_error_title),
+        body = stringResource(R.string.login_error),
+        buttonText = stringResource(id = R.string.generic_dialog_confirm),
+        onDismiss = onErrorDismiss
+    )
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun Content(
-    stateEmail: Entry,
-    stateCode: Entry,
-    isInputtingCode: Boolean,
-    hasError: Boolean,
-    showInfo: Boolean,
-    isLoading: Boolean,
-    onInfoDismiss: () -> Unit,
-    onErrorDismiss: () -> Unit,
-    onTextChange: (Entry, Entry, Boolean) -> Unit,
-    onSubmission: () -> Unit,
-    onCreateAccountPress: () -> Unit,
+private fun MainContent(
+    subject: Entry = Entry("", EntryError.NameError.None),
+    showInfo: Boolean = false,
+    inputType: BaseLoginViewModel.LoginInputType,
+    isLoading: Boolean = false,
+    onTextChange: (Entry) -> Unit = { _ -> },
+    onSubmission: () -> Unit = {},
+    onCreateAccountPress: () -> Unit = {},
+    onInfoDismiss: () -> Unit = {},
 ) {
-    var email = stateEmail.text
-    var emailError = stateEmail.error
-    var code = stateCode.text
-    var codeError = stateCode.error
-    val focusManager = LocalFocusManager.current
+    var text = subject.text
+    var textError = subject.error
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    if (!isInputtingCode) {
-        InputField(
-            label = stringResource(R.string.login_email_prompt),
-            value = email,
-            onValueChange = {
-                email = it
-                onTextChange(Entry(email, emailError), Entry(code, codeError), isInputtingCode)
-            },
-            imeAction = if (isInputtingCode) ImeAction.Next else ImeAction.Done,
-            onNext = { focusManager.moveFocus(FocusDirection.Down) },
-            onDone = {
-                keyboardController?.hide()
-                if (emailError.isValid()) {
-                    onSubmission()
-                }
-            },
-        )
-        if (email.isNotEmpty() && !emailError.isValid()) {
-            if (emailError == LoginError.EmailError.Length) {
+    InputField(
+        label = if (inputType == BaseLoginViewModel.LoginInputType.EMAIL) stringResource(R.string.login_email_prompt) else stringResource(
+            R.string.login_code_prompt
+        ),
+        value = text,
+        onValueChange = {
+            text = it
+            onTextChange(Entry(text, textError))
+        },
+        imeAction = ImeAction.Done,
+        onDone = {
+            keyboardController?.hide()
+            if (textError.isValid()) {
+                onSubmission()
+            }
+        },
+    )
+    if (inputType == BaseLoginViewModel.LoginInputType.EMAIL) {
+        if (text.isNotEmpty() && !textError.isValid()) {
+            if (textError == EntryError.EmailError.Length) {
                 ErrorText(error = stringResource(R.string.login_email_error_length))
-            } else if (emailError == LoginError.EmailError.InvalidFormat) {
+            } else if (textError == EntryError.EmailError.InvalidFormat) {
                 ErrorText(error = stringResource(R.string.login_email_error_format))
             }
         }
     } else {
-        InputField(
-            label = stringResource(R.string.login_code_prompt), value = code,
-            onValueChange = {
-                code = it
-                onTextChange(Entry(email, emailError), Entry(code, codeError), isInputtingCode)
-            },
-            keyboardType = KeyboardType.Number,
-            imeAction = ImeAction.Done,
-            onDone = {
-                keyboardController?.hide()
-                if (emailError.isValid() && codeError.isValid()) {
-                    onSubmission()
-                }
-            },
-        )
-        if (code.isNotEmpty() && !codeError.isValid()) {
-            if (codeError == LoginError.CodeError.Length) {
+        if (text.isNotEmpty() && !textError.isValid()) {
+            if (textError == EntryError.CodeError.Length) {
                 ErrorText(error = stringResource(R.string.login_code_error))
             }
         }
@@ -151,11 +162,7 @@ private fun Content(
         SubmitButton(
             onSubmission = onSubmission,
             label = stringResource(R.string.login_button_text),
-            enabled = if (!isInputtingCode) {
-                emailError.isValid()
-            } else {
-                emailError.isValid() && codeError.isValid()
-            }
+            enabled = textError.isValid()
         )
     }
     Spacer(modifier = Modifier.height(ForzenbookTheme.dimens.grid.x5))
@@ -168,14 +175,6 @@ private fun Content(
             }
             .padding(ForzenbookTheme.dimens.grid.x3)
     )
-    if (hasError) {
-        ForzenbookDialog(
-            title = stringResource(R.string.login_error_title),
-            body = stringResource(R.string.login_error),
-            buttonText = stringResource(id = R.string.generic_dialog_confirm),
-            onDismiss = onErrorDismiss
-        )
-    }
     if (showInfo) {
         ForzenbookDialog(
             title = stringResource(R.string.login_info_title),

@@ -2,12 +2,11 @@ package com.hamdan.forzenbook.legacy.core.viewmodels
 
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.viewModelScope
-import com.hamdan.forzenbook.core.Entry
-import com.hamdan.forzenbook.core.LoginError
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountResult
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountUseCase
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountValidationUseCase
 import com.hamdan.forzenbook.createaccount.core.viewmodel.BaseCreateAccountViewModel
+import com.hamdan.forzenbook.createaccount.core.viewmodel.getContent
 import com.hamdan.forzenbook.legacy.core.view.FragmentNavigator
 import com.hamdan.forzenbook.ui.core.R
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,7 +25,7 @@ class LegacyCreateAccountFragmentViewModel @Inject constructor(
     createAccountUseCase
 ) {
     private val _state: MutableStateFlow<CreateAccountState> =
-        MutableStateFlow(CreateAccountState())
+        MutableStateFlow(CreateAccountState.Content(CreateAccountContent()))
     val state: StateFlow<CreateAccountState>
         get() = _state
 
@@ -42,10 +41,8 @@ class LegacyCreateAccountFragmentViewModel @Inject constructor(
 
     private fun createAccount(fragmentManager: FragmentManager) {
         viewModelScope.launch {
-            createAccountState.let {
-                createAccountState = createAccountState.copy(
-                    isLoading = true,
-                )
+            createAccountState.getContent().createAccountContent.let {
+                createAccountState = CreateAccountState.Loading
                 val split = it.birthDay.text.split("-")
                 // convert date back to a readable format for the sql on the server
                 val actualDate = "${split[2]}-${split[0]}-${split[1]}"
@@ -58,29 +55,18 @@ class LegacyCreateAccountFragmentViewModel @Inject constructor(
                 )
                 when (result) {
                     CreateAccountResult.CREATE_SUCCESS -> {
-                        createAccountState = createAccountState.copy(
-                            firstName = Entry(text = "", error = LoginError.NameError.Length),
-                            lastName = Entry(text = "", error = LoginError.NameError.Length),
-                            birthDay = Entry(text = "", error = LoginError.BirthDateError.TooYoung),
-                            email = Entry(text = "", error = LoginError.EmailError.Valid),
-                            location = Entry(text = "", error = LoginError.LocationError.Length),
-                            isLoading = false,
-                            accountCreated = true
-                        )
+                        createAccountState = CreateAccountState.AccountCreated
+                        navigator.navigateToLogin(fragmentManager)
+                        createAccountState = CreateAccountState.Content(CreateAccountContent())
                         // send to login page
-                        navigateToLogin(fragmentManager)
                     }
                     CreateAccountResult.CREATE_EXISTS -> {
-                        createAccountState = createAccountState.copy(
-                            errorId = R.string.create_account_error_user_exists,
-                            isLoading = false,
-                        )
+                        createAccountState =
+                            CreateAccountState.Error(R.string.create_account_error_user_exists)
                     }
                     CreateAccountResult.CREATE_FAILURE -> {
-                        createAccountState = createAccountState.copy(
-                            errorId = R.string.create_account_error_generic,
-                            isLoading = false,
-                        )
+                        createAccountState =
+                            CreateAccountState.Error(R.string.create_account_error_generic)
                     }
                 }
             }

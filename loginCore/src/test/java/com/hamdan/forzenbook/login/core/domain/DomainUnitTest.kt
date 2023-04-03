@@ -1,7 +1,7 @@
 package com.hamdan.forzenbook.login.core.domain
 
 import com.hamdan.forzenbook.core.Entry
-import com.hamdan.forzenbook.core.LoginError
+import com.hamdan.forzenbook.core.EntryError
 import com.hamdan.forzenbook.login.core.data.repository.LoginRepository
 import com.hamdan.forzenbook.login.core.data.repository.NullTokenException
 import com.hamdan.forzenbook.login.core.data.repository.User
@@ -78,21 +78,21 @@ class DomainUnitTest {
         var state = LoginEntrys(
             email = Entry(
                 text = longEmail,
-                error = LoginError.EmailError.Valid
+                error = EntryError.EmailError.Valid
             ),
-            code = Entry(text = validCode, error = LoginError.CodeError.Valid),
+            code = Entry(text = validCode, error = EntryError.CodeError.Valid),
         )
-        if (useCase(state).email.error != LoginError.EmailError.Length) fail()
+        if (useCase(state).email.error != EntryError.EmailError.Length) fail()
         state = state.copy(email = Entry(invalidEmailFormat, state.email.error))
-        if (useCase(state).email.error != LoginError.EmailError.InvalidFormat) fail()
+        if (useCase(state).email.error != EntryError.EmailError.InvalidFormat) fail()
         state = state.copy(email = Entry(longAndInvalidEmail, state.email.error))
-        if (useCase(state).email.error != LoginError.EmailError.Length) fail()
+        if (useCase(state).email.error != EntryError.EmailError.Length) fail()
         state = state.copy(email = Entry(validEmail, state.email.error))
-        if (useCase(state).email.error != LoginError.EmailError.Valid) fail()
+        if (useCase(state).email.error != EntryError.EmailError.Valid) fail()
 
         state = state.copy(code = Entry(longCode, state.code.error))
-        if (useCase(state).code.error != LoginError.CodeError.Length) fail()
+        if (useCase(state).code.error != EntryError.CodeError.Length) fail()
         state = state.copy(code = Entry(validCode, state.code.error))
-        if (useCase(state).code.error != LoginError.CodeError.Valid) fail()
+        if (useCase(state).code.error != EntryError.CodeError.Valid) fail()
     }
 }

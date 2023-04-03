@@ -10,7 +10,9 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.viewModelScope
-import com.hamdan.forzenbook.core.LoginError
+import com.hamdan.forzenbook.core.EntryError
+import com.hamdan.forzenbook.createaccount.core.viewmodel.BaseCreateAccountViewModel
+import com.hamdan.forzenbook.createaccount.core.viewmodel.getContent
 import com.hamdan.forzenbook.legacy.core.view.utils.DialogUtils
 import com.hamdan.forzenbook.legacy.core.viewmodels.LegacyCreateAccountFragmentViewModel
 import com.hamdan.forzenbook.ui.core.R
@@ -66,115 +68,126 @@ class LegacyCreateAccountFragment : Fragment() {
             createAccountModel.viewModelScope.launch(Dispatchers.IO) {
                 createAccountModel.state.collect { state ->
                     withContext(Dispatchers.Main) {
-                        state.apply {
-                            firstNameValue = firstName.text
-                            lastNameValue = lastName.text
-                            birthDateValue = birthDay.text
-                            emailValue = email.text
-                            locationValue = location.text
+                        when (state) {
+                            BaseCreateAccountViewModel.CreateAccountState.AccountCreated -> {
+                                createAccountModel.navigateUpPressed()
+                            }
+                            is BaseCreateAccountViewModel.CreateAccountState.Content -> {
+                                createAccountClickBlocker.isVisible = false
+                                createAccountSubmitText.isVisible = true
+                                createAccountSubmitProgressIndicator.isVisible = false
 
-                            submitable =
-                                (email.error.isValid() && birthDay.error.isValid() && location.error.isValid() && lastName.error.isValid() && firstName.error.isValid())
+                                state.createAccountContent.let { stateContent ->
+                                    firstNameValue = stateContent.firstName.text
+                                    lastNameValue = stateContent.lastName.text
+                                    birthDateValue = stateContent.birthDay.text
+                                    emailValue = stateContent.email.text
+                                    locationValue = stateContent.location.text
 
-                            errorId?.let {
+                                    submitable =
+                                        (stateContent.email.error.isValid() && stateContent.birthDay.error.isValid() && stateContent.location.error.isValid() && stateContent.lastName.error.isValid() && stateContent.firstName.error.isValid())
+
+                                    createAccountSubmitButton.isEnabled = submitable
+                                    if (stateContent.isDateDialogOpen) {
+                                        DialogUtils.fragmentDatePicker(
+                                            birthDate = stateContent.birthDay.text,
+                                            onTextChange = {
+                                                inputBirthDateText.setText(it)
+                                                createAccountModel.updateCreateAccountTextAndErrors(
+                                                    firstName = stateContent.firstName.copy(text = firstNameValue),
+                                                    lastName = stateContent.firstName.copy(text = lastNameValue),
+                                                    birthDay = stateContent.firstName.copy(text = it),
+                                                    email = stateContent.firstName.copy(text = emailValue),
+                                                    location = stateContent.firstName.copy(text = locationValue),
+                                                )
+                                            },
+                                            onDateSubmission = {
+                                                createAccountModel.createAccountDateDialogSubmitClicked()
+                                            },
+                                            onDateDismiss = {
+                                                createAccountModel.createAccountDateDialogDismiss()
+                                            }
+                                        ).show(parentFragmentManager, null)
+                                    }
+
+                                    firstNameErrorText.apply {
+                                        if (stateContent.firstName.text.isNotEmpty() && !stateContent.firstName.error.isValid()) {
+                                            if (stateContent.firstName.error == EntryError.NameError.Length) {
+                                                text =
+                                                    getString(R.string.create_account_first_name_error_length)
+                                                isVisible = true
+                                            } else if (stateContent.firstName.error == EntryError.NameError.InvalidCharacters) {
+                                                text =
+                                                    getString(R.string.create_account_first_name_error_invalid_characters)
+                                                isVisible = true
+                                            }
+                                        } else {
+                                            isVisible = false
+                                        }
+                                    }
+
+                                    lastNameErrorText.apply {
+                                        if (stateContent.lastName.text.isNotEmpty() && !stateContent.lastName.error.isValid()) {
+                                            if (stateContent.lastName.error == EntryError.NameError.Length) {
+                                                text =
+                                                    getString(R.string.create_account_last_name_error_length)
+                                                isVisible = true
+                                            } else if (stateContent.lastName.error == EntryError.NameError.InvalidCharacters) {
+                                                text =
+                                                    getString(R.string.create_account_last_name_error_invalid_characters)
+                                                isVisible = true
+                                            }
+                                        } else {
+                                            isVisible = false
+                                        }
+                                    }
+
+                                    birthDateErrorText.isVisible =
+                                        stateContent.birthDay.error == EntryError.BirthDateError.TooYoung && stateContent.birthDay.text.isNotEmpty()
+
+                                    emailErrorText.apply {
+                                        if (!stateContent.email.error.isValid() && stateContent.email.text.isNotEmpty()) {
+                                            if (stateContent.email.error == EntryError.EmailError.Length) {
+                                                text = getString(R.string.login_email_error_length)
+                                                isVisible = true
+                                            } else if (stateContent.email.error == EntryError.EmailError.InvalidFormat) {
+                                                text = getString(R.string.login_email_error_format)
+                                                isVisible = true
+                                            }
+                                        } else {
+                                            isVisible = false
+                                        }
+                                    }
+
+                                    locationErrorText.isVisible =
+                                        stateContent.location.error == EntryError.LocationError.Length
+                                }
+                            }
+                            is BaseCreateAccountViewModel.CreateAccountState.Error -> {
+                                createAccountClickBlocker.isVisible = false
+                                createAccountSubmitText.isVisible = true
+                                createAccountSubmitProgressIndicator.isVisible = false
+
                                 DialogUtils.fragmentAlertDialog(
                                     title = getString(R.string.create_account_error_title),
-                                    body = getString(it),
+                                    body = getString(state.errorId),
                                     buttonText = getString(R.string.generic_dialog_confirm),
                                     onDismiss = { createAccountModel.createAccountDismissErrorClicked() }
                                 ).show(parentFragmentManager, null)
                             }
-
-                            if (isLoading) {
+                            BaseCreateAccountViewModel.CreateAccountState.Loading -> {
                                 createAccountClickBlocker.isVisible = true
                                 createAccountSubmitText.isVisible = false
                                 createAccountSubmitProgressIndicator.isVisible = true
-                            } else {
-                                createAccountClickBlocker.isVisible = false
-                                createAccountSubmitText.isVisible = true
-                                createAccountSubmitProgressIndicator.isVisible = false
                             }
-
-                            if (isDateDialogOpen) {
-                                DialogUtils.fragmentDatePicker(
-                                    birthDate = state.birthDay.text,
-                                    onTextChange = {
-                                        inputBirthDateText.setText(it)
-                                        createAccountModel.updateCreateAccountTextAndErrors(
-                                            firstName = this.firstName.copy(text = firstNameValue),
-                                            lastName = this.firstName.copy(text = lastNameValue),
-                                            birthDay = this.firstName.copy(text = it),
-                                            email = this.firstName.copy(text = emailValue),
-                                            location = this.firstName.copy(text = locationValue),
-                                        )
-                                    },
-                                    onDateSubmission = {
-                                        createAccountModel.createAccountDateDialogSubmitClicked()
-                                    },
-                                    onDateDismiss = {
-                                        createAccountModel.createAccountDateDialogDismiss()
-                                    }
-                                ).show(parentFragmentManager, null)
+                            else -> {
+                                throw Exception("Illegal unknown state")
                             }
-
-                            createAccountSubmitButton.isEnabled = submitable
-
-                            firstNameErrorText.apply {
-                                if (firstName.text.isNotEmpty() && !firstName.error.isValid()) {
-                                    if (firstName.error == LoginError.NameError.Length) {
-                                        text =
-                                            getString(R.string.create_account_first_name_error_length)
-                                        isVisible = true
-                                    } else if (firstName.error == LoginError.NameError.InvalidCharacters) {
-                                        text =
-                                            getString(R.string.create_account_first_name_error_invalid_characters)
-                                        isVisible = true
-                                    }
-                                } else {
-                                    isVisible = false
-                                }
-                            }
-
-                            lastNameErrorText.apply {
-                                if (lastName.text.isNotEmpty() && !lastName.error.isValid()) {
-                                    if (lastName.error == LoginError.NameError.Length) {
-                                        text =
-                                            getString(R.string.create_account_last_name_error_length)
-                                        isVisible = true
-                                    } else if (lastName.error == LoginError.NameError.InvalidCharacters) {
-                                        text =
-                                            getString(R.string.create_account_last_name_error_invalid_characters)
-                                        isVisible = true
-                                    }
-                                } else {
-                                    isVisible = false
-                                }
-                            }
-
-                            birthDateErrorText.isVisible =
-                                birthDay.error == LoginError.BirthDateError.TooYoung && birthDay.text.isNotEmpty()
-
-                            emailErrorText.apply {
-                                if (!email.error.isValid() && email.text.isNotEmpty()) {
-                                    if (email.error == LoginError.EmailError.Length) {
-                                        text = getString(R.string.login_email_error_length)
-                                        isVisible = true
-                                    } else if (email.error == LoginError.EmailError.InvalidFormat) {
-                                        text = getString(R.string.login_email_error_format)
-                                        isVisible = true
-                                    }
-                                } else {
-                                    isVisible = false
-                                }
-                            }
-
-                            locationErrorText.isVisible =
-                                location.error == LoginError.LocationError.Length
                         }
                     }
                 }
             }
-            createAccountModel.state.value.apply {
+            createAccountModel.state.value.getContent().createAccountContent.apply {
                 inputFirstNameText.addTextChangedListener {
                     createAccountModel.updateCreateAccountTextAndErrors(
                         firstName = this.firstName.copy(text = it.toString()),

@@ -16,12 +16,12 @@ class PostViewModel @Inject constructor(
     textPostUseCase,
     imagePostUseCase
 ) {
-    private val _state: MutableState<BasePostViewModel.PostState> =
-        mutableStateOf(BasePostViewModel.PostState())
-    val state: MutableState<BasePostViewModel.PostState>
+    private val _state: MutableState<PostState> =
+        mutableStateOf(PostState.Content(PostContent.Text()))
+    val state: MutableState<PostState>
         get() = _state
 
-    override var postState: BasePostViewModel.PostState
+    override var postState: PostState
         get() = _state.value
         set(value) {
             _state.value = value

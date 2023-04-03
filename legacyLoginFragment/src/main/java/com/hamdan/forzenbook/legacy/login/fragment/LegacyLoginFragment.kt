@@ -1,6 +1,7 @@
 package com.hamdan.forzenbook.legacy.login.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +11,12 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.viewModelScope
-import com.hamdan.forzenbook.core.LoginError
+import com.hamdan.forzenbook.core.EntryError
 import com.hamdan.forzenbook.legacy.core.view.utils.DialogUtils
 import com.hamdan.forzenbook.legacy.core.view.utils.KeyboardUtils
 import com.hamdan.forzenbook.legacy.core.viewmodels.LegacyLoginFragmentViewModel
+import com.hamdan.forzenbook.login.core.viewmodel.BaseLoginViewModel
+import com.hamdan.forzenbook.login.core.viewmodel.getContent
 import com.hamdan.forzenbook.ui.core.R
 import com.hamdan.forzenbook.ui.core.databinding.ActivityLegacyLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,8 +41,6 @@ class LegacyLoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
-            var emailInputTextValue = ""
-            var codeInputTextValue = ""
             var loginSubmittable = false
             loginSubmitButton.isEnabled = false
             val context = requireContext()
@@ -75,71 +76,67 @@ class LegacyLoginFragment : Fragment() {
             loginModel.viewModelScope.launch(Dispatchers.IO) {
                 loginModel.state.collect { state ->
                     withContext(Dispatchers.Main) {
-                        state.apply {
-                            if (this.loggedIn) {
-                                loginModel.login()
-                                return@withContext
-                            }
-                            emailInputTextValue = email.text
-                            codeInputTextValue = code.text
-                            loginSubmittable = email.error.isValid() && code.error.isValid()
-
-                            loginSubmitButton.isEnabled = if (!inputtingCode) {
-                                email.error.isValid()
-                            } else {
-                                email.error.isValid() && code.error.isValid()
-                            }
-
-                            emailErrorText.apply {
-                                if (!email.error.isValid() && email.text.isNotEmpty()) {
-                                    if (email.error == LoginError.EmailError.Length) {
-                                        text = getString(R.string.login_email_error_length)
-                                        isVisible = true
-                                    } else if (email.error == LoginError.EmailError.InvalidFormat) {
-                                        text = getString(R.string.login_email_error_format)
-                                        isVisible = true
-                                    }
-                                } else {
-                                    isVisible = false
-                                }
-                            }
-                            if (inputtingCode) {
-                                inputEmailBody.isVisible = false
-                                emailErrorText.isVisible = false
-                                inputCodeBody.isVisible = true
-                                codeErrorText.isVisible =
-                                    if (code.text.isNotEmpty() && !code.error.isValid())
-                                        code.error == LoginError.CodeError.Length
-                                    else false
-                            } else {
-                                codeErrorText.isVisible = false
-                                inputCodeBody.isVisible = false
-                            }
-
-                            if (isLoading) {
-                                loginClickBlocker.isVisible = true
-                                loginSubmitText.isVisible = false
-                                loginSubmitProgressIndicator.isVisible = true
-                            } else {
+                        when (state) {
+                            is BaseLoginViewModel.LoginState.Content -> {
                                 loginClickBlocker.isVisible = false
                                 loginSubmitText.isVisible = true
                                 loginSubmitProgressIndicator.isVisible = false
-                                loginSubmitButton.isEnabled = if (!inputtingCode) {
-                                    email.error.isValid()
+
+                                if (state.content is BaseLoginViewModel.LoginContent.Email) {
+                                    (state.content as BaseLoginViewModel.LoginContent.Email).let { stateContent ->
+                                        codeErrorText.isVisible = false
+                                        inputCodeBody.isVisible = false
+
+                                        loginSubmittable = stateContent.email.error.isValid()
+                                        loginSubmitButton.isEnabled = loginSubmittable
+
+                                        emailErrorText.apply {
+                                            if (!stateContent.email.error.isValid() && stateContent.email.text.isNotEmpty()) {
+                                                if (stateContent.email.error == EntryError.EmailError.Length) {
+                                                    text =
+                                                        getString(R.string.login_email_error_length)
+                                                    isVisible = true
+                                                } else if (stateContent.email.error == EntryError.EmailError.InvalidFormat) {
+                                                    text =
+                                                        getString(R.string.login_email_error_format)
+                                                    isVisible = true
+                                                }
+                                            } else {
+                                                isVisible = false
+                                            }
+                                        }
+                                    }
                                 } else {
-                                    email.error.isValid() && code.error.isValid()
+                                    (state.content as BaseLoginViewModel.LoginContent.Code).let { stateContent ->
+                                        inputEmailBody.isVisible = false
+                                        emailErrorText.isVisible = false
+                                        loginSubmittable = stateContent.code.error.isValid()
+                                        Log.v("Hamdan", loginSubmittable.toString())
+                                        loginSubmitButton.isEnabled = loginSubmittable
+
+                                        inputCodeBody.isVisible = true
+                                        codeErrorText.isVisible =
+                                            if (stateContent.code.text.isNotEmpty() && !stateContent.code.error.isValid())
+                                                stateContent.code.error == EntryError.CodeError.Length
+                                            else false
+
+                                        if (stateContent.showInfoDialog) {
+                                            DialogUtils.fragmentAlertDialog(
+                                                getString(R.string.login_info_title),
+                                                getString(R.string.login_info),
+                                                getString(R.string.generic_dialog_confirm)
+                                            ) {
+                                                loginModel.loginDismissInfoClicked()
+                                            }.show(parentFragmentManager, null)
+                                        }
+                                    }
                                 }
                             }
-                            if (showInfoDialog) {
-                                DialogUtils.fragmentAlertDialog(
-                                    getString(R.string.login_info_title),
-                                    getString(R.string.login_info),
-                                    getString(R.string.generic_dialog_confirm)
-                                ) {
-                                    loginModel.loginDismissInfoClicked()
-                                }.show(parentFragmentManager, null)
-                            }
-                            if (hasError) {
+                            is BaseLoginViewModel.LoginState.Error -> {
+                                loginClickBlocker.isVisible = false
+                                loginSubmitText.isVisible = true
+                                loginSubmitProgressIndicator.isVisible = false
+
                                 DialogUtils.fragmentAlertDialog(
                                     getString(R.string.login_error_title),
                                     getString(R.string.login_error),
@@ -148,23 +145,34 @@ class LegacyLoginFragment : Fragment() {
                                     loginModel.loginDismissErrorClicked()
                                 }.show(parentFragmentManager, null)
                             }
+                            is BaseLoginViewModel.LoginState.Loading -> {
+                                loginClickBlocker.isVisible = true
+                                loginSubmitText.isVisible = false
+                                loginSubmitProgressIndicator.isVisible = true
+                            }
+                            BaseLoginViewModel.LoginState.LoggedIn -> {
+                                loginModel.login()
+                                return@withContext
+                            }
                         }
                     }
                 }
             }
-            loginModel.state.value.apply {
-                inputEmailText.addTextChangedListener {
-                    loginModel.updateLoginTexts(
-                        email = this.email.copy(text = it.toString()),
-                        code = this.code.copy(text = codeInputTextValue),
-                        isInputtingCode = this.inputtingCode
+            inputEmailText.addTextChangedListener {
+                if (loginModel.state.value.getContent() is BaseLoginViewModel.LoginContent.Email) {
+                    loginModel.updateText(
+                        entry = (loginModel.state.value.getContent() as BaseLoginViewModel.LoginContent.Email).email.copy(
+                            text = it.toString()
+                        ),
                     )
                 }
-                inputCodeText.addTextChangedListener {
-                    loginModel.updateLoginTexts(
-                        email = this.email.copy(text = emailInputTextValue),
-                        code = this.code.copy(text = it.toString()),
-                        isInputtingCode = this.inputtingCode
+            }
+            inputCodeText.addTextChangedListener {
+                if (loginModel.state.value.getContent() is BaseLoginViewModel.LoginContent.Code) {
+                    loginModel.updateText(
+                        entry = (loginModel.state.value.getContent() as BaseLoginViewModel.LoginContent.Code).code.copy(
+                            text = it.toString()
+                        ),
                     )
                 }
             }

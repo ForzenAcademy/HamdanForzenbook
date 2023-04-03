@@ -3,6 +3,7 @@ package com.hamdan.forzenbook.createaccount.compose
 import android.app.DatePickerDialog
 import android.widget.DatePicker
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,20 +32,21 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.hamdan.forzenbook.compose.core.LocalNavController
+import com.hamdan.forzenbook.compose.core.composables.BackgroundColumn
 import com.hamdan.forzenbook.compose.core.composables.ErrorText
 import com.hamdan.forzenbook.compose.core.composables.ForzenbookDialog
 import com.hamdan.forzenbook.compose.core.composables.ForzenbookTopAppBar
 import com.hamdan.forzenbook.compose.core.composables.InputField
 import com.hamdan.forzenbook.compose.core.composables.LoadingButton
-import com.hamdan.forzenbook.compose.core.composables.LoginBackgroundColumn
 import com.hamdan.forzenbook.compose.core.composables.PreventScreenActionsDuringLoad
 import com.hamdan.forzenbook.compose.core.composables.SubmitButton
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
 import com.hamdan.forzenbook.compose.core.theme.dimens
 import com.hamdan.forzenbook.core.Entry
-import com.hamdan.forzenbook.core.LoginError
+import com.hamdan.forzenbook.core.EntryError
 import com.hamdan.forzenbook.core.stringDate
-import com.hamdan.forzenbook.createaccount.core.view.CreateUiComposeState
+import com.hamdan.forzenbook.createaccount.core.viewmodel.BaseCreateAccountViewModel
+import com.hamdan.forzenbook.createaccount.core.viewmodel.getContent
 import com.hamdan.forzenbook.ui.core.R
 import java.util.Calendar
 
@@ -52,65 +54,85 @@ private const val ONE_LINE = 1
 
 @Composable
 fun CreateAccountContent(
-    state: CreateUiComposeState,
+    state: BaseCreateAccountViewModel.CreateAccountState,
     onErrorDismiss: () -> Unit,
     onTextChange: (Entry, Entry, Entry, Entry, Entry) -> Unit,
     onDateFieldClick: () -> Unit,
     onDateSubmission: () -> Unit,
     onDateDismiss: () -> Unit,
     onSubmission: () -> Unit,
+    onNavigateUp: () -> Unit,
 ) {
     val navigator = LocalNavController.current
-    LaunchedEffect(state.accountCreated) {
-        if (state.accountCreated) {
-            navigator?.navigateUp()
+    when (state) {
+        BaseCreateAccountViewModel.CreateAccountState.AccountCreated -> {
+            ContentWrapper {}
+            LaunchedEffect(Unit) {
+                navigator?.navigateUp()
+                onNavigateUp()
+            }
+        }
+        is BaseCreateAccountViewModel.CreateAccountState.Content -> {
+            ContentWrapper {
+                MainContent(
+                    stateFirstName = state.getContent().createAccountContent.firstName,
+                    stateLastName = state.getContent().createAccountContent.lastName,
+                    stateBirthDate = state.getContent().createAccountContent.birthDay,
+                    stateEmail = state.getContent().createAccountContent.email,
+                    stateLocation = state.getContent().createAccountContent.location,
+                    isDateDialogOpen = state.getContent().createAccountContent.isDateDialogOpen,
+                    onTextChange = onTextChange,
+                    onDateSubmission = onDateSubmission,
+                    onDateDismiss = onDateDismiss,
+                    onSubmission = onSubmission,
+                    onDateFieldClick = onDateFieldClick,
+                )
+            }
+        }
+        is BaseCreateAccountViewModel.CreateAccountState.Error -> {
+            ContentWrapper {
+                ErrorContent(state.errorId, onErrorDismiss)
+            }
+        }
+        BaseCreateAccountViewModel.CreateAccountState.Loading -> {
+            ContentWrapper {
+                LoadingContent()
+            }
+            PreventScreenActionsDuringLoad()
+        }
+        else -> {
+            throw Exception("Illegal unknown state")
         }
     }
+}
+
+@Composable
+private fun ContentWrapper(content: @Composable ColumnScope.() -> Unit) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = { ForzenbookTopAppBar(topText = stringResource(R.string.top_bar_text_create_account)) },
     ) { padding ->
-        LoginBackgroundColumn(modifier = Modifier.padding(padding)) {
-            Content(
-                stateError = state.errorId,
-                stateFirstName = state.firstName,
-                stateLastName = state.lastName,
-                stateBirthDate = state.birthDay,
-                stateEmail = state.email,
-                stateLocation = state.location,
-                isDialogOpen = state.isDateDialogOpen,
-                isLoading = state.isLoading,
-                onTextChange = onTextChange,
-                onDateSubmission = onDateSubmission,
-                onDateDismiss = onDateDismiss,
-                onSubmission = onSubmission,
-                onErrorDismiss = onErrorDismiss,
-                onDateFieldClick = onDateFieldClick,
-            )
-        }
-        if (state.isLoading) {
-            PreventScreenActionsDuringLoad()
+        BackgroundColumn(modifier = Modifier.padding(padding)) {
+            content()
         }
     }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun Content(
-    stateError: Int?,
-    stateFirstName: Entry,
-    stateLastName: Entry,
-    stateBirthDate: Entry,
-    stateEmail: Entry,
-    stateLocation: Entry,
-    isDialogOpen: Boolean,
-    isLoading: Boolean,
-    onTextChange: (Entry, Entry, Entry, Entry, Entry) -> Unit,
-    onDateSubmission: () -> Unit,
-    onDateDismiss: () -> Unit,
-    onSubmission: () -> Unit,
-    onErrorDismiss: () -> Unit,
-    onDateFieldClick: () -> Unit,
+private fun MainContent(
+    stateFirstName: Entry = Entry("", EntryError.NameError.None),
+    stateLastName: Entry = Entry("", EntryError.NameError.None),
+    stateBirthDate: Entry = Entry("", EntryError.BirthDateError.None),
+    stateEmail: Entry = Entry("", EntryError.EmailError.None),
+    stateLocation: Entry = Entry("", EntryError.LocationError.None),
+    isDateDialogOpen: Boolean = false,
+    isLoading: Boolean = false,
+    onTextChange: (Entry, Entry, Entry, Entry, Entry) -> Unit = { _, _, _, _, _ -> },
+    onDateSubmission: () -> Unit = {},
+    onDateDismiss: () -> Unit = {},
+    onSubmission: () -> Unit = {},
+    onDateFieldClick: () -> Unit = {},
 ) {
     var firstName = stateFirstName.text
     var lastName = stateLastName.text
@@ -138,9 +160,9 @@ private fun Content(
         onNext = { focusManager.moveFocus(FocusDirection.Down) }
     )
     if (firstName.isNotEmpty() && !stateFirstName.error.isValid()) {
-        if (stateFirstName.error == LoginError.NameError.Length) {
+        if (stateFirstName.error == EntryError.NameError.Length) {
             ErrorText(error = stringResource(R.string.create_account_first_name_error_length))
-        } else if (stateFirstName.error == LoginError.NameError.InvalidCharacters) {
+        } else if (stateFirstName.error == EntryError.NameError.InvalidCharacters) {
             ErrorText(error = stringResource(R.string.create_account_first_name_error_invalid_characters))
         }
     }
@@ -161,9 +183,9 @@ private fun Content(
         onNext = { focusManager.moveFocus(FocusDirection.Down) }
     )
     if (lastName.isNotEmpty() && !stateLastName.error.isValid()) {
-        if (stateLastName.error == LoginError.NameError.Length) {
+        if (stateLastName.error == EntryError.NameError.Length) {
             ErrorText(error = stringResource(R.string.create_account_last_name_error_length))
-        } else if (stateLastName.error == LoginError.NameError.InvalidCharacters) {
+        } else if (stateLastName.error == EntryError.NameError.InvalidCharacters) {
             ErrorText(error = stringResource(R.string.create_account_last_name_error_invalid_characters))
         }
     }
@@ -222,9 +244,9 @@ private fun Content(
         onNext = { focusManager.moveFocus(FocusDirection.Down) }
     )
     if (email.isNotEmpty() && !stateEmail.error.isValid()) {
-        if (stateEmail.error == LoginError.EmailError.Length) {
+        if (stateEmail.error == EntryError.EmailError.Length) {
             ErrorText(error = stringResource(R.string.login_email_error_length))
-        } else if (stateEmail.error == LoginError.EmailError.InvalidFormat) {
+        } else if (stateEmail.error == EntryError.EmailError.InvalidFormat) {
             ErrorText(error = stringResource(R.string.login_email_error_format))
         }
     }
@@ -250,7 +272,7 @@ private fun Content(
         }
     )
     if (location.isNotEmpty() && !stateLocation.error.isValid()) {
-        if (stateLocation.error == LoginError.LocationError.Length) {
+        if (stateLocation.error == EntryError.LocationError.Length) {
             ErrorText(error = stringResource(R.string.create_account_location_error))
         }
     }
@@ -265,16 +287,8 @@ private fun Content(
         )
     }
     Spacer(modifier = Modifier.height(60.dp))
-    if (stateError != null) {
-        ForzenbookDialog(
-            title = stringResource(R.string.create_account_error_title),
-            body = stringResource(stateError),
-            buttonText = stringResource(id = R.string.generic_dialog_confirm),
-            onDismiss = onErrorDismiss
-        )
-    }
     val context = LocalContext.current
-    if (isDialogOpen) {
+    if (isDateDialogOpen) {
         val calendar = Calendar.getInstance()
         val currentYear = calendar.get(Calendar.YEAR)
         val currentMonth = calendar.get(Calendar.MONTH)
@@ -311,4 +325,20 @@ private fun Content(
             }.show()
         }
     }
+}
+
+@Composable
+private fun ErrorContent(errorId: Int, onErrorDismiss: () -> Unit) {
+    MainContent()
+    ForzenbookDialog(
+        title = stringResource(R.string.create_account_error_title),
+        body = stringResource(errorId),
+        buttonText = stringResource(id = R.string.generic_dialog_confirm),
+        onDismiss = onErrorDismiss
+    )
+}
+
+@Composable
+private fun LoadingContent() {
+    MainContent(isLoading = true)
 }
