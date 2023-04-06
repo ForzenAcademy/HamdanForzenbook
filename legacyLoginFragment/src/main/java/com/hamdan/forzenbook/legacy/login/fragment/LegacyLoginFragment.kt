@@ -134,7 +134,7 @@ class LegacyLoginFragment : Fragment() {
                                 DialogUtils.fragmentAlertDialog(
                                     getString(R.string.login_info_title),
                                     getString(R.string.login_info),
-                                    getString(R.string.login_confirm_info)
+                                    getString(R.string.generic_dialog_confirm)
                                 ) {
                                     loginModel.loginDismissInfoClicked()
                                 }.show(parentFragmentManager, null)
@@ -143,7 +143,7 @@ class LegacyLoginFragment : Fragment() {
                                 DialogUtils.fragmentAlertDialog(
                                     getString(R.string.login_error_title),
                                     getString(R.string.login_error),
-                                    getString(R.string.login_confirm_error)
+                                    getString(R.string.generic_dialog_confirm)
                                 ) {
                                     loginModel.loginDismissErrorClicked()
                                 }.show(parentFragmentManager, null)

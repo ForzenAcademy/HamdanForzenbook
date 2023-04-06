@@ -172,7 +172,7 @@ private fun Content(
         ForzenbookDialog(
             title = stringResource(R.string.login_error_title),
             body = stringResource(R.string.login_error),
-            buttonText = stringResource(id = R.string.login_confirm_error),
+            buttonText = stringResource(id = R.string.generic_dialog_confirm),
             onDismiss = onErrorDismiss
         )
     }
@@ -180,7 +180,7 @@ private fun Content(
         ForzenbookDialog(
             title = stringResource(R.string.login_info_title),
             body = stringResource(R.string.login_info),
-            buttonText = stringResource(id = R.string.login_confirm_info),
+            buttonText = stringResource(id = R.string.generic_dialog_confirm),
             onDismiss = onInfoDismiss
         )
     }

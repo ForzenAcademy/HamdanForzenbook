@@ -80,7 +80,7 @@ class LegacyCreateAccountFragment : Fragment() {
                                 DialogUtils.fragmentAlertDialog(
                                     title = getString(R.string.create_account_error_title),
                                     body = getString(it),
-                                    buttonText = getString(R.string.create_account_confirm_error),
+                                    buttonText = getString(R.string.generic_dialog_confirm),
                                     onDismiss = { createAccountModel.createAccountDismissErrorClicked() }
                                 ).show(parentFragmentManager, null)
                             }

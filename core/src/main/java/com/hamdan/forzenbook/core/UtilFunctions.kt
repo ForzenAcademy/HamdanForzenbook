@@ -1,6 +1,12 @@
 package com.hamdan.forzenbook.core
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
+import android.net.Uri
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.hamdan.forzenbook.ui.core.R
 import java.util.regex.Pattern
 
@@ -21,4 +27,30 @@ fun String.leftPad(): String {
     return if (this.length < 2) {
         "0$this"
     } else this
+}
+
+fun getBitmapFromUri(
+    uri: Uri,
+    context: Context,
+    onError: () -> Unit,
+    onBitmapLoaded: (Bitmap) -> Unit
+) {
+    Glide
+        .with(context)
+        .asBitmap()
+        .error(R.drawable.baseline_square_24)
+        .load(uri)
+        .into(BitmapGetter(onError = onError) { onBitmapLoaded(it) })
+}
+
+class BitmapGetter(val onError: () -> Unit, val onGetBitmap: (Bitmap) -> Unit) :
+    CustomTarget<Bitmap>() {
+    override fun onLoadCleared(placeholder: Drawable?) {}
+    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+        try {
+            onGetBitmap(resource)
+        } catch (e: Exception) {
+            onError()
+        }
+    }
 }

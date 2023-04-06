@@ -98,7 +98,7 @@ public class JavaLoginActivity extends ComponentActivity {
                                         this,
                                         getString(R.string.login_info_title),
                                         getString(R.string.login_info),
-                                        getString(R.string.login_confirm_info),
+                                        getString(R.string.generic_dialog_confirm),
                                         () -> {
                                             model.loginDismissInfoClicked();
                                         }
@@ -110,7 +110,7 @@ public class JavaLoginActivity extends ComponentActivity {
                                         this,
                                         getString(R.string.login_error_title),
                                         getString(R.string.login_error),
-                                        getString(R.string.login_confirm_error),
+                                        getString(R.string.generic_dialog_confirm),
                                         () -> {
                                             model.loginDismissErrorClicked();
                                         }
