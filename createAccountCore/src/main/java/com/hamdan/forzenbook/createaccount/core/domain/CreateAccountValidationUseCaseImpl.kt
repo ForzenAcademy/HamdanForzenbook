@@ -1,8 +1,8 @@
 package com.hamdan.forzenbook.createaccount.core.domain
 
 import com.hamdan.forzenbook.core.Entry
+import com.hamdan.forzenbook.core.EntryError
 import com.hamdan.forzenbook.core.GlobalConstants.EMAIL_LENGTH_LIMIT
-import com.hamdan.forzenbook.core.LoginError
 import com.hamdan.forzenbook.core.validateEmail
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -12,23 +12,23 @@ import java.util.Calendar
 class CreateAccountValidationUseCaseImpl : CreateAccountValidationUseCase {
     override fun invoke(state: CreateAccountEntrys): CreateAccountEntrys {
         val firstNameError = if (state.firstName.text.length > NAME_LENGTH_LIMIT) {
-            LoginError.NameError.Length
+            EntryError.NameError.Length
         } else if (!state.firstName.text.all { name -> name.isLetter() }) {
-            LoginError.NameError.InvalidCharacters
-        } else LoginError.NameError.Valid
+            EntryError.NameError.InvalidCharacters
+        } else EntryError.NameError.Valid
         val lastNameError = if (state.lastName.text.length > NAME_LENGTH_LIMIT) {
-            LoginError.NameError.Length
+            EntryError.NameError.Length
         } else if (!state.lastName.text.all { name -> name.isLetter() }) {
-            LoginError.NameError.InvalidCharacters
-        } else LoginError.NameError.Valid
+            EntryError.NameError.InvalidCharacters
+        } else EntryError.NameError.Valid
         val emailError = if (state.email.text.length > EMAIL_LENGTH_LIMIT) {
-            LoginError.EmailError.Length
+            EntryError.EmailError.Length
         } else if (!validateEmail(state.email.text)) {
-            LoginError.EmailError.InvalidFormat
-        } else LoginError.EmailError.Valid
+            EntryError.EmailError.InvalidFormat
+        } else EntryError.EmailError.Valid
         val locationError = if (state.location.text.length > LOCATION_LENGTH_LIMIT) {
-            LoginError.LocationError.Length
-        } else LoginError.LocationError.Valid
+            EntryError.LocationError.Length
+        } else EntryError.LocationError.Valid
         val birthError = if (state.birthDay.text.isNotEmpty()) {
             val calendar = Calendar.getInstance()
             val currentYear = calendar.get(Calendar.YEAR)
@@ -39,8 +39,8 @@ class CreateAccountValidationUseCaseImpl : CreateAccountValidationUseCase {
             val selectedDate =
                 LocalDate.parse(state.birthDay.text, DateTimeFormatter.ofPattern("MM-dd-yyyy"))
             if (selectedDate.isAfter(minDate.toLocalDate())) {
-                LoginError.BirthDateError.TooYoung
-            } else LoginError.BirthDateError.Valid
+                EntryError.BirthDateError.TooYoung
+            } else EntryError.BirthDateError.Valid
         } else {
             state.birthDay.error
         }

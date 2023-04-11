@@ -13,8 +13,6 @@ import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetCredentialsFromNe
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetCredentialsFromNetworkUseCaseImpl
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetStoredCredentialsUseCase
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetStoredCredentialsUseCaseImpl
-import com.hamdan.forzenbook.login.core.domain.usecase.LoginStringValidationUseCase
-import com.hamdan.forzenbook.login.core.domain.usecase.LoginStringValidationUseCaseImpl
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginValidationUseCase
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginValidationUseCaseImpl
 import dagger.Module
@@ -90,11 +88,6 @@ object LoginModule {
         return LoginValidationUseCaseImpl(
             loginRepository
         )
-    }
-
-    @Provides
-    fun providesLoginStringValidationUseCase(): LoginStringValidationUseCase {
-        return LoginStringValidationUseCaseImpl()
     }
 
     private const val MODULE_NAME = "login"

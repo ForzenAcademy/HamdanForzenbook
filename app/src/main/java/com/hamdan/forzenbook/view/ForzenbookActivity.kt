@@ -11,11 +11,8 @@ import androidx.navigation.compose.rememberNavController
 import com.hamdan.forzenbook.compose.core.LocalNavController
 import com.hamdan.forzenbook.compose.core.theme.ForzenBookTheme
 import com.hamdan.forzenbook.createaccount.compose.CreateAccountContent
-import com.hamdan.forzenbook.createaccount.core.viewmodel.toCreateAccountUiState
 import com.hamdan.forzenbook.login.compose.MainLoginContent
-import com.hamdan.forzenbook.login.core.viewmodel.toLoginUiState
-import com.hamdan.forzenbook.post.compose.PostContent
-import com.hamdan.forzenbook.post.core.viewmodel.toUiState
+import com.hamdan.forzenbook.post.compose.Post
 import com.hamdan.forzenbook.viewmodels.CreateAccountViewModel
 import com.hamdan.forzenbook.viewmodels.LoginViewModel
 import com.hamdan.forzenbook.viewmodels.PostViewModel
@@ -36,23 +33,19 @@ class ForzenbookActivity : ComponentActivity() {
                 CompositionLocalProvider(LocalNavController provides navController) {
                     NavHost(
                         navController = navController,
-                        startDestination = NavigationDestinations.POST_PAGE
+                        startDestination = NavigationDestinations.LOGIN_PAGE
                     ) {
                         composable(NavigationDestinations.LOGIN_PAGE) {
                             MainLoginContent(
-                                state = loginViewModel.state.value.toLoginUiState(),
+                                state = loginViewModel.state.value,
                                 onInfoDismiss = {
                                     loginViewModel.loginDismissInfoClicked()
                                 },
                                 onErrorDismiss = {
                                     loginViewModel.loginDismissErrorClicked()
                                 },
-                                onTextChange = { email, code, isInputting ->
-                                    loginViewModel.updateLoginTexts(
-                                        email,
-                                        code,
-                                        isInputting
-                                    )
+                                onTextChange = { entry ->
+                                    loginViewModel.updateText(entry)
                                 },
                                 onSubmission = {
                                     loginViewModel.loginClicked()
@@ -63,7 +56,7 @@ class ForzenbookActivity : ComponentActivity() {
                         }
                         composable(NavigationDestinations.CREATE_ACCOUNT_PAGE) {
                             CreateAccountContent(
-                                state = createAccountViewModel.state.value.toCreateAccountUiState(),
+                                state = createAccountViewModel.state.value,
                                 onErrorDismiss = {
                                     createAccountViewModel.createAccountDismissErrorClicked()
                                 },
@@ -80,11 +73,12 @@ class ForzenbookActivity : ComponentActivity() {
                                 onDateSubmission = { createAccountViewModel.createAccountDateDialogSubmitClicked() },
                                 onDateDismiss = { createAccountViewModel.createAccountDateDialogDismiss() },
                                 onSubmission = { createAccountViewModel.createAccountClicked() },
+                                onNavigateUp = { createAccountViewModel.navigateUpPressed() }
                             )
                         }
                         composable(NavigationDestinations.POST_PAGE) {
-                            PostContent(
-                                state = postViewModel.state.value.toUiState(),
+                            Post(
+                                state = postViewModel.state.value,
                                 onTextChange = { postViewModel.updateText(it) },
                                 onToggleClicked = { postViewModel.toggleClicked() },
                                 onDialogDismiss = { postViewModel.dialogDismissClicked() }

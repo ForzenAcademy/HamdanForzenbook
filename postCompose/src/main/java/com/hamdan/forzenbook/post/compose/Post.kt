@@ -3,6 +3,7 @@ package com.hamdan.forzenbook.post.compose
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,31 +21,139 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.hamdan.forzenbook.compose.core.LocalNavController
+import com.hamdan.forzenbook.compose.core.composables.BackgroundColumn
 import com.hamdan.forzenbook.compose.core.composables.ForzenbookDialog
 import com.hamdan.forzenbook.compose.core.composables.ForzenbookTopAppBar
-import com.hamdan.forzenbook.compose.core.composables.LoadingScreen
-import com.hamdan.forzenbook.compose.core.composables.LoginBackgroundColumn
+import com.hamdan.forzenbook.compose.core.composables.LoadingOverlay
 import com.hamdan.forzenbook.compose.core.composables.PillToggleSwitch
 import com.hamdan.forzenbook.compose.core.composables.PostTextField
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
 import com.hamdan.forzenbook.compose.core.theme.dimens
-import com.hamdan.forzenbook.post.core.view.PostUiComposeState
-import com.hamdan.forzenbook.post.core.viewmodel.toBoolean
+import com.hamdan.forzenbook.post.core.viewmodel.BasePostViewModel
+import com.hamdan.forzenbook.post.core.viewmodel.getText
 import com.hamdan.forzenbook.ui.core.R
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun PostContent(
-    state: PostUiComposeState,
+fun Post(
+    state: BasePostViewModel.PostState,
     onTextChange: (String) -> Unit,
     onDialogDismiss: () -> Unit,
     onToggleClicked: () -> Unit,
     onSendClicked: () -> Unit,
 ) {
-    val navigator = LocalNavController.current
-    val text = state.postText
+    when (true) {
+        (state is BasePostViewModel.PostState.Content) -> {
+            if (state.content is BasePostViewModel.PostContent.Text) {
+                TextPostContent(
+                    state = state,
+                    onTextChange = onTextChange,
+                    onToggleClicked = onToggleClicked
+                ) {
+                    onSendClicked()
+                }
+            } else {
+                ImagePostContent(
+                    state = state,
+                    onToggleClicked = onToggleClicked
+                ) {
+                    onSendClicked()
+                }
+            }
+        }
+        (state is BasePostViewModel.PostState.Loading) -> {
+            LoadingContent()
+        }
+        (state is BasePostViewModel.PostState.Error) -> {
+            ErrorContent(state, onDialogDismiss)
+        }
+        else -> {
+            throw Exception("Illegal unknown state")
+        }
+    }
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+private fun TextPostContent(
+    state: BasePostViewModel.PostState,
+    onTextChange: (String) -> Unit,
+    onToggleClicked: () -> Unit,
+    onSendClicked: () -> Unit,
+) {
     val focusRequester = remember { FocusRequester() }
     val keyboard = LocalSoftwareKeyboardController.current
+    StandardContent(
+        state = state,
+        onToggleClicked = onToggleClicked,
+        onSendClicked = onSendClicked
+    ) { padding ->
+        BackgroundColumn(
+            modifier = Modifier
+                .padding(padding)
+                .clickable {
+                    keyboard?.show()
+                    focusRequester.requestFocus()
+                },
+        ) {
+            PostTextField(
+                state.getText(),
+                focusRequester
+            ) {
+                onTextChange(it)
+            }
+        }
+    }
+}
+
+@Composable
+private fun ImagePostContent(
+    state: BasePostViewModel.PostState,
+    onToggleClicked: () -> Unit,
+    onSendClicked: () -> Unit,
+) {
+    StandardContent(
+        state = state,
+        onToggleClicked = onToggleClicked,
+        onSendClicked = onSendClicked
+    ) { padding ->
+        BackgroundColumn(
+            modifier = Modifier
+                .padding(padding),
+        ) {
+        }
+    }
+}
+
+@Composable
+private fun ErrorContent(
+    state: BasePostViewModel.PostState,
+    onDialogDismiss: () -> Unit,
+) {
+    StandardContent(state = state, onSendClicked = {}, onToggleClicked = {}) {
+        BackgroundColumn(Modifier.padding(it)) {}
+    }
+    ForzenbookDialog(
+        title = stringResource(id = R.string.generic_error_title),
+        body = stringResource(id = R.string.post_error),
+        buttonText = stringResource(id = R.string.generic_dialog_confirm),
+    ) {
+        onDialogDismiss()
+    }
+}
+
+@Composable
+private fun LoadingContent() {
+    LoadingOverlay()
+}
+
+@Composable
+private fun StandardContent(
+    state: BasePostViewModel.PostState,
+    onToggleClicked: () -> Unit,
+    onSendClicked: () -> Unit,
+    content: @Composable (PaddingValues) -> Unit,
+) {
+    val navigator = LocalNavController.current
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -73,36 +182,13 @@ fun PostContent(
                     leftDescriptionRes = R.string.text_toggle_text,
                     imageRightRes = R.drawable.baseline_image_24,
                     rightDescriptionRes = R.string.text_toggle_image,
-                    selected = state.postType.toBoolean(),
+                    selected = (state as BasePostViewModel.PostState.Content).content is BasePostViewModel.PostContent.Text,
                 ) {
                     onToggleClicked()
                 }
             }
         }
     ) { padding ->
-        LoginBackgroundColumn(
-            modifier = Modifier
-                .padding(padding)
-                .clickable {
-                    keyboard?.show()
-                    focusRequester.requestFocus()
-                },
-        ) {
-            PostTextField(text, focusRequester) {
-                onTextChange(it)
-            }
-        }
-    }
-    if (state.isLoading) {
-        LoadingScreen()
-    }
-    if (state.hasError) {
-        ForzenbookDialog(
-            title = stringResource(id = R.string.generic_error_title),
-            body = stringResource(id = R.string.post_error),
-            buttonText = stringResource(id = R.string.generic_dialog_confirm),
-        ) {
-            onDialogDismiss()
-        }
+        content(padding)
     }
 }

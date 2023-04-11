@@ -2,12 +2,14 @@ package com.hamdan.forzenbook.core
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.hamdan.forzenbook.ui.core.R
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.util.regex.Pattern
 
 fun validateEmail(email: String): Boolean {
@@ -33,24 +35,31 @@ fun getBitmapFromUri(
     uri: Uri,
     context: Context,
     onError: () -> Unit,
-    onBitmapLoaded: (Bitmap) -> Unit
+    onBitmapLoaded: (Bitmap) -> Unit,
+    onImageSaved: (File) -> Unit
 ) {
     Glide
         .with(context)
         .asBitmap()
         .error(R.drawable.baseline_square_24)
         .load(uri)
-        .into(BitmapGetter(onError = onError) { onBitmapLoaded(it) })
+        .into(object : SimpleTarget<Bitmap>() {
+            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                // Save the downloaded bitmap to a temporary file
+                val tempFile: File
+                try {
+                    tempFile = createTemporaryImageFile()
+                    FileOutputStream(tempFile).use { fos ->
+                        resource.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+                    }
+                    onBitmapLoaded(resource)
+                    onImageSaved(tempFile)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    onError()
+                }
+            }
+        })
 }
 
-class BitmapGetter(val onError: () -> Unit, val onGetBitmap: (Bitmap) -> Unit) :
-    CustomTarget<Bitmap>() {
-    override fun onLoadCleared(placeholder: Drawable?) {}
-    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-        try {
-            onGetBitmap(resource)
-        } catch (e: Exception) {
-            onError()
-        }
-    }
-}
+private fun createTemporaryImageFile(): File = File.createTempFile(GlobalConstants.TEMPORARY_FILENAME, ".jpg")

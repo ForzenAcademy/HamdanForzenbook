@@ -26,8 +26,8 @@ interface PostService {
 //    ): Response<Void>
 
     companion object {
-        private const val TYPE = "post_type"
+        private const val TYPE = "postType"
         private const val BODY = "body"
-        private const val POST = "post_test/"
+        private const val POST = "post/"
     }
 }

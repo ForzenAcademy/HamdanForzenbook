@@ -11,7 +11,7 @@ class PostRepositoryImpl(
         }
     }
 
-    override suspend fun postImage(token:String) {
+    override suspend fun postImage(token: String) {
         // Todo implement when further info given
     }
 
