@@ -4,7 +4,7 @@ import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetCredentialsFromNe
 
 class MockLoginGetCredentialsFromNetworkUseCaseFails :
     LoginGetCredentialsFromNetworkUseCase {
-    override suspend fun invoke(email: String, code: String) {
+    override suspend fun invoke(email: String, code: String): String {
         throw RuntimeException("There was an issue getting the token!")
     }
 }

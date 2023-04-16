@@ -46,5 +46,4 @@ object PostModule {
     fun providesSendTextPostUseCase(repository: PostRepository): SendTextPostUseCase {
         return SendTextPostUseCaseImpl(repository)
     }
-
 }
