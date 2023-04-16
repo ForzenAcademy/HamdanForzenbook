@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.post.core.domain.SendImagePostUseCase
 import com.hamdan.forzenbook.post.core.domain.SendTextPostUseCase
 import kotlinx.coroutines.launch
+import java.io.File
 
 abstract class BasePostViewModel(
     val sendTextPostUseCase: SendTextPostUseCase,
@@ -12,7 +13,7 @@ abstract class BasePostViewModel(
 ) : ViewModel() {
     sealed interface PostContent {
         data class Text(val text: String = "", val maxLength: Int = POST_LENGTH_LIMIT) : PostContent
-        data class Image(val uri: String = "") : PostContent
+        data class Image(val filePath: String? = null) : PostContent
     }
 
     sealed interface PostState {
@@ -39,13 +40,12 @@ abstract class BasePostViewModel(
     }
 
     fun sendPostClicked() {
-        val content = (postState as PostState.Content).content
-        when (true) {
-            (content is PostContent.Text) -> {
-                sendText()
-            }
-            (content is PostContent.Image) -> {
+        when ((postState as PostState.Content).content) {
+            is PostContent.Image -> {
                 sendImage()
+            }
+            is PostContent.Text -> {
+                sendText()
             }
             else -> {
                 throw Exception("illegal unknown post type")
@@ -53,27 +53,39 @@ abstract class BasePostViewModel(
         }
     }
 
+    fun updateImage(filePath: String?) {
+        // in the case the user immediately picks another image, delete the old temp file and create a new one
+        postState = PostState.Content(PostContent.Image(filePath))
+    }
+
     private fun sendText() {
-        val text = postState.getText()
-        postState = PostState.Loading
-        viewModelScope.launch {
-            try {
-                sendTextPostUseCase(PLACEHOLDER_TOKEN, text)
-                postState = PostState.Content(PostContent.Text())
-            } catch (e: Exception) {
-                postState = PostState.Error
+        postState.asTextOrNull()?.let {
+            val text = it.text
+            postState = PostState.Loading
+            viewModelScope.launch {
+                try {
+                    sendTextPostUseCase(PLACEHOLDER_TOKEN, text)
+                    postState = PostState.Content(PostContent.Text())
+                } catch (e: Exception) {
+                    postState = PostState.Error
+                }
             }
         }
     }
 
     private fun sendImage() {
-        val uri = postState.getUri()
-        viewModelScope.launch {
-            try {
-                sendImagePostUseCase(PLACEHOLDER_TOKEN) // Todo when further implementation for image is added, send the bitmap
-                postState = PostState.Content(PostContent.Image())
-            } catch (e: Exception) {
-                postState = PostState.Error
+        postState.asImageOrNull()?.let {
+            it.filePath?.let { path ->
+                viewModelScope.launch {
+                    try {
+                        sendImagePostUseCase(PLACEHOLDER_TOKEN, path)
+                        File(path).delete()
+                        postState = PostState.Content(PostContent.Image())
+                    } catch (e: Exception) {
+                        File(path).delete()
+                        postState = PostState.Error
+                    }
+                }
             }
         }
     }
@@ -84,14 +96,23 @@ abstract class BasePostViewModel(
 
     companion object {
         private const val POST_LENGTH_LIMIT = 256
-        private const val PLACEHOLDER_TOKEN = "qHIc17fdLgcL750SOpxajnA9aUzDRsTDPAZqJuBcwfkcXw7rfC0mCvXzh1yed0RD"
+        private const val PLACEHOLDER_TOKEN =
+            "9aH7Jr398ccXTy5ArWXdvOJN5FpWNgcoZNrY76VekmT7oApGI4Xp9hVRZtltrzba"
     }
 }
 
-fun BasePostViewModel.PostState.getText(): String {
-    return ((this as BasePostViewModel.PostState.Content).content as BasePostViewModel.PostContent.Text).text
+fun BasePostViewModel.PostState.asContentOrNull(): BasePostViewModel.PostContent? {
+    return try {
+        (this as BasePostViewModel.PostState.Content).content
+    } catch (e: Exception) {
+        null
+    }
 }
 
-fun BasePostViewModel.PostState.getUri(): String {
-    return ((this as BasePostViewModel.PostState.Content).content as BasePostViewModel.PostContent.Image).uri
+fun BasePostViewModel.PostState.asImageOrNull(): BasePostViewModel.PostContent.Image? {
+    return (this as? BasePostViewModel.PostState.Content)?.content as? BasePostViewModel.PostContent.Image
+}
+
+fun BasePostViewModel.PostState.asTextOrNull(): BasePostViewModel.PostContent.Text? {
+    return (this as? BasePostViewModel.PostState.Content)?.content as? BasePostViewModel.PostContent.Text
 }

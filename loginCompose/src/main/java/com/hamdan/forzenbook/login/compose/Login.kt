@@ -48,7 +48,7 @@ fun MainLoginContent(
             painter = painterResource(id = R.drawable.logo_render_full_notext),
             contentDescription = stringResource(id = R.string.lion_icon),
         )
-        LoginTitleSection(stringResource(id = R.string.app_name))
+        LoginTitleSection(title = stringResource(id = R.string.app_name))
         when (state) {
             is BaseLoginViewModel.LoginState.Content -> {
                 state.getContent().let {

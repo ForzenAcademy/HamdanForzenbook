@@ -61,11 +61,14 @@ import com.hamdan.forzenbook.ui.core.R
 private const val ONE_LINE = 1
 
 @Composable
-fun LoginTitleSection(title: String) {
+fun LoginTitleSection(
+    modifier: Modifier = Modifier,
+    title: String,
+) {
     Text(
         text = title,
         fontSize = ForzenbookTheme.typography.h1.fontSize,
-        modifier = Modifier.padding(ForzenbookTheme.dimens.grid.x3),
+        modifier = modifier.padding(ForzenbookTheme.dimens.grid.x3),
         maxLines = ONE_LINE,
         overflow = TextOverflow.Ellipsis,
     )
@@ -73,6 +76,7 @@ fun LoginTitleSection(title: String) {
 
 @Composable
 fun InputField(
+    modifier: Modifier = Modifier,
     label: String,
     value: String,
     onValueChange: (String) -> Unit,
@@ -91,7 +95,7 @@ fun InputField(
     enabled: Boolean = true,
 ) {
     TextField(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(
                 horizontal = ForzenbookTheme.dimens.grid.x10,
@@ -109,28 +113,36 @@ fun InputField(
         colors = colors,
         maxLines = ONE_LINE,
         enabled = enabled,
-        textStyle = TextStyle(fontSize = ForzenbookTheme.typography.h2.fontSize)
+        textStyle = TextStyle(fontSize = ForzenbookTheme.typography.h2.fontSize),
     )
 }
 
 @Composable
-fun ErrorText(error: String) {
+fun ErrorText(
+    modifier: Modifier = Modifier,
+    error: String,
+) {
     Text(
         text = error,
         fontSize = ForzenbookTheme.typography.h4.fontSize,
         textAlign = TextAlign.Center,
-        modifier = Modifier
+        modifier = modifier
             .padding(
                 horizontal = ForzenbookTheme.dimens.grid.x5,
                 vertical = ForzenbookTheme.dimens.grid.x3,
-            )
+            ),
     )
 }
 
 @Composable
-fun SubmitButton(onSubmission: () -> Unit, label: String, enabled: Boolean) {
+fun SubmitButton(
+    modifier: Modifier = Modifier,
+    label: String,
+    enabled: Boolean,
+    onSubmission: () -> Unit,
+) {
     Button(
-        modifier = Modifier
+        modifier = modifier
             .padding(horizontal = ForzenbookTheme.dimens.grid.x10)
             .height(ForzenbookTheme.dimens.grid.x20)
             .fillMaxWidth(),
@@ -152,14 +164,16 @@ fun SubmitButton(onSubmission: () -> Unit, label: String, enabled: Boolean) {
             backgroundColor = ForzenbookTheme.colors.colors.primary,
             disabledBackgroundColor = ForzenbookTheme.colors.colors.surface,
         ),
-        enabled = enabled
+        enabled = enabled,
     )
 }
 
 @Composable
-fun LoadingButton() {
+fun LoadingButton(
+    modifier: Modifier = Modifier,
+) {
     Button(
-        modifier = Modifier
+        modifier = modifier
             .padding(horizontal = ForzenbookTheme.dimens.grid.x10)
             .height(ForzenbookTheme.dimens.grid.x20)
             .fillMaxWidth(),
@@ -167,7 +181,7 @@ fun LoadingButton() {
         content = {
             CircularProgressIndicator(
                 color = ForzenbookTheme.colors.colors.onPrimary,
-                modifier = Modifier.height(ForzenbookTheme.dimens.grid.x10)
+                modifier = Modifier.height(ForzenbookTheme.dimens.grid.x10),
             )
         },
         colors = ButtonDefaults.buttonColors(
@@ -178,10 +192,13 @@ fun LoadingButton() {
 }
 
 @Composable
-fun PreventScreenActionsDuringLoad(content: (@Composable () -> Unit)? = null) {
+fun PreventScreenActionsDuringLoad(
+    modifier: Modifier = Modifier,
+    content: (@Composable () -> Unit)? = null,
+) {
     // put an invisible box on the screen that will take clicks and do nothing
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Color.Transparent)
             .clickable(
@@ -196,19 +213,24 @@ fun PreventScreenActionsDuringLoad(content: (@Composable () -> Unit)? = null) {
 }
 
 @Composable
-fun LoadingOverlay(indicatorColor: Color = ForzenbookTheme.colors.colors.primary) {
+fun LoadingOverlay(
+    modifier: Modifier = Modifier,
+    indicatorColor: Color = ForzenbookTheme.colors.colors.primary,
+) {
     PreventScreenActionsDuringLoad {
         CircularProgressIndicator(
             color = indicatorColor,
-            modifier = Modifier.height(ForzenbookTheme.dimens.grid.x10)
+            modifier = modifier.height(ForzenbookTheme.dimens.grid.x10),
         )
     }
 }
 
 @Composable
-fun LoadingScreen() {
+fun LoadingScreen(
+    modifier: Modifier = Modifier,
+) {
     BackgroundColumn {
-        LoadingOverlay()
+        LoadingOverlay(modifier)
     }
 }
 
@@ -216,7 +238,7 @@ fun LoadingScreen() {
 fun BackgroundColumn(
     modifier: Modifier = Modifier,
     scrollState: ScrollState = rememberScrollState(),
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -232,8 +254,9 @@ fun BackgroundColumn(
 
 @Composable
 fun ForzenbookTopAppBar(
+    modifier: Modifier = Modifier,
     topText: String,
-    actions: @Composable (() -> Unit)? = null
+    actions: @Composable (() -> Unit)? = null,
 ) {
     val navigator = LocalNavController.current
     TopAppBar(
@@ -247,7 +270,7 @@ fun ForzenbookTopAppBar(
                 overflow = TextOverflow.Ellipsis,
             )
         },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         backgroundColor = ForzenbookTheme.colors.colors.background,
         navigationIcon = {
             IconButton(onClick = { navigator?.navigateUp() }) {
@@ -270,7 +293,13 @@ fun ForzenbookTopAppBar(
 }
 
 @Composable
-fun ForzenbookDialog(title: String, body: String, buttonText: String, onDismiss: () -> Unit) {
+fun ForzenbookDialog(
+    modifier: Modifier = Modifier,
+    title: String,
+    body: String,
+    buttonText: String,
+    onDismiss: () -> Unit,
+) {
     AlertDialog(
         onDismissRequest = { onDismiss() },
         title = {
@@ -285,17 +314,18 @@ fun ForzenbookDialog(title: String, body: String, buttonText: String, onDismiss:
                 modifier = Modifier
                     .padding(
                         end = ForzenbookTheme.dimens.grid.x2,
-                        bottom = ForzenbookTheme.dimens.grid.x2
+                        bottom = ForzenbookTheme.dimens.grid.x2,
                     )
                     .clickable { onDismiss() },
             )
         },
-        modifier = Modifier.padding(ForzenbookTheme.dimens.grid.x5)
+        modifier = modifier.padding(ForzenbookTheme.dimens.grid.x5),
     )
 }
 
 @Composable
 fun PillToggleSwitch(
+    modifier: Modifier = Modifier,
     @DrawableRes imageLeftRes: Int,
     @StringRes leftDescriptionRes: Int,
     @DrawableRes imageRightRes: Int,
@@ -308,12 +338,12 @@ fun PillToggleSwitch(
 ) {
     val rowShape = RoundedCornerShape(ForzenbookTheme.dimens.grid.x3)
     Row(
-        modifier = Modifier
+        modifier = modifier
             .clip(rowShape)
             .clickable {
                 onToggle()
             }
-            .border(ForzenbookTheme.dimens.grid.x1, enabledColor, rowShape)
+            .border(ForzenbookTheme.dimens.grid.x1, enabledColor, rowShape),
     ) {
         Box(
             modifier = Modifier
@@ -323,7 +353,7 @@ fun PillToggleSwitch(
                         bottomStart = ForzenbookTheme.dimens.grid.x3
                     )
                 )
-                .background(if (selected) enabledColor else disabledColor)
+                .background(if (selected) enabledColor else disabledColor),
         ) {
             Image(
                 painterResource(id = imageLeftRes),
@@ -345,7 +375,7 @@ fun PillToggleSwitch(
                         bottomEnd = ForzenbookTheme.dimens.grid.x3
                     )
                 )
-                .background(if (!selected) enabledColor else disabledColor)
+                .background(if (!selected) enabledColor else disabledColor),
         ) {
             Image(
                 painterResource(id = imageRightRes),
@@ -363,11 +393,16 @@ fun PillToggleSwitch(
 }
 
 @Composable
-fun PostTextField(text: String, focusRequester: FocusRequester, onValueChange: (String) -> Unit) {
+fun PostTextField(
+    modifier: Modifier = Modifier,
+    text: String,
+    focusRequester: FocusRequester,
+    onValueChange: (String) -> Unit,
+) {
     TextField(
         value = text,
         onValueChange = onValueChange,
-        modifier = Modifier.focusRequester(focusRequester),
+        modifier = modifier.focusRequester(focusRequester),
         colors = TextFieldDefaults.textFieldColors(
             backgroundColor = Color.Transparent,
             focusedLabelColor = Color.Transparent,
@@ -375,6 +410,6 @@ fun PostTextField(text: String, focusRequester: FocusRequester, onValueChange: (
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
         ),
-        textStyle = ForzenbookTheme.typography.h2
+        textStyle = ForzenbookTheme.typography.h2,
     )
 }
