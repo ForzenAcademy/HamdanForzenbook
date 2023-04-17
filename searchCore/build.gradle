@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace 'com.hamdan.forzenbook.post.core'
+    namespace 'com.hamdan.forzenbook.search.core'
     compileSdk 33
 
     defaultConfig {
@@ -36,7 +36,7 @@ dependencies {
     // Modules
     implementation project(":core")
     implementation project(":uiCore")
-    
+
     // Hilt
     implementation "com.google.dagger:hilt-android:2.45"
     kapt "com.google.dagger:hilt-compiler:2.45"
