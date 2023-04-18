@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/createAccountCompose" />
             <option value="$PROJECT_DIR$/createAccountCore" />
+            <option value="$PROJECT_DIR$/data" />
             <option value="$PROJECT_DIR$/javaCore" />
             <option value="$PROJECT_DIR$/javaCreateAccount" />
             <option value="$PROJECT_DIR$/javaCreateAccountCore" />
@@ -38,6 +39,7 @@
             <option value="$PROJECT_DIR$/postCore" />
             <option value="$PROJECT_DIR$/searchCompose" />
             <option value="$PROJECT_DIR$/searchCore" />
+            <option value="$PROJECT_DIR$/searchResultsCompose" />
             <option value="$PROJECT_DIR$/uiCore" />
           </set>
         </option>
