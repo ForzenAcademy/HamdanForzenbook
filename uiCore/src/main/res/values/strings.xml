@@ -50,11 +50,18 @@
     <string name="post_error">There was an error when trying to create your post</string>
     <string name="post_gallery_button_text">Open Gallery</string>
     <!--
+    Feed Page
+    -->
+    <string name="feed_top_bar_text">Feed</string>
+    <string name="feed_post_icon">Poster Icon</string>
+    <string name="feed_post_image">Post Image</string>
+    <!--
     Generic usage
     -->
     <string name="generic_error_title">Error</string>
     <string name="generic_success_title">Success!</string>
     <string name="generic_dialog_confirm">OK</string>
+    <string name="user_name">%1$s %2$s</string>
     <!--
     Content Descriptions
     -->
@@ -66,4 +73,5 @@
     <string name="text_toggle_image">Toggle to Image</string>
     <string name="post_send_icon">Send Icon</string>
     <string name="post_send_image">Your selected image</string>
+    <string name="create_post_button">Create Post</string>
 </resources>

@@ -12,11 +12,14 @@ import androidx.navigation.compose.rememberNavController
 import com.hamdan.forzenbook.compose.core.LocalNavController
 import com.hamdan.forzenbook.compose.core.theme.ForzenBookTheme
 import com.hamdan.forzenbook.core.getBitmapFromUri
+import com.hamdan.forzenbook.core.getImageFromNetwork
 import com.hamdan.forzenbook.core.launchGalleryImageGetter
 import com.hamdan.forzenbook.createaccount.compose.CreateAccountContent
 import com.hamdan.forzenbook.login.compose.MainLoginContent
+import com.hamdan.forzenbook.mainpage.compose.FeedPage
 import com.hamdan.forzenbook.post.compose.Post
 import com.hamdan.forzenbook.viewmodels.CreateAccountViewModel
+import com.hamdan.forzenbook.viewmodels.FeedViewModel
 import com.hamdan.forzenbook.viewmodels.LoginViewModel
 import com.hamdan.forzenbook.viewmodels.PostViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,6 +30,7 @@ class ForzenbookActivity : ComponentActivity() {
     private val loginViewModel: LoginViewModel by viewModels()
     private val createAccountViewModel: CreateAccountViewModel by viewModels()
     private val postViewModel: PostViewModel by viewModels()
+    private val feedViewModel: FeedViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,13 +48,14 @@ class ForzenbookActivity : ComponentActivity() {
             }
         }
         loginViewModel.checkLoggedIn(this)
+        feedViewModel.loadMore(this@ForzenbookActivity)
         setContent {
             ForzenBookTheme {
                 val navController = rememberNavController()
                 CompositionLocalProvider(LocalNavController provides navController) {
                     NavHost(
                         navController = navController,
-                        startDestination = NavigationDestinations.POST_PAGE,
+                        startDestination = NavigationDestinations.FEED_PAGE
                     ) {
                         composable(NavigationDestinations.LOGIN_PAGE) {
                             MainLoginContent(
@@ -92,6 +97,17 @@ class ForzenbookActivity : ComponentActivity() {
                                 onSubmission = { createAccountViewModel.createAccountClicked() },
                                 onNavigateUp = { createAccountViewModel.navigateUpPressed() },
                             )
+                        }
+                        composable(NavigationDestinations.FEED_PAGE) {
+                            FeedPage(
+                                state = feedViewModel.state.value,
+                                onRequestMorePosts = { feedViewModel.loadMore(this@ForzenbookActivity) },
+                                onImageRequestLoad = { url ->
+                                    getImageFromNetwork(url, this@ForzenbookActivity)
+                                }
+                            ) {
+                                navController.navigate(NavigationDestinations.POST_PAGE)
+                            }
                         }
                         composable(NavigationDestinations.POST_PAGE) {
                             Post(

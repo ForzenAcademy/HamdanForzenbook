@@ -1,5 +1,7 @@
 package com.hamdan.forzenbook.compose.core.theme
 
+import androidx.compose.material3.Typography
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -16,54 +18,98 @@ val defaultFontFamily = FontFamily(
     Font(R.font.mont_bold_ital, FontWeight.Bold, FontStyle.Italic),
 )
 
-object TextSizeValues {
-    /**
-     * 8.sp
-     */
-    val small_1 = 8.sp
+val typographyDefault = Typography(
+    headlineLarge = TextStyle(
+        fontFamily = defaultFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 44.sp
+    ),
+    headlineMedium = TextStyle(
+        fontFamily = defaultFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 36.sp
+    ),
+    headlineSmall = TextStyle(
+        fontFamily = defaultFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 28.sp
+    ),
+    titleLarge = TextStyle(
+        fontFamily = defaultFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 40.sp
+    ),
+    titleMedium = TextStyle(
+        fontFamily = defaultFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 32.sp
+    ),
+    titleSmall = TextStyle(
+        fontFamily = defaultFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 24.sp
+    ),
+    bodyLarge = TextStyle(
+        fontFamily = defaultFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 20.sp
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = defaultFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp
+    ),
+    bodySmall = TextStyle(
+        fontFamily = defaultFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp
+    ),
+)
 
-    /**
-     * 12.sp
-     */
-    val small_2 = 12.sp
-
-    /**
-     * 16.sp
-     */
-    val small_3 = 16.sp
-
-    /**
-     * 20.sp
-     */
-    val med_1 = 20.sp
-
-    /**
-     * 24.sp
-     */
-    val med_2 = 24.sp
-
-    /**
-     * 28.sp
-     */
-    val med_3 = 28.sp
-
-    /**
-     * 32.sp
-     */
-    val large_1 = 32.sp
-
-    /**
-     * 36.sp
-     */
-    val large_2 = 36.sp
-
-    /**
-     * 40.sp
-     */
-    val large_3 = 40.sp
-
-    /**
-     * 40.sp
-     */
-    val large_4 = 44.sp
-}
+val typographySmall = Typography(
+    headlineLarge = TextStyle(
+        fontFamily = defaultFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 40.sp
+    ),
+    headlineMedium = TextStyle(
+        fontFamily = defaultFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 32.sp
+    ),
+    headlineSmall = TextStyle(
+        fontFamily = defaultFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 24.sp
+    ),
+    titleLarge = TextStyle(
+        fontFamily = defaultFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 36.sp
+    ),
+    titleMedium = TextStyle(
+        fontFamily = defaultFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 28.sp
+    ),
+    titleSmall = TextStyle(
+        fontFamily = defaultFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 20.sp
+    ),
+    bodyLarge = TextStyle(
+        fontFamily = defaultFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = defaultFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp
+    ),
+    bodySmall = TextStyle(
+        fontFamily = defaultFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp
+    ),
+)

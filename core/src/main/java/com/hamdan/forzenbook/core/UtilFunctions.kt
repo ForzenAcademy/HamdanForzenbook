@@ -66,3 +66,12 @@ private fun createTemporaryImageFile(): File =
 fun launchGalleryImageGetter(contentLauncher: ActivityResultLauncher<String>) {
     contentLauncher.launch("image/*")
 }
+
+fun getImageFromNetwork(url: String, context: Context): Bitmap {
+    return Glide.with(context)
+        .asBitmap()
+        .load(url)
+        .error(context.getDrawable(R.drawable.logo_render_full_notext)) // Place holder, Todo check if we should have a different placeholder for errors, for now its the logo
+        .submit()
+        .get()
+}
