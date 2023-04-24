@@ -22,6 +22,7 @@ import com.hamdan.forzenbook.viewmodels.CreateAccountViewModel
 import com.hamdan.forzenbook.viewmodels.FeedViewModel
 import com.hamdan.forzenbook.viewmodels.LoginViewModel
 import com.hamdan.forzenbook.viewmodels.PostViewModel
+import com.hamdan.forzenbook.viewmodels.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,6 +32,7 @@ class ForzenbookActivity : ComponentActivity() {
     private val createAccountViewModel: CreateAccountViewModel by viewModels()
     private val postViewModel: PostViewModel by viewModels()
     private val feedViewModel: FeedViewModel by viewModels()
+    private val searchViewModel: SearchViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +57,7 @@ class ForzenbookActivity : ComponentActivity() {
                 CompositionLocalProvider(LocalNavController provides navController) {
                     NavHost(
                         navController = navController,
-                        startDestination = NavigationDestinations.FEED_PAGE
+                        startDestination = NavigationDestinations.POST_PAGE
                     ) {
                         composable(NavigationDestinations.LOGIN_PAGE) {
                             MainLoginContent(

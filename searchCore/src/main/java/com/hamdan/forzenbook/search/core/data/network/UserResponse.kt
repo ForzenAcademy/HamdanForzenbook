@@ -1,4 +1,4 @@
-package com.hamdan.forzenbook.mainpage.core.data.network
+package com.hamdan.forzenbook.search.core.data.network
 
 import com.google.gson.annotations.SerializedName
 import com.hamdan.forzenbook.data.entities.UserEntity
@@ -14,11 +14,11 @@ data class UserResponse(
     @SerializedName("avatarUrl") val avatarUrl: String? = null,
 )
 
-fun UserResponse.toUserEntity(nameFormat: String): UserEntity {
+fun UserResponse.toUserEntity(): UserEntity {
     return UserEntity(
         userId = this.userId,
         userIcon = this.avatarUrl,
-        name = String.format(nameFormat, this.firstName, this.lastName),
+        name = this.firstName + " " + this.lastName,
         location = this.location,
         timestamp = System.currentTimeMillis()
     )

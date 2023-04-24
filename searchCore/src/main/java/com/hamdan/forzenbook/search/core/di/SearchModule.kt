@@ -1,18 +1,20 @@
-package com.hamdan.forzenbook.mainpage.core.di
+package com.hamdan.forzenbook.search.core.di
 
 import android.content.Context
 import androidx.room.Room
 import com.google.gson.GsonBuilder
-import com.hamdan.forzenbook.core.GlobalConstants.LOGIN_BASE_URL
+import com.hamdan.forzenbook.core.GlobalConstants
 import com.hamdan.forzenbook.data.daos.FeedDao
 import com.hamdan.forzenbook.data.daos.UserDao
 import com.hamdan.forzenbook.data.databases.FeedDatabase
 import com.hamdan.forzenbook.data.databases.UserDatabase
-import com.hamdan.forzenbook.mainpage.core.data.network.FeedService
-import com.hamdan.forzenbook.mainpage.core.data.repository.FeedRepository
-import com.hamdan.forzenbook.mainpage.core.data.repository.FeedRepositoryImpl
-import com.hamdan.forzenbook.mainpage.core.domain.GetPostsUseCase
-import com.hamdan.forzenbook.mainpage.core.domain.GetPostsUseCaseImpl
+import com.hamdan.forzenbook.search.core.data.network.SearchService
+import com.hamdan.forzenbook.search.core.data.repository.SearchRepository
+import com.hamdan.forzenbook.search.core.data.repository.SearchRepositoryImpl
+import com.hamdan.forzenbook.search.core.domain.GetPostByStringUseCase
+import com.hamdan.forzenbook.search.core.domain.GetPostByStringUseCaseImpl
+import com.hamdan.forzenbook.search.core.domain.GetPostByUserIdUseCase
+import com.hamdan.forzenbook.search.core.domain.GetPostByUserIdUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,23 +26,23 @@ import javax.inject.Named
 
 @InstallIn(ViewModelComponent::class)
 @Module
-object FeedModule {
+object SearchModule {
 
     @Provides
     @Named(MODULE_NAME)
-    fun providesFeedRetrofit(): Retrofit {
+    fun providesSearchRetrofit(): Retrofit {
         val gson = GsonBuilder()
             .setLenient()
             .create()
         return Retrofit.Builder()
-            .baseUrl(LOGIN_BASE_URL)
+            .baseUrl(GlobalConstants.LOGIN_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }
 
     @Provides
-    fun providesFeedService(@Named(MODULE_NAME) retrofit: Retrofit): FeedService {
-        return retrofit.create(FeedService::class.java)
+    fun providesSearchService(@Named(MODULE_NAME) retrofit: Retrofit): SearchService {
+        return retrofit.create(SearchService::class.java)
     }
 
     @Provides
@@ -70,18 +72,23 @@ object FeedModule {
     }
 
     @Provides
-    fun providesFeedRepository(
+    fun providesSearchRepository(
+        searchService: SearchService,
         @Named(MODULE_NAME) feedDao: FeedDao,
-        @Named(MODULE_NAME) userDao: UserDao,
-        service: FeedService
-    ): FeedRepository {
-        return FeedRepositoryImpl(service, feedDao, userDao)
+        @Named(MODULE_NAME) userDao: UserDao
+    ): SearchRepository {
+        return SearchRepositoryImpl(feedDao, userDao, searchService)
     }
 
     @Provides
-    fun providesGetPostUseCase(repository: FeedRepository): GetPostsUseCase {
-        return GetPostsUseCaseImpl(repository)
+    fun providesSearchGetPostByStringUseCase(repository: SearchRepository): GetPostByStringUseCase {
+        return GetPostByStringUseCaseImpl(repository)
     }
 
-    private const val MODULE_NAME = "feed"
+    @Provides
+    fun providesSearchGetPostByUserIdUseCase(repository: SearchRepository): GetPostByUserIdUseCase {
+        return GetPostByUserIdUseCaseImpl(repository)
+    }
+
+    private const val MODULE_NAME = "search"
 }

@@ -1,9 +1,10 @@
-package com.hamdan.forzenbook.mainpage.core.data.database
+package com.hamdan.forzenbook.data.daos
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.hamdan.forzenbook.mainpage.core.data.repository.FeedRepositoryImpl.Companion.DAY_IN_MILLIS
+import com.hamdan.forzenbook.core.GlobalConstants.DAY_IN_MILLIS
+import com.hamdan.forzenbook.data.entities.UserEntity
 
 @Dao
 interface UserDao {
@@ -16,16 +17,15 @@ interface UserDao {
             SELECT * FROM ${UserEntity.TABLE_NAME} WHERE ${UserEntity.USER_ID} = :userId
         """
     )
-    suspend fun getUser(userId: String): List<UserEntity>
+    suspend fun getUser(userId: Int): List<UserEntity>
 
     @Query(
         """
             DELETE FROM ${UserEntity.TABLE_NAME} WHERE ${UserEntity.USER_ID} = :userId
         """
     )
-    suspend fun deleteUser(userId: String)
+    suspend fun deleteUser(userId: Int)
 
-    // the time value of 86400000 is 24 hours in milliseconds
     @Query(
         """
             DELETE FROM ${UserEntity.TABLE_NAME} WHERE ${UserEntity.ENTRY_DATE} <= (:currentTime - $DAY_IN_MILLIS)

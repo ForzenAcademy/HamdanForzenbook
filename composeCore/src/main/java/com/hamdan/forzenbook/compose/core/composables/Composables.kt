@@ -568,6 +568,7 @@ fun PostTextField(
         onValueChange = onValueChange,
         modifier = modifier.focusRequester(focusRequester),
         colors = TextFieldDefaults.textFieldColors(
+            textColor = ForzenbookTheme.colors.colors.primary,
             containerColor = Color.Transparent,
             focusedLabelColor = Color.Transparent,
             unfocusedLabelColor = Color.Transparent,

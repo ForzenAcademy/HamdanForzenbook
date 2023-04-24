@@ -6,4 +6,5 @@ object GlobalConstants {
     const val TEMPORARY_FILENAME = "TempFileForDeletion"
     const val TOKEN_PREFERENCE_LOCATION = "FORZENBOOK_TOKEN_PREFERENCE_FILE"
     const val TOKEN_KEY = "loginToken"
+    const val DAY_IN_MILLIS = 86400000
 }

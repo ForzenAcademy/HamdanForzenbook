@@ -36,10 +36,17 @@ dependencies {
     // Modules
     implementation project(":core")
     implementation project(":uiCore")
+    implementation project(":data")
 
     // Hilt
     implementation "com.google.dagger:hilt-android:2.45"
     kapt "com.google.dagger:hilt-compiler:2.45"
+
+    // Room
+    implementation "androidx.room:room-runtime:2.5.0"
+    annotationProcessor("androidx.room:room-compiler:2.5.0")
+    kapt("androidx.room:room-compiler:2.5.0")
+    implementation("androidx.room:room-ktx:2.5.0")
 
     // retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'

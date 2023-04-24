@@ -61,6 +61,8 @@ dependencies {
     implementation project(':postCompose')
     implementation project(':mainPageCore')
     implementation project(':mainPageCompose')
+    implementation project(':searchCore')
+    implementation project(':searchCompose')
 
     // MockK
     testImplementation("io.mockk:mockk:1.13.4")

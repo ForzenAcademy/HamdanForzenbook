@@ -11,7 +11,7 @@ interface FeedService {
 
     @GET(USER_GET)
     suspend fun getUser(
-        @Query(USER_ID) id: String,
+        @Query(USER_ID) id: Int,
     ): Response<UserResponse>
 
     companion object {

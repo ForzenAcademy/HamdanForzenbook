@@ -16,8 +16,8 @@ abstract class BaseFeedViewModel(
     sealed interface FeedState {
         val posts: List<PostData>
 
-        data class Content(override val posts: List<PostData>) : FeedState
-        data class Error(override val posts: List<PostData>) : FeedState
+        data class Content(override val posts: List<PostData> = listOf()) : FeedState
+        data class Error(override val posts: List<PostData> = listOf()) : FeedState
     }
 
     protected abstract var feedState: FeedState

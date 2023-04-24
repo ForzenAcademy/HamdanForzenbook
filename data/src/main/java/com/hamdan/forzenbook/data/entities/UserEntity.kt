@@ -1,9 +1,9 @@
-package com.hamdan.forzenbook.mainpage.core.data.database
+package com.hamdan.forzenbook.data.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.hamdan.forzenbook.mainpage.core.data.database.UserEntity.Companion.TABLE_NAME
+import com.hamdan.forzenbook.data.entities.UserEntity.Companion.TABLE_NAME
 
 @Entity(tableName = TABLE_NAME)
 data class UserEntity(
