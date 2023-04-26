@@ -50,8 +50,8 @@ fun Post(
     onGalleryClicked: () -> Unit,
     onSendClicked: () -> Unit,
 ) {
-    when (true) {
-        (state is BasePostViewModel.PostState.Content) -> {
+    when (state) {
+        is BasePostViewModel.PostState.Content -> {
             if (state.content is BasePostViewModel.PostContent.Text) {
                 TextPostContent(
                     state = state,
@@ -70,12 +70,12 @@ fun Post(
             }
         }
 
-        (state is BasePostViewModel.PostState.Loading) -> {
-            LoadingContent()
+        BasePostViewModel.PostState.Error -> {
+            ErrorContent(onDialogDismiss)
         }
 
-        (state is BasePostViewModel.PostState.Error) -> {
-            ErrorContent(onDialogDismiss)
+        BasePostViewModel.PostState.Loading -> {
+            LoadingContent()
         }
 
         else -> {

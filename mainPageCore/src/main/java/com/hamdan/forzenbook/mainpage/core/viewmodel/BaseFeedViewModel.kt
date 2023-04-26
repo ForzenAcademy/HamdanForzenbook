@@ -17,7 +17,7 @@ abstract class BaseFeedViewModel(
         val posts: List<PostData>
 
         data class Content(override val posts: List<PostData> = listOf()) : FeedState
-        data class Error(override val posts: List<PostData> = listOf()) : FeedState
+        data class Error(override val posts: List<PostData> = emptyList()) : FeedState
     }
 
     protected abstract var feedState: FeedState

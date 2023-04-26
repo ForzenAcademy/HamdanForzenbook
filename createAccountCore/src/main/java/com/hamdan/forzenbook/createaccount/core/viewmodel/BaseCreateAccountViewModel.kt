@@ -29,9 +29,7 @@ abstract class BaseCreateAccountViewModel(
 
     protected abstract var createAccountState: CreateAccountState
 
-    fun createAccountDateDialogClicked() {
-        createAccountShowDateDialog()
-    }
+    fun createAccountDateDialogClicked() = createAccountShowDateDialog()
 
     private fun createAccountShowDateDialog() {
         createAccountState = CreateAccountState.Content(
@@ -39,13 +37,9 @@ abstract class BaseCreateAccountViewModel(
         )
     }
 
-    fun createAccountDateDialogSubmitClicked() {
-        closeAccountShowDateDialog()
-    }
+    fun createAccountDateDialogSubmitClicked() = closeAccountShowDateDialog()
 
-    fun createAccountDateDialogDismiss() {
-        closeAccountShowDateDialog()
-    }
+    fun createAccountDateDialogDismiss() = closeAccountShowDateDialog()
 
     fun navigateUpPressed() {
         if (createAccountState is CreateAccountState.AccountCreated) {
@@ -63,9 +57,7 @@ abstract class BaseCreateAccountViewModel(
         createAccountState = CreateAccountState.Content(CreateAccountContent())
     }
 
-    fun createAccountDismissErrorClicked() {
-        createAccountNormalView()
-    }
+    fun createAccountDismissErrorClicked() = createAccountNormalView()
 
     fun updateCreateAccountTextAndErrors(
         firstName: Entry,

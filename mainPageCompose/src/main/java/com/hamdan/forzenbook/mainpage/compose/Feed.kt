@@ -1,6 +1,5 @@
 package com.hamdan.forzenbook.mainpage.compose
 
-import android.graphics.Bitmap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
@@ -35,7 +34,7 @@ import com.hamdan.forzenbook.ui.core.R
 fun FeedPage(
     state: BaseFeedViewModel.FeedState,
     onRequestMorePosts: () -> Unit,
-    onImageRequestLoad: (String) -> Bitmap,
+    onNameClick: (Int) -> Unit,
     bottomBar: @Composable () -> Unit,
     onCreatePostClicked: () -> Unit,
 ) {
@@ -45,16 +44,17 @@ fun FeedPage(
                 onCreatePostClicked = onCreatePostClicked,
                 posts = state.posts,
                 onRequestMorePosts = onRequestMorePosts,
-                onImageRequestLoad = onImageRequestLoad,
+                onNameClick = onNameClick,
                 bottomBar = bottomBar
             )
         }
+
         is BaseFeedViewModel.FeedState.Error -> {
             MainContent(
                 onCreatePostClicked = onCreatePostClicked,
                 posts = state.posts,
                 onRequestMorePosts = onRequestMorePosts,
-                onImageRequestLoad = onImageRequestLoad,
+                onNameClick = onNameClick,
                 bottomBar = bottomBar
             )
             // Todo pop open an error dialog, will need to implement when more info is given on the feed page regarding this
@@ -68,7 +68,7 @@ private fun MainContent(
     onCreatePostClicked: () -> Unit,
     posts: List<PostData>,
     onRequestMorePosts: () -> Unit,
-    onImageRequestLoad: (String) -> Bitmap,
+    onNameClick: (Int) -> Unit,
     bottomBar: @Composable () -> Unit,
 ) {
     Scaffold(
@@ -100,7 +100,7 @@ private fun MainContent(
                         item.posterName,
                         item.posterLocation,
                         item.date,
-                        onImageRequestLoad
+                        { onNameClick(item.posterId) },
                     )
                     Spacer(
                         modifier = Modifier
@@ -110,7 +110,7 @@ private fun MainContent(
                             .height(ForzenbookTheme.dimens.borderGrid.x1)
                     )
                     if (item.type == PostData.IMAGE_TYPE) {
-                        FeedImagePost(onImageRequestLoad, LOGIN_BASE_URL + item.body)
+                        FeedImagePost(LOGIN_BASE_URL + item.body)
                     } else {
                         FeedTextPost(item.body)
                     }

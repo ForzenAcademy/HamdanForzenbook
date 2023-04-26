@@ -2,9 +2,7 @@ package com.hamdan.forzenbook.search.core.data.repository
 
 import com.hamdan.forzenbook.data.daos.FeedDao
 import com.hamdan.forzenbook.data.daos.UserDao
-import com.hamdan.forzenbook.data.entities.PostEntity
 import com.hamdan.forzenbook.data.entities.Postable
-import com.hamdan.forzenbook.data.entities.UserEntity
 import com.hamdan.forzenbook.search.core.data.network.SearchResponse
 import com.hamdan.forzenbook.search.core.data.network.SearchService
 import com.hamdan.forzenbook.search.core.data.network.toFeedEntity
@@ -16,11 +14,10 @@ class SearchRepositoryImpl(
     private val service: SearchService,
 ) : SearchRepository {
     override suspend fun getPostByUserId(id: Int): List<Postable> {
-        deleteOldPosts()
         val postable = mutableListOf<Postable>()
         service.getPosts(id = id).body()?.forEach {
-            val user = getUserEntity(it.userId)
-            val post = getPostEntity(it)
+            val user = userDao.getUser(it.userId)
+            val post = feedDao.getSpecificPostId(it.postId)
             if (post.isNotEmpty() && user.isNotEmpty()) {
                 postable.add(Postable(post[0], user[0]))
             }
@@ -29,11 +26,10 @@ class SearchRepositoryImpl(
     }
 
     override suspend fun getPostByQuery(query: String): List<Postable> {
-        deleteOldPosts()
         val postable = mutableListOf<Postable>()
         service.getPosts(query = query).body()?.forEach {
-            val user = getUserEntity(it.userId)
-            val post = getPostEntity(it)
+            val user = userDao.getUser(it.userId)
+            val post = feedDao.getSpecificPostId(it.postId)
             if (post.isNotEmpty() && user.isNotEmpty()) {
                 postable.add(Postable(post[0], user[0]))
             }
@@ -41,34 +37,53 @@ class SearchRepositoryImpl(
         return postable
     }
 
-    private suspend fun deleteOldPosts() {
-        val currentTime = System.currentTimeMillis()
-        feedDao.deleteOldPosts(currentTime)
-        userDao.deleteOldUsers(currentTime)
+    override suspend fun searchPostByUserId(id: Int) {
+        deletePostsAndUsers()
+        service.getPosts(id = id).body()?.forEach {
+            updateUserEntity(it.userId)
+            updatePostEntity(it)
+        }
     }
 
-    private suspend fun getUserEntity(id: Int): List<UserEntity> {
-        var user = userDao.getUser(id)
-        if (user.isEmpty() || user.size > 1) {
-            userDao.deleteUser(id)
-            try {
+    override suspend fun searchPostByQuery(query: String) {
+        deletePostsAndUsers()
+        service.getPosts(query = query).body()?.forEach {
+            updateUserEntity(it.userId)
+            updatePostEntity(it)
+        }
+    }
+
+    private suspend fun deleteOldPosts(time: Long) {
+        feedDao.deleteOldPosts(time)
+    }
+
+    private suspend fun deleteOldUsers(time: Long) {
+        userDao.deleteOldUsers(time)
+    }
+
+    private suspend fun deletePostsAndUsers() {
+        val currentTime = System.currentTimeMillis()
+        deleteOldPosts(currentTime)
+        deleteOldUsers(currentTime)
+    }
+
+    private suspend fun updatePostEntity(response: SearchResponse) {
+        feedDao.getSpecificPostId(response.postId).apply {
+            if (isEmpty() || size > 1) {
+                feedDao.deleteSpecificPost(response.postId)
+                feedDao.insert(response.toFeedEntity())
+            }
+        }
+    }
+
+    private suspend fun updateUserEntity(id: Int) {
+        userDao.getUser(id).apply {
+            if (isEmpty() || size > 1) {
                 service.getUser(id).body()?.apply {
+                    userDao.deleteUser(id)
                     userDao.insert(toUserEntity())
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
-            user = userDao.getUser(id)
         }
-        return user
-    }
-
-    private suspend fun getPostEntity(response: SearchResponse): List<PostEntity> {
-        var post = feedDao.getSpecificPostId(response.postId)
-        if (post.isEmpty()) {
-            feedDao.insert(response.toFeedEntity())
-            post = feedDao.getSpecificPostId(response.postId)
-        }
-        return post
     }
 }

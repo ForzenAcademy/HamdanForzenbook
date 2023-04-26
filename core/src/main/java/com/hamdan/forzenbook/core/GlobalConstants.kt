@@ -7,4 +7,7 @@ object GlobalConstants {
     const val TOKEN_PREFERENCE_LOCATION = "FORZENBOOK_TOKEN_PREFERENCE_FILE"
     const val TOKEN_KEY = "loginToken"
     const val DAY_IN_MILLIS = 86400000
+    const val NAVIGATION_USERID = "userId"
+    const val NAVIGATION_QUERY = "queryString"
+    const val NAVIGATION_ERROR = "error"
 }

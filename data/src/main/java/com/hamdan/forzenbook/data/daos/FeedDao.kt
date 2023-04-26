@@ -28,6 +28,13 @@ interface FeedDao {
 
     @Query(
         """
+            DELETE FROM ${PostEntity.TABLE_NAME} WHERE ${PostEntity.POST_ID} = :postId
+        """
+    )
+    suspend fun deleteSpecificPost(postId: Int)
+
+    @Query(
+        """
             DELETE FROM ${PostEntity.TABLE_NAME} WHERE ${PostEntity.ENTRY_DATE} <= (:currentTime - ${GlobalConstants.DAY_IN_MILLIS})
         """
     )

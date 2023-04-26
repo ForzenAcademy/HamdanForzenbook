@@ -56,10 +56,15 @@
     <string name="feed_post_icon">Poster Icon</string>
     <string name="feed_post_image">Post Image</string>
     <!--
-    Search Page
+    SearchResult Page
     -->
     <string name="search_title_user">Posts by %1$s</string>
     <string name="search_title_query">Search results</string>
+    <string name="search_loading_title">Searching...</string>
+    <string name="search_error">Error retrieving search</string>
+    <!--
+    Search Page
+    -->
     <string name="search_label">Search</string>
     <!--
     Generic usage

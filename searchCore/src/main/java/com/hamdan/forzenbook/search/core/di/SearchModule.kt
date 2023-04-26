@@ -15,6 +15,10 @@ import com.hamdan.forzenbook.search.core.domain.GetPostByStringUseCase
 import com.hamdan.forzenbook.search.core.domain.GetPostByStringUseCaseImpl
 import com.hamdan.forzenbook.search.core.domain.GetPostByUserIdUseCase
 import com.hamdan.forzenbook.search.core.domain.GetPostByUserIdUseCaseImpl
+import com.hamdan.forzenbook.search.core.domain.SearchForPostByIdUseCase
+import com.hamdan.forzenbook.search.core.domain.SearchForPostByIdUseCaseImpl
+import com.hamdan.forzenbook.search.core.domain.SearchForPostByStringUseCase
+import com.hamdan.forzenbook.search.core.domain.SearchForPostByStringUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -81,12 +85,22 @@ object SearchModule {
     }
 
     @Provides
-    fun providesSearchGetPostByStringUseCase(repository: SearchRepository): GetPostByStringUseCase {
+    fun providesSearchGetPostByStringUseCase(repository: SearchRepository): SearchForPostByStringUseCase {
+        return SearchForPostByStringUseCaseImpl(repository)
+    }
+
+    @Provides
+    fun providesSearchGetPostByUserIdUseCase(repository: SearchRepository): SearchForPostByIdUseCase {
+        return SearchForPostByIdUseCaseImpl(repository)
+    }
+
+    @Provides
+    fun providesGetPostByStringUseCase(repository: SearchRepository): GetPostByStringUseCase {
         return GetPostByStringUseCaseImpl(repository)
     }
 
     @Provides
-    fun providesSearchGetPostByUserIdUseCase(repository: SearchRepository): GetPostByUserIdUseCase {
+    fun providesGetPostByUserIdUseCase(repository: SearchRepository): GetPostByUserIdUseCase {
         return GetPostByUserIdUseCaseImpl(repository)
     }
 
