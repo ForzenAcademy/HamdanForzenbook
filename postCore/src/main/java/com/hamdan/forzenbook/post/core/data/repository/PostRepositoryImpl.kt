@@ -1,7 +1,7 @@
 package com.hamdan.forzenbook.post.core.data.repository
 
 import com.hamdan.forzenbook.post.core.data.network.PostService
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
@@ -16,8 +16,10 @@ class PostRepositoryImpl(
     }
 
     override suspend fun postImage(token: String, file: File) {
-        val requestBodyType = RequestBody.create(MediaType.parse("multipart/form-data"), IMAGE_TYPE)
-        val requestBodyFile = RequestBody.create(MediaType.parse("image/*"), file)
+        // Todo update this so its not deprecated
+        val requestBodyType =
+            RequestBody.create("multipart/form-data".toMediaTypeOrNull(), IMAGE_TYPE)
+        val requestBodyFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
         val response = service.sendImagePost(
             token,
             requestBodyType,

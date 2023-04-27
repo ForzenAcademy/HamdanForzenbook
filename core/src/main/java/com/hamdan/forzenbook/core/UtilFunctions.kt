@@ -4,9 +4,9 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.activity.result.ActivityResultLauncher
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.transition.Transition
+import androidx.core.graphics.drawable.toBitmap
+import coil.ImageLoader
+import coil.request.ImageRequest
 import com.hamdan.forzenbook.ui.core.R
 import java.io.File
 import java.io.FileOutputStream
@@ -31,33 +31,34 @@ fun String.leftPad(): String {
     } else this
 }
 
-fun getBitmapFromUri(
+suspend fun saveBitmapFromUri(
     uri: Uri,
     context: Context,
     onError: () -> Unit,
-    onImageSaved: (File) -> Unit
+    onImageSaved: (File) -> Unit,
 ) {
-    Glide
-        .with(context)
-        .asBitmap()
-        .error(R.drawable.error_icon)
-        .load(uri)
-        .into(object : SimpleTarget<Bitmap>() {
-            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                // Save the downloaded bitmap to a temporary file
-                val tempFile: File
-                try {
-                    tempFile = createTemporaryImageFile()
-                    FileOutputStream(tempFile).use { fos ->
-                        resource.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+    val imageLoader = ImageLoader(context)
+    imageLoader.execute(
+        ImageRequest.Builder(context)
+            .data(uri)
+            .allowConversionToBitmap(true)
+            .target {
+                it.toBitmap().apply {
+                    val tempFile: File
+                    try {
+                        tempFile = createTemporaryImageFile()
+                        FileOutputStream(tempFile).use { fos ->
+                            this.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+                        }
+                        onImageSaved(tempFile)
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                        onError()
                     }
-                    onImageSaved(tempFile)
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                    onError()
                 }
             }
-        })
+            .build()
+    )
 }
 
 private fun createTemporaryImageFile(): File =
@@ -65,13 +66,4 @@ private fun createTemporaryImageFile(): File =
 
 fun launchGalleryImageGetter(contentLauncher: ActivityResultLauncher<String>) {
     contentLauncher.launch("image/*")
-}
-
-fun getImageFromNetwork(url: String, context: Context): Bitmap {
-    return Glide.with(context)
-        .asBitmap()
-        .load(url)
-        .error(context.getDrawable(R.drawable.logo_render_full_notext)) // Place holder, Todo check if we should have a different placeholder for errors, for now its the logo
-        .submit()
-        .get()
 }

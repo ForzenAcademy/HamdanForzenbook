@@ -1,6 +1,5 @@
 package com.hamdan.forzenbook.compose.core.composables
 
-import android.graphics.Bitmap
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -49,10 +48,6 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,7 +55,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -70,14 +65,15 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
 import com.hamdan.forzenbook.compose.core.LocalNavController
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.dimens
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.typography
 import com.hamdan.forzenbook.core.NavigationItem
 import com.hamdan.forzenbook.ui.core.R
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 private const val ONE_LINE = 1
 
@@ -317,7 +313,12 @@ fun ForzenbookBottomNavigationBar(navIcons: List<NavigationItem>) {
                         contentDescription = stringResource(it.description),
                     )
                 },
-                onClick = { navigator?.navigate(it.page) },
+                onClick = {
+                    navigator?.navigate(it.page) {
+                        popUpTo(it.page)
+                        launchSingleTop = true
+                    }
+                },
             )
         }
     }
@@ -493,23 +494,24 @@ fun FeedTextPost(text: String) {
 }
 
 @Composable
-fun FeedImagePost(onImageRequestLoad: (String) -> Bitmap, url: String) {
+fun FeedImagePost(url: String) {
     val cardShape = RoundedCornerShape(ForzenbookTheme.dimens.grid.x4)
-    val scope = rememberCoroutineScope()
-    val state = remember { mutableStateOf<Bitmap?>(null) }
-    LaunchedEffect(Unit) {
-        scope.launch(Dispatchers.IO) {
-            state.value = onImageRequestLoad(url)
-        }
-    }
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-        state.value?.apply {
-            Image(
-                bitmap = this.asImageBitmap(),
-                stringResource(id = R.string.feed_post_image),
-                modifier = Modifier.clip(cardShape)
-            )
-        } ?: CircularProgressIndicator()
+        SubcomposeAsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(url)
+                .build(),
+            contentDescription = stringResource(id = R.string.feed_post_image),
+            modifier = Modifier.clip(cardShape),
+            error = {
+                Image(
+                    modifier = Modifier.clip(cardShape),
+                    painter = painterResource(id = R.drawable.logo_render_full_notext),
+                    contentDescription = stringResource(id = R.string.lion_icon),
+                )
+            },
+            loading = { CircularProgressIndicator() }
+        )
     }
 }
 
@@ -519,17 +521,8 @@ fun UserRow(
     name: String,
     location: String,
     date: String,
-    onImageRequestLoad: (String) -> Bitmap
+    onNameClick: () -> Unit = {},
 ) {
-    val scope = rememberCoroutineScope()
-    val state = remember { mutableStateOf<Bitmap?>(null) }
-    if (icon != null) {
-        LaunchedEffect(Unit) {
-            scope.launch(Dispatchers.IO) {
-                state.value = onImageRequestLoad(icon)
-            }
-        }
-    }
     val roundIcon = RoundedCornerShape(ForzenbookTheme.dimens.grid.x20)
     Row(
         modifier = Modifier
@@ -538,25 +531,17 @@ fun UserRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
-        if (icon == null) {
-            Image(
-                modifier = Modifier
-                    .size(ForzenbookTheme.dimens.imageSizes.small)
-                    .clip(roundIcon),
-                painter = painterResource(id = R.drawable.logo_render_full_notext),
-                contentDescription = stringResource(id = R.string.lion_icon),
-            )
-        } else {
-            state.value?.apply {
-                Image(
-                    bitmap = this.asImageBitmap(),
-                    stringResource(id = R.string.feed_post_icon),
-                    modifier = Modifier
-                        .size(ForzenbookTheme.dimens.imageSizes.small)
-                        .clip(roundIcon),
-                )
-            }
-        }
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(icon)
+                .build(),
+            placeholder = painterResource(id = R.drawable.logo_render_full_notext),
+            contentDescription = stringResource(id = R.string.feed_post_icon),
+            modifier = Modifier
+                .size(ForzenbookTheme.dimens.imageSizes.small)
+                .clip(roundIcon),
+            error = painterResource(id = R.drawable.logo_render_full_notext),
+        )
         Column(
             modifier = Modifier
                 .padding(start = ForzenbookTheme.dimens.grid.x2)
@@ -567,6 +552,7 @@ fun UserRow(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = ForzenbookTheme.typography.bodyLarge,
+                modifier = Modifier.clickable { onNameClick() }
             )
             Text(
                 text = location,

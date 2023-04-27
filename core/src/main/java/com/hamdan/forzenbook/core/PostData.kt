@@ -4,6 +4,7 @@ data class PostData(
     val posterName: String,
     val posterLocation: String,
     val posterIcon: String?,
+    val posterId: Int,
     val body: String,
     val type: String,
     val date: String,

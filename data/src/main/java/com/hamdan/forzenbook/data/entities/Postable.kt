@@ -21,6 +21,7 @@ fun Postable.toPostData(): PostData {
         posterName = this.userEntity.name,
         posterLocation = this.userEntity.location,
         posterIcon = this.userEntity.userIcon,
+        posterId = this.userEntity.userId,
         body = this.postEntity.body,
         type = this.postEntity.type,
         date = formattedDateTime,

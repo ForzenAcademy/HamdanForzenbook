@@ -24,9 +24,7 @@ abstract class BasePostViewModel(
 
     protected abstract var postState: PostState
 
-    fun toggleClicked() {
-        toggle()
-    }
+    fun toggleClicked() = toggle()
 
     private fun toggle() {
         postState = PostState.Content(
@@ -44,9 +42,11 @@ abstract class BasePostViewModel(
             is PostContent.Image -> {
                 sendImage()
             }
+
             is PostContent.Text -> {
                 sendText()
             }
+
             else -> {
                 throw Exception("illegal unknown post type")
             }
@@ -102,17 +102,13 @@ abstract class BasePostViewModel(
 }
 
 fun BasePostViewModel.PostState.asContentOrNull(): BasePostViewModel.PostContent? {
-    return try {
-        (this as BasePostViewModel.PostState.Content).content
-    } catch (e: Exception) {
-        null
-    }
+    return (this as? BasePostViewModel.PostState.Content)?.content
 }
 
 fun BasePostViewModel.PostState.asImageOrNull(): BasePostViewModel.PostContent.Image? {
-    return (this as? BasePostViewModel.PostState.Content)?.content as? BasePostViewModel.PostContent.Image
+    return this.asContentOrNull() as? BasePostViewModel.PostContent.Image
 }
 
 fun BasePostViewModel.PostState.asTextOrNull(): BasePostViewModel.PostContent.Text? {
-    return (this as? BasePostViewModel.PostState.Content)?.content as? BasePostViewModel.PostContent.Text
+    return this.asContentOrNull() as? BasePostViewModel.PostContent.Text
 }
