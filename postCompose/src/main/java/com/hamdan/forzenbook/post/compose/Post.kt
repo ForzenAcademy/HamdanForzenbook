@@ -32,6 +32,7 @@ import com.hamdan.forzenbook.compose.core.composables.LoadingOverlay
 import com.hamdan.forzenbook.compose.core.composables.PillToggleSwitch
 import com.hamdan.forzenbook.compose.core.composables.PostTextField
 import com.hamdan.forzenbook.compose.core.composables.SubmitButton
+import com.hamdan.forzenbook.compose.core.composables.TitleText
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.dimens
 import com.hamdan.forzenbook.post.core.viewmodel.BasePostViewModel
@@ -68,12 +69,15 @@ fun Post(
                 )
             }
         }
+
         (state is BasePostViewModel.PostState.Loading) -> {
             LoadingContent()
         }
+
         (state is BasePostViewModel.PostState.Error) -> {
             ErrorContent(onDialogDismiss)
         }
+
         else -> {
             throw Exception("Illegal unknown state")
         }
@@ -180,9 +184,9 @@ private fun StandardContent(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            ForzenbookTopAppBar(topText = stringResource(R.string.post_top_bar_text)) {
+            ForzenbookTopAppBar(titleSection = { TitleText(text = stringResource(R.string.post_top_bar_text)) }) {
                 Image(
-                    painterResource(id = R.drawable.baseline_send_24),
+                    painterResource(id = R.drawable.send_post_icon),
                     contentDescription = stringResource(id = R.string.post_send_icon),
                     colorFilter = ColorFilter.tint(ForzenbookTheme.colors.colors.primary),
                     modifier = Modifier
@@ -203,7 +207,7 @@ private fun StandardContent(
                 PillToggleSwitch(
                     imageLeftRes = R.drawable.baseline_text_fields_24,
                     leftDescriptionRes = R.string.text_toggle_text,
-                    imageRightRes = R.drawable.baseline_image_24,
+                    imageRightRes = R.drawable.image_post_icon,
                     rightDescriptionRes = R.string.text_toggle_image,
                     selected = selected,
                 ) {

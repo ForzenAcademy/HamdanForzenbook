@@ -52,9 +52,15 @@
     <!--
     Feed Page
     -->
-    <string name="feed_top_bar_text">Feed</string>
+    <string name="feed_top_bar_text">Home</string>
     <string name="feed_post_icon">Poster Icon</string>
     <string name="feed_post_image">Post Image</string>
+    <!--
+    Search Page
+    -->
+    <string name="search_title_user">Posts by %1$s</string>
+    <string name="search_title_query">Search results</string>
+    <string name="search_label">Search</string>
     <!--
     Generic usage
     -->
@@ -62,6 +68,11 @@
     <string name="generic_success_title">Success!</string>
     <string name="generic_dialog_confirm">OK</string>
     <string name="user_name">%1$s %2$s</string>
+    <!--
+    Bottom Navigation bar
+    -->
+    <string name="home_nav_text">Home</string>
+    <string name="search_nav_text">Search</string>
     <!--
     Content Descriptions
     -->
@@ -71,7 +82,11 @@
     <string name="app_logo_image">app logo Image</string>
     <string name="text_toggle_text">Toggle to Text</string>
     <string name="text_toggle_image">Toggle to Image</string>
-    <string name="post_send_icon">Send Icon</string>
+    <string name="post_send_icon">Send Post Button</string>
+    <string name="home_button">Home Button</string>
+    <string name="back_button">Back Button</string>
     <string name="post_send_image">Your selected image</string>
     <string name="create_post_button">Create Post</string>
+    <string name="home_nav_button">Home navigation Button</string>
+    <string name="search_nav_button">Search navigation Button</string>
 </resources>

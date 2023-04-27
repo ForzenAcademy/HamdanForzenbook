@@ -40,7 +40,7 @@ fun getBitmapFromUri(
     Glide
         .with(context)
         .asBitmap()
-        .error(R.drawable.baseline_square_24)
+        .error(R.drawable.error_icon)
         .load(uri)
         .into(object : SimpleTarget<Bitmap>() {
             override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {

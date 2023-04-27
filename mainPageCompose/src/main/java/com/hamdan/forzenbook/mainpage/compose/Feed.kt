@@ -22,6 +22,7 @@ import com.hamdan.forzenbook.compose.core.composables.FeedImagePost
 import com.hamdan.forzenbook.compose.core.composables.FeedTextPost
 import com.hamdan.forzenbook.compose.core.composables.ForzenbookTopAppBar
 import com.hamdan.forzenbook.compose.core.composables.PostCard
+import com.hamdan.forzenbook.compose.core.composables.TitleText
 import com.hamdan.forzenbook.compose.core.composables.UserRow
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.dimens
@@ -35,6 +36,7 @@ fun FeedPage(
     state: BaseFeedViewModel.FeedState,
     onRequestMorePosts: () -> Unit,
     onImageRequestLoad: (String) -> Bitmap,
+    bottomBar: @Composable () -> Unit,
     onCreatePostClicked: () -> Unit,
 ) {
     when (state) {
@@ -43,7 +45,8 @@ fun FeedPage(
                 onCreatePostClicked = onCreatePostClicked,
                 posts = state.posts,
                 onRequestMorePosts = onRequestMorePosts,
-                onImageRequestLoad = onImageRequestLoad
+                onImageRequestLoad = onImageRequestLoad,
+                bottomBar = bottomBar
             )
         }
         is BaseFeedViewModel.FeedState.Error -> {
@@ -51,7 +54,8 @@ fun FeedPage(
                 onCreatePostClicked = onCreatePostClicked,
                 posts = state.posts,
                 onRequestMorePosts = onRequestMorePosts,
-                onImageRequestLoad = onImageRequestLoad
+                onImageRequestLoad = onImageRequestLoad,
+                bottomBar = bottomBar
             )
             // Todo pop open an error dialog, will need to implement when more info is given on the feed page regarding this
         }
@@ -65,12 +69,13 @@ private fun MainContent(
     posts: List<PostData>,
     onRequestMorePosts: () -> Unit,
     onImageRequestLoad: (String) -> Bitmap,
+    bottomBar: @Composable () -> Unit,
 ) {
     Scaffold(
         topBar = {
             ForzenbookTopAppBar(
-                topText = stringResource(id = R.string.feed_top_bar_text),
-                backIcon = false,
+                titleSection = { TitleText(text = stringResource(id = R.string.feed_top_bar_text)) },
+                showBackIcon = false,
                 actions = {
                     Icon(
                         imageVector = Icons.Filled.Add,
@@ -82,7 +87,8 @@ private fun MainContent(
                     )
                 },
             )
-        }
+        },
+        bottomBar = { bottomBar() },
     ) { padding ->
         FeedBackground(
             modifier = Modifier.padding(padding),

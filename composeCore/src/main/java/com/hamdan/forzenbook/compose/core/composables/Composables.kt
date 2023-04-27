@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -39,6 +41,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
@@ -60,6 +63,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
@@ -70,6 +74,7 @@ import com.hamdan.forzenbook.compose.core.LocalNavController
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.dimens
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.typography
+import com.hamdan.forzenbook.core.NavigationItem
 import com.hamdan.forzenbook.ui.core.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -94,8 +99,13 @@ fun LoginTitleSection(
 @Composable
 fun InputField(
     modifier: Modifier = Modifier,
-    label: String,
+    label: String?,
     value: String,
+    padding: PaddingValues = PaddingValues(
+        horizontal = ForzenbookTheme.dimens.grid.x10,
+        vertical = ForzenbookTheme.dimens.grid.x2,
+    ),
+    textStyle: TextStyle = ForzenbookTheme.typography.headlineMedium,
     onValueChange: (String) -> Unit,
     imeAction: ImeAction = ImeAction.None,
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -114,11 +124,10 @@ fun InputField(
     TextField(
         modifier = modifier
             .fillMaxWidth()
-            .padding(
-                horizontal = ForzenbookTheme.dimens.grid.x10,
-                vertical = ForzenbookTheme.dimens.grid.x2,
-            ),
-        label = { Text(text = label) },
+            .padding(padding),
+        label = if (label != null) {
+            { Text(text = label) }
+        } else null,
         value = value,
         onValueChange = onValueChange,
         keyboardOptions = KeyboardOptions(imeAction = imeAction, keyboardType = keyboardType),
@@ -130,7 +139,7 @@ fun InputField(
         colors = colors,
         maxLines = ONE_LINE,
         enabled = enabled,
-        textStyle = ForzenbookTheme.typography.headlineMedium,
+        textStyle = textStyle,
     )
 }
 
@@ -265,24 +274,18 @@ fun BackgroundColumn(
 @Composable
 fun ForzenbookTopAppBar(
     modifier: Modifier = Modifier,
-    topText: String,
-    backIcon: Boolean = true,
+    showBackIcon: Boolean = true,
+    titleSection: @Composable () -> Unit,
     actions: @Composable (() -> Unit)? = null,
 ) {
     val navigator = LocalNavController.current
     TopAppBar(
         title = {
-            Text(
-                text = topText,
-                textAlign = TextAlign.Center,
-                color = ForzenbookTheme.colors.colors.onBackground,
-                maxLines = ONE_LINE,
-                overflow = TextOverflow.Ellipsis,
-            )
+            titleSection()
         },
         modifier = modifier.fillMaxWidth(),
         colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = ForzenbookTheme.colors.colors.background),
-        navigationIcon = if (backIcon) {
+        navigationIcon = if (showBackIcon) {
             {
                 IconButton(onClick = { navigator?.navigateUp() }) {
                     Icon(
@@ -297,12 +300,65 @@ fun ForzenbookTopAppBar(
         },
         actions = {
             if (actions != null) actions()
-            else Icon(
-                imageVector = Icons.Filled.ArrowBack,
-                contentDescription = stringResource(id = R.string.back_arrow),
-                tint = Color.Transparent,
+        }
+    )
+}
+
+@Composable
+fun ForzenbookBottomNavigationBar(navIcons: List<NavigationItem>) {
+    val navigator = LocalNavController.current
+    NavigationBar(containerColor = ForzenbookTheme.colors.colors.background) {
+        navIcons.forEach {
+            ForzenbookNavigationItem(
+                label = it.label,
+                icon = {
+                    Icon(
+                        painter = painterResource(id = it.icon),
+                        contentDescription = stringResource(it.description),
+                    )
+                },
+                onClick = { navigator?.navigate(it.page) },
             )
         }
+    }
+}
+
+@Composable
+fun RowScope.ForzenbookNavigationItem(
+    label: Int,
+    icon: @Composable () -> Unit,
+    onClick: () -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .padding(ForzenbookTheme.dimens.grid.x2)
+            .weight(1f),
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(ForzenbookTheme.dimens.grid.x2)
+                .fillMaxSize()
+                .clickable {
+                    onClick()
+                },
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            icon()
+            Text(text = stringResource(id = label))
+        }
+    }
+}
+
+@Composable
+fun TitleText(text: String) {
+    Text(
+        text = text,
+        textAlign = TextAlign.Center,
+        color = ForzenbookTheme.colors.colors.onBackground,
+        maxLines = ONE_LINE,
+        overflow = TextOverflow.Ellipsis,
     )
 }
 
