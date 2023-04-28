@@ -15,7 +15,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import com.hamdan.forzenbook.compose.core.LocalNavController
 import com.hamdan.forzenbook.compose.core.composables.BackgroundColumn
 import com.hamdan.forzenbook.compose.core.composables.ErrorText
 import com.hamdan.forzenbook.compose.core.composables.ForzenbookDialog
@@ -41,8 +40,8 @@ fun MainLoginContent(
     onTextChange: (Entry) -> Unit,
     onSubmission: () -> Unit,
     onCreateAccountPress: () -> Unit,
+    onLoggedIn: () -> Unit,
 ) {
-    val navigator = LocalNavController.current
     BackgroundColumn {
         Image(
             modifier = Modifier.size(ForzenbookTheme.dimens.imageSizes.large),
@@ -68,18 +67,22 @@ fun MainLoginContent(
                     )
                 }
             }
+
             is BaseLoginViewModel.LoginState.Error -> {
                 ErrorContent(state.loginInputType, onErrorDismiss)
             }
+
             is BaseLoginViewModel.LoginState.Loading -> {
                 LoadingContent(loginType = state.loginInputType)
                 PreventScreenActionsDuringLoad()
             }
+
             BaseLoginViewModel.LoginState.LoggedIn -> {
                 LaunchedEffect(Unit) {
-                    // Todo when a main page is implemented create a navigation to it here
+                    onLoggedIn()
                 }
             }
+
             else -> {
                 throw Exception("Illegal unknown state")
             }

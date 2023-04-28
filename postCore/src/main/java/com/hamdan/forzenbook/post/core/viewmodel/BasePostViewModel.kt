@@ -1,7 +1,10 @@
 package com.hamdan.forzenbook.post.core.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hamdan.forzenbook.core.GlobalConstants
+import com.hamdan.forzenbook.core.GlobalConstants.TOKEN_KEY
 import com.hamdan.forzenbook.post.core.domain.SendImagePostUseCase
 import com.hamdan.forzenbook.post.core.domain.SendTextPostUseCase
 import kotlinx.coroutines.launch
@@ -37,14 +40,14 @@ abstract class BasePostViewModel(
         if (text.length < POST_LENGTH_LIMIT) postState = PostState.Content(PostContent.Text(text))
     }
 
-    fun sendPostClicked() {
+    fun sendPostClicked(context: Context) {
         when ((postState as PostState.Content).content) {
             is PostContent.Image -> {
-                sendImage()
+                sendImage(context)
             }
 
             is PostContent.Text -> {
-                sendText()
+                sendText(context)
             }
 
             else -> {
@@ -58,13 +61,17 @@ abstract class BasePostViewModel(
         postState = PostState.Content(PostContent.Image(filePath))
     }
 
-    private fun sendText() {
+    private fun sendText(context: Context) {
+        val token = context.getSharedPreferences(
+            GlobalConstants.TOKEN_PREFERENCE_LOCATION,
+            Context.MODE_PRIVATE
+        ).getString(TOKEN_KEY, null)
         postState.asTextOrNull()?.let {
-            val text = it.text
             postState = PostState.Loading
             viewModelScope.launch {
                 try {
-                    sendTextPostUseCase(PLACEHOLDER_TOKEN, text)
+                    if (token == null) throw Exception("invalid token")
+                    sendTextPostUseCase(token, it.text)
                     postState = PostState.Content(PostContent.Text())
                 } catch (e: Exception) {
                     postState = PostState.Error
@@ -73,12 +80,17 @@ abstract class BasePostViewModel(
         }
     }
 
-    private fun sendImage() {
+    private fun sendImage(context: Context) {
+        val token = context.getSharedPreferences(
+            GlobalConstants.TOKEN_PREFERENCE_LOCATION,
+            Context.MODE_PRIVATE
+        ).getString(TOKEN_KEY, null)
         postState.asImageOrNull()?.let {
             it.filePath?.let { path ->
                 viewModelScope.launch {
                     try {
-                        sendImagePostUseCase(PLACEHOLDER_TOKEN, path)
+                        if (token == null) throw Exception("invalid token")
+                        sendImagePostUseCase(token, path)
                         File(path).delete()
                         postState = PostState.Content(PostContent.Image())
                     } catch (e: Exception) {
@@ -96,8 +108,6 @@ abstract class BasePostViewModel(
 
     companion object {
         private const val POST_LENGTH_LIMIT = 256
-        private const val PLACEHOLDER_TOKEN =
-            "9aH7Jr398ccXTy5ArWXdvOJN5FpWNgcoZNrY76VekmT7oApGI4Xp9hVRZtltrzba"
     }
 }
 

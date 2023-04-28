@@ -83,7 +83,7 @@ class ForzenbookActivity : ComponentActivity() {
                 CompositionLocalProvider(LocalNavController provides navController) {
                     NavHost(
                         navController = navController,
-                        startDestination = FEED_PAGE,
+                        startDestination = LOGIN_PAGE,
                     ) {
                         composable(LOGIN_PAGE) {
                             MainLoginContent(
@@ -99,9 +99,12 @@ class ForzenbookActivity : ComponentActivity() {
                                 },
                                 onSubmission = {
                                     loginViewModel.loginClicked(this@ForzenbookActivity)
+                                },
+                                onCreateAccountPress = {
+                                    navController.navigate(CREATE_ACCOUNT_PAGE)
                                 }
                             ) {
-                                navController.navigate(CREATE_ACCOUNT_PAGE)
+                                navController.navigate(FEED_PAGE)
                             }
                         }
                         composable(CREATE_ACCOUNT_PAGE) {
@@ -225,7 +228,7 @@ class ForzenbookActivity : ComponentActivity() {
                                 onDialogDismiss = { postViewModel.dialogDismissClicked() },
                                 onGalleryClicked = { launchGalleryImageGetter(launcher) },
                             ) {
-                                postViewModel.sendPostClicked()
+                                postViewModel.sendPostClicked(this@ForzenbookActivity)
                             }
                         }
                     }
