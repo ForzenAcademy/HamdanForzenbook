@@ -1,7 +1,7 @@
 package com.hamdan.forzenbook.login.core.domain.usecase
 
+import com.hamdan.forzenbook.core.NullTokenException
 import com.hamdan.forzenbook.login.core.data.repository.LoginRepository
-import com.hamdan.forzenbook.login.core.data.repository.NullTokenException
 
 class LoginGetCredentialsFromNetworkUseCaseImpl(
     val repository: LoginRepository

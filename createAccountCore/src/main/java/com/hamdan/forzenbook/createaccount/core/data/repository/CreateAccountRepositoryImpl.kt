@@ -2,6 +2,8 @@ package com.hamdan.forzenbook.createaccount.core.data.repository
 
 import android.util.Log
 import com.google.gson.Gson
+import com.hamdan.forzenbook.core.AccountException
+import com.hamdan.forzenbook.core.InputException
 import com.hamdan.forzenbook.createaccount.core.data.network.CreateAccountResponse
 import com.hamdan.forzenbook.createaccount.core.data.network.CreateAccountService
 import java.sql.Date
@@ -20,7 +22,7 @@ class CreateAccountRepositoryImpl(
             email, Date.valueOf(birthDay), firstName, lastName, location
         )
         if (!response.isSuccessful) {
-            if (response.code() == USER_EXISTS) throw(AccountException("User Already Exists"))
+            if (response.code() == USER_EXISTS) throw (AccountException("User Already Exists"))
             if (response.code() == INPUT_ERROR) {
                 val msg = Gson().fromJson(
                     response.errorBody()?.charStream(),
@@ -28,7 +30,7 @@ class CreateAccountRepositoryImpl(
                 )
                 Log.e("CreateAccount", "${msg.reason}")
                 throw InputException()
-            } else throw(Exception("Unknown Error"))
+            } else throw (Exception("Unknown Error"))
         }
     }
 
@@ -37,6 +39,3 @@ class CreateAccountRepositoryImpl(
         private const val INPUT_ERROR = 400
     }
 }
-
-class AccountException(message: String) : Exception(message)
-class InputException() : Exception()

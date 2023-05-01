@@ -15,19 +15,21 @@ interface PostService {
     @FormUrlEncoded
     @POST(POST)
     suspend fun sendTextPost(
-        @Header("token") token: String,
+        @Header(TOKEN) token: String,
         @Field(TYPE) type: String,
         @Field(BODY) body: String,
     ): Response<Void>
+
     @Multipart
     @POST(POST)
     suspend fun sendImagePost(
-        @Header("token") token: String,
+        @Header(TOKEN) token: String,
         @Part(TYPE) type: RequestBody,
         @Part image: MultipartBody.Part,
     ): Response<Void>
 
     companion object {
+        private const val TOKEN = "token"
         private const val TYPE = "postType"
         private const val BODY = "body"
         private const val POST = "post/"

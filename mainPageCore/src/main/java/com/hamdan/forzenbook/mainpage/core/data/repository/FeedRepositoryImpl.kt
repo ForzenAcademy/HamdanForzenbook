@@ -12,12 +12,12 @@ class FeedRepositoryImpl(
     private val feedDao: FeedDao,
     private val userDao: UserDao,
 ) : FeedRepository {
-    override suspend fun getFeed(nameFormat: String): List<Postable> {
+    override suspend fun getFeed(nameFormat: String,token:String): List<Postable> {
         val currentTime = System.currentTimeMillis()
         feedDao.deleteOldPosts(currentTime)
         userDao.deleteOldUsers(currentTime)
         val postables: MutableList<Postable> = mutableListOf()
-        service.getFeed().body()?.apply {
+        service.getFeed(token).body()?.apply {
             this.forEach {
                 var user = userDao.getUser(it.userId)
                 if (user.isEmpty() || user.size > 1) {

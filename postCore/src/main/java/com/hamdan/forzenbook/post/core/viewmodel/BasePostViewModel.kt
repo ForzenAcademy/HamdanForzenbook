@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.core.GlobalConstants
 import com.hamdan.forzenbook.core.GlobalConstants.TOKEN_KEY
+import com.hamdan.forzenbook.core.InvalidTokenException
 import com.hamdan.forzenbook.post.core.domain.SendImagePostUseCase
 import com.hamdan.forzenbook.post.core.domain.SendTextPostUseCase
 import kotlinx.coroutines.launch
@@ -23,6 +24,7 @@ abstract class BasePostViewModel(
         data class Content(val content: PostContent) : PostState
         object Error : PostState
         object Loading : PostState
+        object InvalidLogin : PostState
     }
 
     protected abstract var postState: PostState
@@ -49,10 +51,6 @@ abstract class BasePostViewModel(
             is PostContent.Text -> {
                 sendText(context)
             }
-
-            else -> {
-                throw Exception("illegal unknown post type")
-            }
         }
     }
 
@@ -62,17 +60,19 @@ abstract class BasePostViewModel(
     }
 
     private fun sendText(context: Context) {
-        val token = context.getSharedPreferences(
-            GlobalConstants.TOKEN_PREFERENCE_LOCATION,
-            Context.MODE_PRIVATE
-        ).getString(TOKEN_KEY, null)
         postState.asTextOrNull()?.let {
             postState = PostState.Loading
             viewModelScope.launch {
                 try {
-                    if (token == null) throw Exception("invalid token")
-                    sendTextPostUseCase(token, it.text)
-                    postState = PostState.Content(PostContent.Text())
+                    context.getSharedPreferences(
+                        GlobalConstants.TOKEN_PREFERENCE_LOCATION,
+                        Context.MODE_PRIVATE
+                    ).getString(TOKEN_KEY, null)?.let { token ->
+                        sendTextPostUseCase(token, it.text)
+                        postState = PostState.Content(PostContent.Text())
+                    } ?: throw (InvalidTokenException())
+                } catch (e: InvalidTokenException) {
+                    postState = PostState.InvalidLogin
                 } catch (e: Exception) {
                     postState = PostState.Error
                 }
@@ -81,18 +81,21 @@ abstract class BasePostViewModel(
     }
 
     private fun sendImage(context: Context) {
-        val token = context.getSharedPreferences(
-            GlobalConstants.TOKEN_PREFERENCE_LOCATION,
-            Context.MODE_PRIVATE
-        ).getString(TOKEN_KEY, null)
         postState.asImageOrNull()?.let {
             it.filePath?.let { path ->
                 viewModelScope.launch {
                     try {
-                        if (token == null) throw Exception("invalid token")
-                        sendImagePostUseCase(token, path)
+                        context.getSharedPreferences(
+                            GlobalConstants.TOKEN_PREFERENCE_LOCATION,
+                            Context.MODE_PRIVATE
+                        ).getString(TOKEN_KEY, null)?.let { token ->
+                            sendImagePostUseCase(token, path)
+                            File(path).delete()
+                            postState = PostState.Content(PostContent.Image())
+                        } ?: throw (InvalidTokenException())
+                    } catch (e: InvalidTokenException) {
                         File(path).delete()
-                        postState = PostState.Content(PostContent.Image())
+                        postState = PostState.InvalidLogin
                     } catch (e: Exception) {
                         File(path).delete()
                         postState = PostState.Error
@@ -100,6 +103,14 @@ abstract class BasePostViewModel(
                 }
             }
         }
+    }
+
+    fun kickBackToLogin() {
+        reset()
+    }
+
+    private fun reset() {
+        postState = PostState.Content(PostContent.Text())
     }
 
     fun dialogDismissClicked() {

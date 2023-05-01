@@ -1,6 +1,6 @@
 package com.hamdan.forzenbook.createaccount.core.domain.mocks
 
-import com.hamdan.forzenbook.createaccount.core.data.repository.AccountException
+import com.hamdan.forzenbook.core.AccountException
 import com.hamdan.forzenbook.createaccount.core.data.repository.CreateAccountRepository
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountResult
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountUseCase

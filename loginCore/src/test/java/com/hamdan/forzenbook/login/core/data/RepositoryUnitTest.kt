@@ -1,11 +1,11 @@
 package com.hamdan.forzenbook.login.core.data
 
 import android.accounts.NetworkErrorException
+import com.hamdan.forzenbook.core.FailTokenRetrievalException
+import com.hamdan.forzenbook.core.NullTokenException
 import com.hamdan.forzenbook.login.core.data.network.LoginResponse
 import com.hamdan.forzenbook.login.core.data.network.LoginService
-import com.hamdan.forzenbook.login.core.data.repository.FailTokenRetrievalException
 import com.hamdan.forzenbook.login.core.data.repository.LoginRepositoryImpl
-import com.hamdan.forzenbook.login.core.data.repository.NullTokenException
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking

@@ -1,8 +1,8 @@
 package com.hamdan.forzenbook.createaccount.data
 
 import android.accounts.NetworkErrorException
+import com.hamdan.forzenbook.core.AccountException
 import com.hamdan.forzenbook.createaccount.core.data.network.CreateAccountService
-import com.hamdan.forzenbook.createaccount.core.data.repository.AccountException
 import com.hamdan.forzenbook.createaccount.core.data.repository.CreateAccountRepositoryImpl
 import io.mockk.coEvery
 import io.mockk.mockk

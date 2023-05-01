@@ -1,6 +1,6 @@
 package com.hamdan.forzenbook.post.core.domain
 
-import com.hamdan.forzenbook.post.core.data.repository.PostException
+import com.hamdan.forzenbook.core.PostException
 import com.hamdan.forzenbook.post.core.data.repository.PostRepository
 import java.io.File
 

@@ -2,12 +2,14 @@ package com.hamdan.forzenbook.search.core.data.network
 
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface SearchService {
 
     @GET(SEARCH)
     suspend fun getPosts(
+        @Header(TOKEN) token: String,
         @Query(USER_ID) id: Int? = null,
         @Query(QUERY) query: String? = null,
     ): Response<List<SearchResponse>>
@@ -18,6 +20,7 @@ interface SearchService {
     ): Response<UserResponse>
 
     companion object {
+        private const val TOKEN = "token"
         private const val SEARCH = "search/posts"
         private const val USER_GET = "user"
         private const val USER_ID = "uid"

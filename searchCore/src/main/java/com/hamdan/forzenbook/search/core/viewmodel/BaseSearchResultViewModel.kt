@@ -1,7 +1,10 @@
 package com.hamdan.forzenbook.search.core.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hamdan.forzenbook.core.GlobalConstants
+import com.hamdan.forzenbook.core.InvalidTokenException
 import com.hamdan.forzenbook.core.PostData
 import com.hamdan.forzenbook.search.core.domain.GetPostByStringUseCase
 import com.hamdan.forzenbook.search.core.domain.GetPostByUserIdUseCase
@@ -14,41 +17,71 @@ abstract class BaseSearchResultViewModel(
 ) : ViewModel() {
 
     sealed interface SearchResultState {
-        val posts: List<PostData>
+        data class Content(val posts: List<PostData> = listOf()) : SearchResultState
 
-        data class Content(override val posts: List<PostData> = listOf()) : SearchResultState
+        object Loading : SearchResultState
 
-        data class Loading(override val posts: List<PostData> = emptyList()) : SearchResultState
+        object Error : SearchResultState
 
-        data class Error(override val posts: List<PostData> = emptyList()) : SearchResultState
+        object InvalidLogin : SearchResultState
     }
 
     protected abstract var searchResultState: SearchResultState
 
-    fun getResultsById(id: Int) {
-        searchResultState = SearchResultState.Loading()
+    fun getResultsById(
+        id: Int,
+        context: Context,
+    ) {
+        searchResultState = SearchResultState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                searchResultState = SearchResultState.Content(getPostByUserIdUseCase(id))
+                context.getSharedPreferences(
+                    GlobalConstants.TOKEN_PREFERENCE_LOCATION,
+                    Context.MODE_PRIVATE
+                ).getString(GlobalConstants.TOKEN_KEY, null)?.let {
+                    searchResultState =
+                        SearchResultState.Content(getPostByUserIdUseCase(id, it))
+                } ?: throw (InvalidTokenException())
+            } catch (e: InvalidTokenException) {
+                searchResultState = SearchResultState.InvalidLogin
             } catch (e: Exception) {
-                searchResultState = SearchResultState.Error()
+                searchResultState = SearchResultState.Error
             }
         }
     }
 
-    fun getResultsByQuery(query: String) {
-        searchResultState = SearchResultState.Loading()
+    fun getResultsByQuery(
+        query: String,
+        context: Context,
+    ) {
+        searchResultState = SearchResultState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                searchResultState = SearchResultState.Content(getPostByStringUseCase(query))
+                context.getSharedPreferences(
+                    GlobalConstants.TOKEN_PREFERENCE_LOCATION,
+                    Context.MODE_PRIVATE
+                ).getString(GlobalConstants.TOKEN_KEY, null)?.let {
+                    searchResultState =
+                        SearchResultState.Content(getPostByStringUseCase(query, it))
+                } ?: throw (InvalidTokenException())
+            } catch (e: InvalidTokenException) {
+                searchResultState = SearchResultState.InvalidLogin
             } catch (e: Exception) {
-                searchResultState = SearchResultState.Error()
+                searchResultState = SearchResultState.Error
             }
         }
     }
 
     fun errorDuringSearch() {
-        searchResultState = SearchResultState.Error()
+        searchResultState = SearchResultState.Error
+    }
+
+    fun kickBackToLogin() {
+        reset()
+    }
+
+    private fun reset() {
+        searchResultState = SearchResultState.Content()
     }
 }
 

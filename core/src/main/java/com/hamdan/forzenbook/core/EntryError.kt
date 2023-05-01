@@ -1,5 +1,9 @@
 package com.hamdan.forzenbook.core
 
+interface Error {
+    fun isValid(): Boolean = false
+}
+
 sealed interface EntryError : Error {
     override fun isValid(): Boolean = false
 

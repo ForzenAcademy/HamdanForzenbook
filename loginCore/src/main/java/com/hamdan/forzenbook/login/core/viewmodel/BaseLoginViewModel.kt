@@ -71,6 +71,23 @@ abstract class BaseLoginViewModel(
         }
     }
 
+    fun kickBackToLogin(context: Context) {
+        reset(context)
+    }
+
+    private fun reset(context: Context) {
+        viewModelScope.launch {
+            context.getSharedPreferences(
+                TOKEN_PREFERENCE_LOCATION,
+                Context.MODE_PRIVATE
+            ).edit().apply {
+                remove(TOKEN_KEY)
+                apply()
+            }
+            loginState = LoginState.Content(LoginContent.Email())
+        }
+    }
+
     private fun updateLoginEmail(
         email: Entry,
     ) {
@@ -160,9 +177,11 @@ abstract class BaseLoginViewModel(
     }
 
     private fun saveTokenToPreferences(context: Context, token: String) {
-        context.getSharedPreferences(TOKEN_PREFERENCE_LOCATION, Context.MODE_PRIVATE).edit().apply {
-            putString(TOKEN_KEY, token)
-            apply()
+        viewModelScope.launch {
+            context.getSharedPreferences(TOKEN_PREFERENCE_LOCATION, Context.MODE_PRIVATE).edit().apply {
+                putString(TOKEN_KEY, token)
+                apply()
+            }
         }
     }
 

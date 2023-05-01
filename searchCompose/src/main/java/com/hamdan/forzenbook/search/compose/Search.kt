@@ -22,12 +22,27 @@ fun SearchContent(
     state: BaseSearchViewModel.SearchState,
     onSearchTextChange: (String) -> Unit,
     onSubmitSearch: () -> Unit,
+    kickBackToLogin: () -> Unit,
 ) {
-    MainContent(
-        state.query,
-        onSearchTextChange,
-        onSubmitSearch,
-    )
+    when (state) {
+        is BaseSearchViewModel.SearchState.Searching -> {
+            MainContent(
+                state.query,
+                onSearchTextChange,
+                onSubmitSearch,
+            )
+        }
+
+        BaseSearchViewModel.SearchState.Error -> {
+            // Todo show an error dialog with normal search
+        }
+        BaseSearchViewModel.SearchState.InvalidLogin -> {
+            kickBackToLogin()
+        }
+        else -> {
+            throw Exception("Illegal unknown state")
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
