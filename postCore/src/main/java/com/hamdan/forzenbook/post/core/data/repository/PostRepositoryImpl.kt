@@ -1,5 +1,7 @@
 package com.hamdan.forzenbook.post.core.data.repository
 
+import com.hamdan.forzenbook.core.NetworkRetrievalException
+import com.hamdan.forzenbook.core.PostException
 import com.hamdan.forzenbook.post.core.data.network.PostService
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -10,8 +12,13 @@ class PostRepositoryImpl(
     private val service: PostService
 ) : PostRepository {
     override suspend fun postText(token: String, message: String) {
-        if (!service.sendTextPost(token, TEXT_TYPE, message).isSuccessful) {
-            throw PostException("Error creating Post")
+        val response = service.sendTextPost(token, TEXT_TYPE, message)
+        if (!response.isSuccessful) {
+            if(response.code() == 401){
+                throw(NetworkRetrievalException())
+            }else{
+                throw PostException("Error creating Post")
+            }
         }
     }
 
@@ -26,7 +33,11 @@ class PostRepositoryImpl(
             MultipartBody.Part.createFormData("fileToUpload", file.name, requestBodyFile)
         )
         if (!response.isSuccessful) {
-            throw PostException("Error creating Post")
+            if(response.code() == 401){
+                throw(NetworkRetrievalException())
+            }else{
+                throw PostException("Error creating Post")
+            }
         }
     }
 
@@ -35,5 +46,3 @@ class PostRepositoryImpl(
         private const val IMAGE_TYPE = "image"
     }
 }
-
-class PostException(message: String) : Exception(message)

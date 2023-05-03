@@ -37,6 +37,7 @@ fun FeedPage(
     onNameClick: (Int) -> Unit,
     bottomBar: @Composable () -> Unit,
     onCreatePostClicked: () -> Unit,
+    kickBackToLogin: () -> Unit,
 ) {
     when (state) {
         is BaseFeedViewModel.FeedState.Content -> {
@@ -58,6 +59,10 @@ fun FeedPage(
                 bottomBar = bottomBar
             )
             // Todo pop open an error dialog, will need to implement when more info is given on the feed page regarding this
+        }
+
+        else -> {
+            kickBackToLogin()
         }
     }
 }

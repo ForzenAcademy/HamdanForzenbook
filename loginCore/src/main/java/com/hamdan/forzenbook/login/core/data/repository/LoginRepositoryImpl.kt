@@ -1,5 +1,7 @@
 package com.hamdan.forzenbook.login.core.data.repository
 
+import com.hamdan.forzenbook.core.FailTokenRetrievalException
+import com.hamdan.forzenbook.core.NullTokenException
 import com.hamdan.forzenbook.login.core.data.network.LoginService
 
 class LoginRepositoryImpl(
@@ -23,5 +25,4 @@ class LoginRepositoryImpl(
     }
 }
 
-class NullTokenException(message: String) : Exception(message)
-class FailTokenRetrievalException(message: String) : Exception(message)
+

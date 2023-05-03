@@ -7,7 +7,7 @@ import com.hamdan.forzenbook.mainpage.core.data.repository.FeedRepository
 class GetPostsUseCaseImpl(
     private val repository: FeedRepository
 ) : GetPostsUseCase {
-    override suspend fun invoke(nameFormat: String): List<PostData> {
-        return repository.getFeed(nameFormat).map { it.toPostData() }
+    override suspend fun invoke(nameFormat: String, token: String): List<PostData> {
+        return repository.getFeed(nameFormat, token).map { it.toPostData() }
     }
 }

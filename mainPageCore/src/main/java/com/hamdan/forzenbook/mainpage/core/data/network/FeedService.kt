@@ -2,12 +2,15 @@ package com.hamdan.forzenbook.mainpage.core.data.network
 
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface FeedService {
 
     @GET(FEED_GET)
-    suspend fun getFeed(): Response<List<FeedResponse>>
+    suspend fun getFeed(
+        @Header(TOKEN) token: String,
+    ): Response<List<FeedResponse>>
 
     @GET(USER_GET)
     suspend fun getUser(
@@ -15,6 +18,7 @@ interface FeedService {
     ): Response<UserResponse>
 
     companion object {
+        private const val TOKEN = "token"
         private const val FEED_GET = "feed"
         private const val USER_GET = "user"
         private const val USER_ID = "id"

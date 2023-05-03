@@ -49,6 +49,7 @@ fun Post(
     onToggleClicked: () -> Unit,
     onGalleryClicked: () -> Unit,
     onSendClicked: () -> Unit,
+    kickBackToLogin: () -> Unit,
 ) {
     when (state) {
         is BasePostViewModel.PostState.Content -> {
@@ -78,6 +79,9 @@ fun Post(
             LoadingContent()
         }
 
+        BasePostViewModel.PostState.InvalidLogin -> {
+            kickBackToLogin()
+        }
         else -> {
             throw Exception("Illegal unknown state")
         }

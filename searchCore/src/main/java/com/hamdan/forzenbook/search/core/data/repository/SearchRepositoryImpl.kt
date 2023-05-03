@@ -13,9 +13,9 @@ class SearchRepositoryImpl(
     private val userDao: UserDao,
     private val service: SearchService,
 ) : SearchRepository {
-    override suspend fun getPostByUserId(id: Int): List<Postable> {
+    override suspend fun getPostByUserId(id: Int, token: String): List<Postable> {
         val postable = mutableListOf<Postable>()
-        service.getPosts(id = id).body()?.forEach {
+        service.getPosts(id = id, token = token).body()?.forEach {
             val user = userDao.getUser(it.userId)
             val post = feedDao.getSpecificPostId(it.postId)
             if (post.isNotEmpty() && user.isNotEmpty()) {
@@ -25,9 +25,9 @@ class SearchRepositoryImpl(
         return postable
     }
 
-    override suspend fun getPostByQuery(query: String): List<Postable> {
+    override suspend fun getPostByQuery(query: String, token: String): List<Postable> {
         val postable = mutableListOf<Postable>()
-        service.getPosts(query = query).body()?.forEach {
+        service.getPosts(query = query, token = token).body()?.forEach {
             val user = userDao.getUser(it.userId)
             val post = feedDao.getSpecificPostId(it.postId)
             if (post.isNotEmpty() && user.isNotEmpty()) {
@@ -37,17 +37,17 @@ class SearchRepositoryImpl(
         return postable
     }
 
-    override suspend fun searchPostByUserId(id: Int) {
+    override suspend fun searchPostByUserId(id: Int, token: String) {
         deletePostsAndUsers()
-        service.getPosts(id = id).body()?.forEach {
+        service.getPosts(id = id, token = token).body()?.forEach {
             updateUserEntity(it.userId)
             updatePostEntity(it)
         }
     }
 
-    override suspend fun searchPostByQuery(query: String) {
+    override suspend fun searchPostByQuery(query: String, token: String) {
         deletePostsAndUsers()
-        service.getPosts(query = query).body()?.forEach {
+        service.getPosts(query = query, token = token).body()?.forEach {
             updateUserEntity(it.userId)
             updatePostEntity(it)
         }

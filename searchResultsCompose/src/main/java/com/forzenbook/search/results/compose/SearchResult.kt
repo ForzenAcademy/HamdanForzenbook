@@ -32,6 +32,7 @@ fun SearchResultContent(
     state: BaseSearchResultViewModel.SearchResultState,
     onNameClick: (Int) -> Unit,
     bottomBar: @Composable () -> Unit,
+    kickBackToLogin: () -> Unit,
 ) {
     when (state) {
         is BaseSearchResultViewModel.SearchResultState.Content -> {
@@ -48,6 +49,13 @@ fun SearchResultContent(
 
         is BaseSearchResultViewModel.SearchResultState.Loading -> {
             LoadingContent(bottomBar)
+        }
+
+        BaseSearchResultViewModel.SearchResultState.InvalidLogin -> {
+            kickBackToLogin()
+        }
+        else -> {
+            throw Exception("Illegal unknown state")
         }
     }
 }
