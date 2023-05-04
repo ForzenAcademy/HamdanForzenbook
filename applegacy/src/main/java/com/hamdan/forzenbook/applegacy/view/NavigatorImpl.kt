@@ -13,6 +13,10 @@ class NavigatorImpl : Navigator {
         }
     }
 
+    override fun navigateToPost(context: Context) {
+        TODO("Not yet implemented")
+    }
+
     override fun navigateToLogin(context: Context) {
         Intent(context, LegacyLoginActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP

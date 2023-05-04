@@ -25,10 +25,27 @@
     <dimen name="gridx11">22dp</dimen>
     <dimen name="gridx12">24dp</dimen>
 
+    <dimen name="staticGridx1">4dp</dimen>
+    <dimen name="staticGridx2">8dp</dimen>
+    <dimen name="staticGridx3">12dp</dimen>
+    <dimen name="staticGridx4">16dp</dimen>
+    <dimen name="staticGridx5">20dp</dimen>
+    <dimen name="staticGridx6">24dp</dimen>
+    <dimen name="staticGridx7">28dp</dimen>
+    <dimen name="staticGridx8">32dp</dimen>
+    <dimen name="staticGridx9">36dp</dimen>
+    <dimen name="staticGridx10">40dp</dimen>
+    <dimen name="staticGridx11">44dp</dimen>
+    <dimen name="staticGridx12">48dp</dimen>
+
     <dimen name="border">2dp</dimen>
-    <dimen name="iconSize">160dp</dimen>
+    <dimen name="iconSize1">24dp</dimen>
+    <dimen name="iconSize2">40dp</dimen>
+    <dimen name="iconSize3">60dp</dimen>
+    <dimen name="iconSize4">160dp</dimen>
     <dimen name="largeBottomPad">30dp</dimen>
     <dimen name="topAppBarPad">80dp</dimen>
+    <dimen name="smallButtonSidePad">80dp</dimen>
 
     <dimen name="caption1">8sp</dimen>
     <dimen name="caption2">12sp</dimen>

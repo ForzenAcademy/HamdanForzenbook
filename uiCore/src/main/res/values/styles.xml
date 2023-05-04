@@ -2,9 +2,14 @@
 <resources>
 
     <style name="loginImageStyle">
-        <item name="android:layout_width">@dimen/iconSize</item>
-        <item name="android:layout_height">@dimen/iconSize</item>
+        <item name="android:layout_width">@dimen/iconSize4</item>
+        <item name="android:layout_height">@dimen/iconSize4</item>
         <item name="android:src">@drawable/logo_render_full_notext</item>
+    </style>
+
+    <style name="appbarIcon">
+        <item name="android:layout_width">@dimen/iconSize1</item>
+        <item name="android:layout_height">@dimen/iconSize1</item>
     </style>
 
     <style name="titleStyle">
@@ -30,6 +35,7 @@
         <item name="colorPrimary">@color/black</item>
         <item name="fontFamily">@font/mont_medium</item>
         <item name="legacyBackground">@color/lion_yellow</item>
+        <item name="legacySecondaryBackground">@color/white</item>
         <item name="legacyPrimary">@color/black</item>
         <item name="legacyOnPrimary">@color/white</item>
         <item name="legacySecondaryVariant">@color/white</item>
@@ -38,6 +44,14 @@
         <item name="legacyOnError">@color/red</item>
         <item name="legacyOnBackground">@color/black</item>
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+    </style>
+
+    <style name="EditTextHint" parent="TextAppearance.AppCompat">
+        <item name="colorAccent">@android:color/white</item>
+        <item name="android:textColorHint">@color/dark_gray</item>
+        <item name="colorControlNormal">@color/black</item>
+        <item name="colorControlActivated">@color/red</item>
+        <item name="colorControlHighlight">@color/lion_yellow</item>
     </style>
 
     <style name="inputBodyStyle">

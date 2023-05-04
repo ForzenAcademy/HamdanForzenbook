@@ -245,9 +245,9 @@ private fun StandardContent(
             ) {
                 additionalBottomContent()
                 PillToggleSwitch(
-                    imageLeftRes = R.drawable.baseline_text_fields_24,
+                    imageLeftRes = R.drawable.pill_text_selected,
                     leftDescriptionRes = R.string.text_toggle_text,
-                    imageRightRes = R.drawable.image_post_icon,
+                    imageRightRes = R.drawable.pill_image_selected,
                     rightDescriptionRes = R.string.text_toggle_image,
                     selected = selected,
                 ) {

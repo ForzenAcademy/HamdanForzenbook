@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="legacyBackground" format="color" />
-    <attr name="legacyPrimary" format="color" />
-    <attr name="legacyOnPrimary" format="color" />
-    <attr name="legacySecondaryVariant" format="color" />
-    <attr name="legacySurface" format="color" />
-    <attr name="legacyOnSurface" format="color" />
-    <attr name="legacyOnError" format="color" />
-    <attr name="legacyOnBackground" format="color" />
+    <attr name="legacyBackground" format="color|reference" />
+    <attr name="legacySecondaryBackground" format="color|reference" />
+    <attr name="legacyPrimary" format="color|reference" />
+    <attr name="legacyOnPrimary" format="color|reference" />
+    <attr name="legacySecondaryVariant" format="color|reference" />
+    <attr name="legacySurface" format="color|reference" />
+    <attr name="legacyOnSurface" format="color|reference" />
+    <attr name="legacyOnError" format="color|reference" />
+    <attr name="legacyOnBackground" format="color|reference" />
 
 </resources>

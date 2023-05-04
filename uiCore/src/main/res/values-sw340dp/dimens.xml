@@ -15,6 +15,6 @@
 
     <dimen name="topAppBarPad">80dp</dimen>
     <dimen name="largeBottomPad">600dp</dimen>
-    <dimen name="iconSize">200dp</dimen>
+    <dimen name="iconSize4">200dp</dimen>
 
 </resources>
