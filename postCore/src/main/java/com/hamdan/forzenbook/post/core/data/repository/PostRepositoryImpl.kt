@@ -14,9 +14,9 @@ class PostRepositoryImpl(
     override suspend fun postText(token: String, message: String) {
         val response = service.sendTextPost(token, TEXT_TYPE, message)
         if (!response.isSuccessful) {
-            if(response.code() == 401){
-                throw(NetworkRetrievalException())
-            }else{
+            if (response.code() == 401) {
+                throw (NetworkRetrievalException())
+            } else {
                 throw PostException("Error creating Post")
             }
         }
@@ -33,9 +33,9 @@ class PostRepositoryImpl(
             MultipartBody.Part.createFormData("fileToUpload", file.name, requestBodyFile)
         )
         if (!response.isSuccessful) {
-            if(response.code() == 401){
-                throw(NetworkRetrievalException())
-            }else{
+            if (response.code() == 401) {
+                throw (NetworkRetrievalException())
+            } else {
                 throw PostException("Error creating Post")
             }
         }

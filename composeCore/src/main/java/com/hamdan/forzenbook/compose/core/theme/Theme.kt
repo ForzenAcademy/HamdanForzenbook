@@ -57,8 +57,8 @@ private val borderDimensionsStatic = BorderDimensions(
     1.dp, 2.dp, 3.dp, 4.dp,
 )
 
-private val NormalImages = ImageSizes(40.dp, 60.dp, 200.dp)
-private val SmallImages = ImageSizes(40.dp, 60.dp, 160.dp)
+private val NormalImages = ImageSizes(24.dp, 40.dp, 60.dp, 200.dp)
+private val SmallImages = ImageSizes(24.dp, 40.dp, 60.dp, 160.dp)
 
 object ForzenbookTheme {
     val colors: ReplacementColors
@@ -72,7 +72,6 @@ object ForzenbookTheme {
             Dimens(
                 SmallGrid,
                 borderDimensionsStatic,
-                NormalGrid,
                 SmallImages
             )
         } else {
@@ -80,7 +79,6 @@ object ForzenbookTheme {
             Dimens(
                 NormalGrid,
                 borderDimensionsStatic,
-                NormalGrid,
                 NormalImages
             )
         }
@@ -95,3 +93,11 @@ object ForzenbookTheme {
             typographyDefault
         }
 }
+
+val MaterialTheme.staticDimens: Dimens
+    @Composable
+    get() = Dimens(
+        NormalGrid,
+        borderDimensionsStatic,
+        NormalImages
+    )
