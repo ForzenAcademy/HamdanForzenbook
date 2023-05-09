@@ -26,6 +26,7 @@ data class GridDimensions(
 )
 
 data class ImageSizes(
+    val tiny: Dp,
     val small: Dp,
     val medium: Dp,
     val large: Dp,
@@ -41,6 +42,5 @@ data class BorderDimensions(
 data class Dimens(
     val grid: GridDimensions,
     val borderGrid: BorderDimensions,
-    val staticGrid: GridDimensions,
     val imageSizes: ImageSizes,
 )

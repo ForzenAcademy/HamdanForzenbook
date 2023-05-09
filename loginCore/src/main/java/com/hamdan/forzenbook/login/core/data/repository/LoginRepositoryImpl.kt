@@ -24,5 +24,3 @@ class LoginRepositoryImpl(
         } else throw FailTokenRetrievalException("Failed to get Token")
     }
 }
-
-

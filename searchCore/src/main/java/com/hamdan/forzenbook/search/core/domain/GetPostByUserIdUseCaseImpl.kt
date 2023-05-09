@@ -8,6 +8,6 @@ class GetPostByUserIdUseCaseImpl(
     private val repository: SearchRepository,
 ) : GetPostByUserIdUseCase {
     override suspend fun invoke(userId: Int, token: String): List<PostData> {
-        return repository.getPostByUserId(userId,token).map { it.toPostData() }
+        return repository.getPostByUserId(userId, token).map { it.toPostData() }
     }
 }
