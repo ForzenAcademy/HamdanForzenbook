@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--    TODO update margins and padding based on the uiupdate version when merged-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?legacySecondaryBackground"
+        android:orientation="vertical">
+
+        <Toolbar
+            android:id="@+id/postLayoutToolBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:background="?legacyBackground"
+            android:elevation="4dp"
+            android:navigationIcon="@drawable/back_arrow"
+            android:paddingEnd="@dimen/gridx1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="@string/top_bar_text_create_account"
+                android:textColor="?legacyOnBackground"
+                android:textSize="@dimen/body2" />
+
+        </Toolbar>
+
+        <FrameLayout
+            android:id="@+id/postChooseImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/smallButtonSidePad"
+            android:layout_marginVertical="@dimen/gridx2"
+            android:background="@drawable/button_state"
+            android:paddingHorizontal="@dimen/gridx2"
+            android:paddingVertical="@dimen/gridx2"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/postChooseImageText"
+                style="@style/buttonText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/post_gallery_button_text" />
+
+        </FrameLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/gridx2"
+            android:layout_marginVertical="@dimen/gridx4"
+            android:src="@drawable/logo_render_full_notext"
+            android:visibility="gone" />
+
+        <ScrollView
+            android:id="@+id/scrollPost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/postTextBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/gridx2"
+                android:layout_marginVertical="@dimen/gridx2"
+                android:hint="@string/post_text_label"
+                android:textColorHint="?legacyPrimary"
+                app:boxBackgroundMode="none"
+                app:placeholderText="@string/post_text_label"
+                app:placeholderTextColor="?legacyPrimary">
+
+                <!--this is the actual edit text which takes the input-->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputPostText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/input_field_shape"
+                    android:imeOptions="actionNext"
+                    android:singleLine="false"
+                    android:textColor="?legacyOnBackground"
+                    android:textCursorDrawable="@drawable/black_cursor"
+                    android:textSize="@dimen/subtitle1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </ScrollView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/postBottomAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:background="?legacySecondaryBackground"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/postChangeImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/smallButtonSidePad"
+            android:layout_marginVertical="@dimen/gridx2"
+            android:background="@drawable/button_state"
+            android:paddingHorizontal="@dimen/gridx2"
+            android:paddingVertical="@dimen/gridx2"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/postChangeImageText"
+                style="@style/buttonText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/post_gallery_change_image" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/post_pill"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/gridx2"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="@dimen/staticGridx12"
+                android:layout_height="@dimen/staticGridx10"
+                android:background="@drawable/pill_left"
+                android:padding="@dimen/staticGridx1">
+
+                <androidx.appcompat.widget.AppCompatToggleButton
+                    android:id="@+id/textToggle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/pill_text_selector"
+                    android:clickable="false"
+                    android:textOff="@null"
+                    android:textOn="@null" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/imageFrame"
+                android:layout_width="@dimen/staticGridx12"
+                android:layout_height="@dimen/staticGridx10"
+                android:background="@drawable/pill_right"
+                android:padding="@dimen/staticGridx1">
+
+                <androidx.appcompat.widget.AppCompatToggleButton
+                    android:id="@+id/imageToggle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/pill_image_selector"
+                    android:clickable="false"
+                    android:textOff="@null"
+                    android:textOn="@null" />
+            </FrameLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</FrameLayout>

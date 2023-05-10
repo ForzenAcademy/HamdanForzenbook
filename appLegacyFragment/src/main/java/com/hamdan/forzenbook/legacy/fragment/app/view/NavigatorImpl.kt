@@ -10,4 +10,7 @@ class NavigatorImpl : Navigator {
 
     override fun navigateToCreateAccount(context: Context) {
     }
+
+    override fun navigateToPost(context: Context) {
+    }
 }

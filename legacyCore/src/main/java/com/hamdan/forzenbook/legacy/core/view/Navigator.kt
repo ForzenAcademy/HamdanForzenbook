@@ -3,6 +3,7 @@ package com.hamdan.forzenbook.legacy.core.view
 import android.content.Context
 
 interface Navigator {
-    fun navigateToLogin(context: Context): Unit
-    fun navigateToCreateAccount(context: Context): Unit
+    fun navigateToLogin(context: Context)
+    fun navigateToCreateAccount(context: Context)
+    fun navigateToPost(context: Context)
 }

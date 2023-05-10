@@ -82,7 +82,7 @@ class ForzenbookActivity : ComponentActivity() {
                 CompositionLocalProvider(LocalNavController provides navController) {
                     NavHost(
                         navController = navController,
-                        startDestination = LOGIN_PAGE,
+                        startDestination = POST_PAGE,
                     ) {
                         composable(LOGIN_PAGE) {
                             MainLoginContent(

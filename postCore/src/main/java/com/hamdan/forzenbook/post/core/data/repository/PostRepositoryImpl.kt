@@ -1,6 +1,6 @@
 package com.hamdan.forzenbook.post.core.data.repository
 
-import com.hamdan.forzenbook.core.NetworkRetrievalException
+import com.hamdan.forzenbook.core.InvalidTokenException
 import com.hamdan.forzenbook.core.PostException
 import com.hamdan.forzenbook.post.core.data.network.PostService
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -14,8 +14,8 @@ class PostRepositoryImpl(
     override suspend fun postText(token: String, message: String) {
         val response = service.sendTextPost(token, TEXT_TYPE, message)
         if (!response.isSuccessful) {
-            if (response.code() == 401) {
-                throw (NetworkRetrievalException())
+            if (response.code() == UNAUTHORIZED) {
+                throw (InvalidTokenException())
             } else {
                 throw PostException("Error creating Post")
             }
@@ -33,8 +33,8 @@ class PostRepositoryImpl(
             MultipartBody.Part.createFormData("fileToUpload", file.name, requestBodyFile)
         )
         if (!response.isSuccessful) {
-            if (response.code() == 401) {
-                throw (NetworkRetrievalException())
+            if (response.code() == UNAUTHORIZED) {
+                throw (InvalidTokenException())
             } else {
                 throw PostException("Error creating Post")
             }
@@ -42,6 +42,7 @@ class PostRepositoryImpl(
     }
 
     companion object {
+        private const val UNAUTHORIZED = 401
         private const val TEXT_TYPE = "text"
         private const val IMAGE_TYPE = "image"
     }
