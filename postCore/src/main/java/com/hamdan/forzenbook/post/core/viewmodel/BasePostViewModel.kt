@@ -1,6 +1,7 @@
 package com.hamdan.forzenbook.post.core.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.core.GlobalConstants
@@ -45,10 +46,12 @@ abstract class BasePostViewModel(
     fun sendPostClicked(context: Context) {
         when ((postState as PostState.Content).content) {
             is PostContent.Image -> {
+                Log.v("Hamdan", "in SendImage")
                 sendImage(context)
             }
 
             is PostContent.Text -> {
+                Log.v("Hamdan", "in SendText")
                 sendText(context)
             }
         }

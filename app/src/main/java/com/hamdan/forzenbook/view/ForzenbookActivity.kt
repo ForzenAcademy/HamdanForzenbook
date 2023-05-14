@@ -66,8 +66,8 @@ class ForzenbookActivity : ComponentActivity() {
                         {
                             postViewModel.updateImage(null)
                         },
-                    ) {
-                        postViewModel.updateImage(it.path)
+                    ) { file ->
+                        postViewModel.updateImage(file.path)
                     }
                 }
             }
@@ -82,7 +82,7 @@ class ForzenbookActivity : ComponentActivity() {
                 CompositionLocalProvider(LocalNavController provides navController) {
                     NavHost(
                         navController = navController,
-                        startDestination = POST_PAGE,
+                        startDestination = FEED_PAGE,
                     ) {
                         composable(LOGIN_PAGE) {
                             MainLoginContent(

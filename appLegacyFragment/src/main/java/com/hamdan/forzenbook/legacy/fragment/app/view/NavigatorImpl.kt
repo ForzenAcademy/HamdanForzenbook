@@ -13,4 +13,7 @@ class NavigatorImpl : Navigator {
 
     override fun navigateToPost(context: Context) {
     }
+
+    override fun kickToLogin(context: Context) {
+    }
 }

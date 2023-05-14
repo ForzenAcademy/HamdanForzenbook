@@ -40,6 +40,7 @@ dependencies {
     implementation project(':core')
     implementation project(':uiCore')
     api project(':loginCore')
+    api project(":postCore")
 
     // Hilt
     implementation "com.google.dagger:hilt-android:2.44"

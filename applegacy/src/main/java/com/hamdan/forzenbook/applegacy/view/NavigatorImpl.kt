@@ -5,6 +5,7 @@ import android.content.Intent
 import com.hamdan.forzenbook.legacy.core.view.Navigator
 import com.hamdan.forzenbook.legacy.createaccount.LegacyCreateAccountActivity
 import com.hamdan.forzenbook.legacy.login.LegacyLoginActivity
+import com.hamdan.forzenbook.legacy.post.LegacyPostActivity
 
 class NavigatorImpl : Navigator {
     override fun navigateToCreateAccount(context: Context) {
@@ -14,7 +15,16 @@ class NavigatorImpl : Navigator {
     }
 
     override fun navigateToPost(context: Context) {
-        TODO("Not yet implemented")
+        Intent(context, LegacyPostActivity::class.java).apply {
+            context.startActivity(this)
+        }
+    }
+
+    override fun kickToLogin(context: Context) {
+        Intent(context, LegacyLoginActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            context.startActivity(this)
+        }
     }
 
     override fun navigateToLogin(context: Context) {
