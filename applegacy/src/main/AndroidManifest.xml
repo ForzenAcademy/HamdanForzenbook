@@ -25,5 +25,6 @@
                 android:value="" />
         </activity>
         <activity android:name="com.hamdan.forzenbook.legacy.createaccount.LegacyCreateAccountActivity" />
+        <activity android:name="com.hamdan.forzenbook.legacy.login.LegacyLoginActivity" />
     </application>
 </manifest>

@@ -58,12 +58,22 @@
         </FrameLayout>
 
         <ImageView
+            android:id="@+id/postChosenImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/gridx2"
             android:layout_marginVertical="@dimen/gridx4"
+            android:layout_gravity="center"
             android:src="@drawable/logo_render_full_notext"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:contentDescription="@string/post_send_image" />
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/post_load_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|top"
+            android:visibility="gone"
+            />
 
         <ScrollView
             android:id="@+id/scrollPost"
@@ -140,6 +150,7 @@
             <FrameLayout
                 android:layout_width="@dimen/staticGridx12"
                 android:layout_height="@dimen/staticGridx10"
+                android:id="@+id/pillLeftFrame"
                 android:background="@drawable/pill_left"
                 android:padding="@dimen/staticGridx1">
 
@@ -154,7 +165,7 @@
             </FrameLayout>
 
             <FrameLayout
-                android:id="@+id/imageFrame"
+                android:id="@+id/pillRightFrame"
                 android:layout_width="@dimen/staticGridx12"
                 android:layout_height="@dimen/staticGridx10"
                 android:background="@drawable/pill_right"

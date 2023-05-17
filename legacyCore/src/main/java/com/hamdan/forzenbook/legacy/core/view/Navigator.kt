@@ -6,4 +6,5 @@ interface Navigator {
     fun navigateToLogin(context: Context)
     fun navigateToCreateAccount(context: Context)
     fun navigateToPost(context: Context)
+    fun kickToLogin(context: Context)
 }
