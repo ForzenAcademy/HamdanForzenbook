@@ -41,6 +41,7 @@ dependencies {
     implementation project(":legacyLogin")
     implementation project(":legacyCreateAccount")
     implementation project(":legacyPost")
+    implementation project(":legacyMainPage")
 
     // Hilt
     implementation "com.google.dagger:hilt-android:2.44"

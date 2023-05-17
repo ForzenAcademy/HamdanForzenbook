@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Forzenbook">
         <activity
-            android:name="com.hamdan.forzenbook.legacy.post.LegacyPostActivity"
+            android:name="com.hamdan.forzenbook.legacy.mainpage.LegacyMainPageActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,5 +26,6 @@
         </activity>
         <activity android:name="com.hamdan.forzenbook.legacy.createaccount.LegacyCreateAccountActivity" />
         <activity android:name="com.hamdan.forzenbook.legacy.login.LegacyLoginActivity" />
+        <activity android:name="com.hamdan.forzenbook.legacy.post.LegacyPostActivity" />
     </application>
 </manifest>

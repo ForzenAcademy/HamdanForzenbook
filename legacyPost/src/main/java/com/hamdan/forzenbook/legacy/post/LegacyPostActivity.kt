@@ -104,15 +104,11 @@ class LegacyPostActivity : ComponentActivity() {
             }
             postLayoutToolBar.inflateMenu(R.menu.post_menu)
             postLayoutToolBar.setOnMenuItemClickListener { item ->
-                when (item.itemId) {
-                    R.id.postSendIcon -> {
-                        postViewModel.sendPostClicked(this@LegacyPostActivity)
-                        true
-                    }
-
-                    else -> {
-                        false
-                    }
+                if (item.itemId == R.id.postSendIcon) {
+                    postViewModel.sendPostClicked(this@LegacyPostActivity)
+                    true
+                } else {
+                    false
                 }
             }
             postPill.setOnClickListener {

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/gridx8"
+    android:layout_marginVertical="@dimen/gridx2"
+    app:cardCornerRadius="@dimen/gridx4">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/gridx4">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="@dimen/gridx12">
+
+                <ImageView
+                    android:layout_width="@dimen/staticGridx10"
+                    android:layout_height="@dimen/staticGridx10"
+                    android:src="@drawable/logo_render_full_notext" />
+            </androidx.cardview.widget.CardView>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/gridx2"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/feedUserName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/body2"
+                    style="@style/userRowText"/>
+
+                <TextView
+                    android:id="@+id/feedUserLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/userRowText" />
+
+                <TextView
+                    android:id="@+id/feedUserDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/userRowText" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/postSpacer"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/border"
+            style="@style/postSpacer" />
+
+        <TextView
+            android:id="@+id/feedPostText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
