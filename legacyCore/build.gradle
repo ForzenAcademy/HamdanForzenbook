@@ -41,6 +41,10 @@ dependencies {
     implementation project(':uiCore')
     api project(':loginCore')
     api project(":postCore")
+    api project(":mainPageCore")
+
+    // Coil
+    implementation "io.coil-kt:coil:2.3.0"
 
     // Hilt
     implementation "com.google.dagger:hilt-android:2.44"

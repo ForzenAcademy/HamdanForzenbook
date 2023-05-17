@@ -1,11 +1,9 @@
 package com.hamdan.forzenbook.mainpage.core.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.core.PostData
 import com.hamdan.forzenbook.mainpage.core.domain.GetPostsUseCase
-import com.hamdan.forzenbook.ui.core.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

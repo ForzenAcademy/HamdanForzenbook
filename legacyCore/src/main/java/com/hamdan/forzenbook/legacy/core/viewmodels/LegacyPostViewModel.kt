@@ -32,11 +32,7 @@ class LegacyPostViewModel @Inject constructor(
         }
 
     fun backButtonPressed(context: Context) {
-        navigateToFeed(context)
-    }
-
-    private fun navigateToFeed(context: Context) {
-        // when feed implemented navigate to feed through navigator
+        navigator.navigateToFeed(context)
     }
 
     fun kickToLogin(context: Context) {

@@ -102,10 +102,13 @@ class LegacyPostActivity : ComponentActivity() {
                 postChosenImage.isVisible = false
                 postChangeImage.isVisible = false
             }
+            postLayoutToolBar.setNavigationOnClickListener {
+                postViewModel.backButtonPressed(this@LegacyPostActivity)
+            }
             postLayoutToolBar.inflateMenu(R.menu.post_menu)
             postLayoutToolBar.setOnMenuItemClickListener { item ->
                 if (item.itemId == R.id.postSendIcon) {
-                    postViewModel.sendPostClicked(this@LegacyPostActivity)
+                    postViewModel.sendPostClicked()
                     true
                 } else {
                     false
