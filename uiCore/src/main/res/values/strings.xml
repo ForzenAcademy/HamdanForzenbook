@@ -90,6 +90,7 @@
     <string name="text_toggle_text">Toggle to Text</string>
     <string name="text_toggle_image">Toggle to Image</string>
     <string name="post_send_icon">Send Post Button</string>
+    <string name="feed_new_post_icon">Create Post Icon</string>
     <string name="home_button">Home Button</string>
     <string name="back_button">Back Button</string>
     <string name="post_send_image">Your selected image</string>

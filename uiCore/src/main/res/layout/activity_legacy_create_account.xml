@@ -14,7 +14,7 @@
             android:id="@+id/createAccountLayoutToolBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="4dp"
+            android:elevation="@dimen/staticGridx1"
             android:navigationIcon="@drawable/back_arrow"
             android:paddingEnd="@dimen/gridx9">
 

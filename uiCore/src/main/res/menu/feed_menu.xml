@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/feedMenu">
+    <item
+        android:id="@+id/feedNewPost"
+        android:icon="@drawable/new_post_icon"
+        android:title="@string/feed_new_post_icon"
+        android:iconTint="?legacyOnBackground"
+        android:showAsAction="always" />
+
+</menu>
