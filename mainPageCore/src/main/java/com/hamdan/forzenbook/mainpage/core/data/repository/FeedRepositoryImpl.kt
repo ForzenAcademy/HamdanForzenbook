@@ -1,5 +1,8 @@
 package com.hamdan.forzenbook.mainpage.core.data.repository
 
+import android.content.Context
+import com.hamdan.forzenbook.core.InvalidTokenException
+import com.hamdan.forzenbook.core.getToken
 import com.hamdan.forzenbook.data.daos.FeedDao
 import com.hamdan.forzenbook.data.daos.UserDao
 import com.hamdan.forzenbook.data.entities.Postable
@@ -11,8 +14,12 @@ class FeedRepositoryImpl(
     private val service: FeedService,
     private val feedDao: FeedDao,
     private val userDao: UserDao,
+    private val context: Context,
 ) : FeedRepository {
-    override suspend fun getFeed(nameFormat: String, token: String): List<Postable> {
+    override suspend fun getFeed(): List<Postable> {
+        val token = getToken(context)
+        if (token.isNullOrEmpty()) throw InvalidTokenException()
+
         val currentTime = System.currentTimeMillis()
         feedDao.deleteOldPosts(currentTime)
         userDao.deleteOldUsers(currentTime)
@@ -24,7 +31,7 @@ class FeedRepositoryImpl(
                     userDao.deleteUser(it.userId)
                     try {
                         service.getUser(it.userId).body()?.apply {
-                            userDao.insert(toUserEntity(nameFormat))
+                            userDao.insert(toUserEntity())
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()

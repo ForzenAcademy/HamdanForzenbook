@@ -1,5 +1,6 @@
 package com.hamdan.forzenbook.login.core.di
 
+import android.content.Context
 import com.google.gson.GsonBuilder
 import com.hamdan.forzenbook.core.GlobalConstants.LOGIN_BASE_URL
 import com.hamdan.forzenbook.login.core.data.network.LoginService
@@ -15,6 +16,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
@@ -43,9 +45,10 @@ object LoginModule {
 
     @Provides
     fun providesLoginRepository(
-        loginService: LoginService
+        loginService: LoginService,
+        @ApplicationContext context: Context,
     ): LoginRepository {
-        return LoginRepositoryImpl(loginService)
+        return LoginRepositoryImpl(loginService, context)
     }
 
     @Provides

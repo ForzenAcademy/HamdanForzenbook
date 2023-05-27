@@ -97,7 +97,7 @@ class ForzenbookActivity : ComponentActivity() {
                                     loginViewModel.updateText(entry)
                                 },
                                 onSubmission = {
-                                    loginViewModel.loginClicked(this@ForzenbookActivity)
+                                    loginViewModel.loginClicked()
                                 },
                                 onCreateAccountPress = {
                                     navController.navigate(CREATE_ACCOUNT_PAGE)
@@ -131,14 +131,14 @@ class ForzenbookActivity : ComponentActivity() {
                         composable(FEED_PAGE) {
                             // Todo remove later
                             LaunchedEffect(Unit) {
-                                feedViewModel.loadMore(this@ForzenbookActivity)
+                                feedViewModel.loadMore()
                             }
                             FeedPage(
                                 state = feedViewModel.state.value,
-                                onRequestMorePosts = { feedViewModel.loadMore(this@ForzenbookActivity) },
+                                onRequestMorePosts = { feedViewModel.loadMore() },
                                 onNameClick = { id ->
                                     searchViewModel.onNameClicked(
-                                        id, this@ForzenbookActivity,
+                                        id,
                                         {
                                             navController.navigate(
                                                 SEARCH_RESULTS_PAGE + searchViewModel.navigateUser(
@@ -175,7 +175,6 @@ class ForzenbookActivity : ComponentActivity() {
                                 },
                                 onSubmitSearch = {
                                     searchViewModel.onSearchSubmit(
-                                        this@ForzenbookActivity,
                                         {
                                             navController.navigate(SEARCH_RESULTS_PAGE + searchViewModel.navigateQuery() + "false")
                                         },
@@ -209,12 +208,10 @@ class ForzenbookActivity : ComponentActivity() {
                                         if (userId == -1 && !query.isNullOrEmpty()) {
                                             searchResultViewModel.getResultsByQuery(
                                                 query,
-                                                this@ForzenbookActivity
                                             )
                                         } else {
                                             searchResultViewModel.getResultsById(
                                                 userId,
-                                                this@ForzenbookActivity,
                                             )
                                         }
                                     } else {
@@ -226,7 +223,7 @@ class ForzenbookActivity : ComponentActivity() {
                                 state = searchResultViewModel.state.value,
                                 onNameClick = { id ->
                                     searchViewModel.onNameClicked(
-                                        id, this@ForzenbookActivity,
+                                        id,
                                         {
                                             navController.navigate(
                                                 SEARCH_RESULTS_PAGE + searchViewModel.navigateUser(
@@ -260,7 +257,7 @@ class ForzenbookActivity : ComponentActivity() {
                                 onDialogDismiss = { postViewModel.dialogDismissClicked() },
                                 onGalleryClicked = { launchGalleryImageGetter(launcher) },
                                 onSendClicked = {
-                                    postViewModel.sendPostClicked(this@ForzenbookActivity)
+                                    postViewModel.sendPostClicked()
                                 }
                             ) {
                                 loginViewModel.kickBackToLogin(this@ForzenbookActivity)
@@ -281,7 +278,7 @@ class ForzenbookActivity : ComponentActivity() {
         val NAVBAR_HOME =
             NavigationItem(
                 FEED_PAGE,
-                R.drawable.baseline_home_24,
+                R.drawable.home_icon,
                 R.string.home_nav_text,
                 R.string.home_nav_button
             )

@@ -18,7 +18,8 @@ fun Postable.toPostData(): PostData {
     val formattedDateTime = dateTime.format(outputFormat)
 
     return PostData(
-        posterName = this.userEntity.name,
+        posterFirstName = this.userEntity.firstName,
+        posterLastName = this.userEntity.lastName,
         posterLocation = this.userEntity.location,
         posterIcon = this.userEntity.userIcon,
         posterId = this.userEntity.userId,

@@ -9,7 +9,6 @@ class MockGetsToken(
     override suspend fun requestValidation(email: String) {
     }
 
-    override suspend fun getToken(email: String?, code: String?): String {
-        return "itsatoken"
+    override suspend fun getToken(email: String?, code: String?) {
     }
 }

@@ -38,7 +38,7 @@ class LegacyLoginActivity : ComponentActivity() {
             loginClickBlocker.setOnClickListener { } // only has an on click to actually block clicks
 
             loginSubmitButton.setOnClickListener {
-                loginModel.loginClicked(context)
+                loginModel.loginClicked()
             }
 
             loginCreateAccountLink.setOnClickListener {
@@ -48,7 +48,7 @@ class LegacyLoginActivity : ComponentActivity() {
             inputEmailText.setOnEditorActionListener { _, action, _ ->
                 return@setOnEditorActionListener if (action == EditorInfo.IME_ACTION_DONE) {
                     KeyboardUtils.hideKeyboard(this@LegacyLoginActivity, inputEmailText)
-                    loginModel.loginClicked(context)
+                    loginModel.loginClicked()
                     true
                 } else false
             }
@@ -56,7 +56,7 @@ class LegacyLoginActivity : ComponentActivity() {
             inputCodeText.setOnEditorActionListener { _, action, _ ->
                 if (action == EditorInfo.IME_ACTION_DONE) {
                     if (loginSubmittable) {
-                        loginModel.loginClicked(context)
+                        loginModel.loginClicked()
                         KeyboardUtils.hideKeyboard(this@LegacyLoginActivity, inputCodeText)
                         return@setOnEditorActionListener true
                     }

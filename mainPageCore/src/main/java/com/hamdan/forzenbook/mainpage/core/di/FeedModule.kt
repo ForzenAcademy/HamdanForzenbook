@@ -73,9 +73,10 @@ object FeedModule {
     fun providesFeedRepository(
         @Named(MODULE_NAME) feedDao: FeedDao,
         @Named(MODULE_NAME) userDao: UserDao,
-        service: FeedService
+        service: FeedService,
+        @ApplicationContext context: Context,
     ): FeedRepository {
-        return FeedRepositoryImpl(service, feedDao, userDao)
+        return FeedRepositoryImpl(service, feedDao, userDao, context)
     }
 
     @Provides

@@ -67,3 +67,10 @@ private fun createTemporaryImageFile(): File =
 fun launchGalleryImageGetter(contentLauncher: ActivityResultLauncher<String>) {
     contentLauncher.launch("image/*")
 }
+
+fun getToken(context: Context): String? {
+    return context.getSharedPreferences(
+        GlobalConstants.TOKEN_PREFERENCE_LOCATION,
+        Context.MODE_PRIVATE
+    ).getString(GlobalConstants.TOKEN_KEY, null)
+}

@@ -7,7 +7,7 @@ import com.hamdan.forzenbook.search.core.data.repository.SearchRepository
 class GetPostByUserIdUseCaseImpl(
     private val repository: SearchRepository,
 ) : GetPostByUserIdUseCase {
-    override suspend fun invoke(userId: Int, token: String): List<PostData> {
-        return repository.getPostByUserId(userId, token).map { it.toPostData() }
+    override suspend fun invoke(userId: Int): List<PostData> {
+        return repository.getPostByUserId(userId).map { it.toPostData() }
     }
 }
