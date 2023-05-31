@@ -92,7 +92,8 @@ private fun ContentBody(
             PostCard {
                 UserRow(
                     item.posterIcon,
-                    item.posterName,
+                    item.posterFirstName,
+                    item.posterLastName,
                     item.posterLocation,
                     item.date,
                     { onNameClick(item.posterId) },

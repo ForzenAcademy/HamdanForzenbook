@@ -53,7 +53,7 @@ abstract class BaseLoginViewModel(
     fun checkLoggedIn(context: Context) {
         viewModelScope.launch {
             try {
-                saveTokenToPreferences(context, loginGetStoredCredentialsUseCase())
+                loginGetStoredCredentialsUseCase()
                 loginState = LoginState.LoggedIn
             } catch (e: Exception) {
                 loginState = LoginState.Content(LoginContent.Email())
@@ -135,17 +135,14 @@ abstract class BaseLoginViewModel(
             LoginState.Content((loginState.getContent() as LoginContent.Code).copy(showInfoDialog = false))
     }
 
-    private fun submitLogin(context: Context) {
+    private fun submitLogin() {
         viewModelScope.launch {
             (loginState.getContent() as LoginContent.Code).let {
                 val email = it.email
                 val code = it.code.text
                 loginState = LoginState.Loading(LoginInputType.CODE, email)
                 try {
-                    saveTokenToPreferences(
-                        context,
-                        loginGetCredentialsFromNetworkUseCase(email, code)
-                    )
+                    loginGetCredentialsFromNetworkUseCase(email, code)
                     loginState = LoginState.LoggedIn
                 } catch (e: Exception) {
                     loginState = LoginState.Error(LoginInputType.CODE, email)
@@ -168,20 +165,11 @@ abstract class BaseLoginViewModel(
         }
     }
 
-    fun loginClicked(context: Context) {
+    fun loginClicked() {
         if (loginState.getContent() is LoginContent.Code) {
-            submitLogin(context)
+            submitLogin()
         } else {
             requestLoginValidationCode()
-        }
-    }
-
-    private fun saveTokenToPreferences(context: Context, token: String) {
-        viewModelScope.launch {
-            context.getSharedPreferences(TOKEN_PREFERENCE_LOCATION, Context.MODE_PRIVATE).edit().apply {
-                putString(TOKEN_KEY, token)
-                apply()
-            }
         }
     }
 

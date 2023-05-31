@@ -1,7 +1,9 @@
 package com.hamdan.forzenbook.post.core.data.repository
 
+import android.content.Context
 import com.hamdan.forzenbook.core.InvalidTokenException
 import com.hamdan.forzenbook.core.PostException
+import com.hamdan.forzenbook.core.getToken
 import com.hamdan.forzenbook.post.core.data.network.PostService
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -9,9 +11,13 @@ import okhttp3.RequestBody
 import java.io.File
 
 class PostRepositoryImpl(
-    private val service: PostService
+    private val service: PostService,
+    private val context: Context,
 ) : PostRepository {
-    override suspend fun postText(token: String, message: String) {
+    override suspend fun postText(message: String) {
+        val token = getToken(context)
+        if (token.isNullOrEmpty()) throw InvalidTokenException()
+
         val response = service.sendTextPost(token, TEXT_TYPE, message)
         if (!response.isSuccessful) {
             if (response.code() == UNAUTHORIZED) {
@@ -22,8 +28,11 @@ class PostRepositoryImpl(
         }
     }
 
-    override suspend fun postImage(token: String, file: File) {
+    override suspend fun postImage(file: File) {
         // Todo update this so its not deprecated
+        val token = getToken(context)
+        if (token.isNullOrEmpty()) throw InvalidTokenException()
+
         val requestBodyType =
             RequestBody.create("multipart/form-data".toMediaTypeOrNull(), IMAGE_TYPE)
         val requestBodyFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)

@@ -1,10 +1,8 @@
 package com.hamdan.forzenbook.mainpage.core.viewmodel
 
-import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hamdan.forzenbook.core.GlobalConstants
-import com.hamdan.forzenbook.core.NullTokenException
 import com.hamdan.forzenbook.core.PostData
 import com.hamdan.forzenbook.mainpage.core.domain.GetPostsUseCase
 import com.hamdan.forzenbook.ui.core.R
@@ -25,34 +23,19 @@ abstract class BaseFeedViewModel(
 
     protected abstract var feedState: FeedState
 
-    fun loadMore(context: Context) {
+    fun loadMore() {
         viewModelScope.launch(Dispatchers.IO) {
             // this is to simulate loading more posts
-            try {
-                context.getSharedPreferences(
-                    GlobalConstants.TOKEN_PREFERENCE_LOCATION,
-                    Context.MODE_PRIVATE
-                ).getString(GlobalConstants.TOKEN_KEY, null)?.let {
-                    feedState =
-                        FeedState.Content(
-                            feedState.posts + getPostsUseCase(
-                                context.getString(R.string.user_name),
-                                it
-                            )
-                        )
-                } ?: throw (NullTokenException())
+            feedState = try {
+                FeedState.Content(feedState.posts + getPostsUseCase())
             } catch (e: Exception) {
-                feedState = FeedState.InvalidLogin()
+                FeedState.InvalidLogin()
             }
             // Todo adjust this based on how we take the feed from the server in the final implementation
         }
     }
 
     fun kickBackToLogin() {
-        reset()
-    }
-
-    private fun reset() {
         feedState = FeedState.Content()
     }
 }

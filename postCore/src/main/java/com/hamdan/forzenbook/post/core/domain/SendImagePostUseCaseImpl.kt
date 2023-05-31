@@ -7,10 +7,10 @@ import java.io.File
 class SendImagePostUseCaseImpl(
     private val repository: PostRepository
 ) : SendImagePostUseCase {
-    override suspend fun invoke(token: String, filePath: String) {
+    override suspend fun invoke(filePath: String) {
         val file = File(filePath)
         if (file.exists()) {
-            repository.postImage(token, file)
+            repository.postImage(file)
         } else {
             throw PostException("File attempted to post does not exist")
         }

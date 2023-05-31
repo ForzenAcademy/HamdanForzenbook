@@ -79,9 +79,10 @@ object SearchModule {
     fun providesSearchRepository(
         searchService: SearchService,
         @Named(MODULE_NAME) feedDao: FeedDao,
-        @Named(MODULE_NAME) userDao: UserDao
+        @Named(MODULE_NAME) userDao: UserDao,
+        @ApplicationContext context: Context,
     ): SearchRepository {
-        return SearchRepositoryImpl(feedDao, userDao, searchService)
+        return SearchRepositoryImpl(feedDao, userDao, searchService, context)
     }
 
     @Provides

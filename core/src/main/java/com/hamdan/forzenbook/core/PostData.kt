@@ -1,7 +1,8 @@
 package com.hamdan.forzenbook.core
 
 data class PostData(
-    val posterName: String,
+    val posterFirstName: String,
+    val posterLastName: String,
     val posterLocation: String,
     val posterIcon: String?,
     val posterId: Int,

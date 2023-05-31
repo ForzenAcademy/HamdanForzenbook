@@ -530,7 +530,8 @@ fun FeedImagePost(url: String) {
 @Composable
 fun UserRow(
     icon: String? = null,
-    name: String,
+    firstName: String,
+    lastName: String,
     location: String,
     date: String,
     onNameClick: () -> Unit = {},
@@ -559,7 +560,7 @@ fun UserRow(
                 .weight(1f)
         ) {
             Text(
-                text = name,
+                text = stringResource(id = R.string.user_name, firstName, lastName),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = ForzenbookTheme.typography.bodyLarge,

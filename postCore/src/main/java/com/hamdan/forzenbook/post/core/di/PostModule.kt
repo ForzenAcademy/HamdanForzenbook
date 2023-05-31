@@ -1,5 +1,6 @@
 package com.hamdan.forzenbook.post.core.di
 
+import android.content.Context
 import com.hamdan.forzenbook.core.GlobalConstants.LOGIN_BASE_URL
 import com.hamdan.forzenbook.post.core.data.network.PostService
 import com.hamdan.forzenbook.post.core.data.repository.PostRepository
@@ -12,6 +13,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
@@ -35,8 +37,11 @@ object PostModule {
     }
 
     @Provides
-    fun providesPostRepository(service: PostService): PostRepository {
-        return PostRepositoryImpl(service)
+    fun providesPostRepository(
+        service: PostService,
+        @ApplicationContext context: Context
+    ): PostRepository {
+        return PostRepositoryImpl(service, context)
     }
 
     @Provides

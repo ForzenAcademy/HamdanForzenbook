@@ -18,8 +18,9 @@ fun UserResponse.toUserEntity(): UserEntity {
     return UserEntity(
         userId = this.userId,
         userIcon = this.avatarUrl,
-        name = this.firstName + " " + this.lastName,
+        firstName = this.firstName,
+        lastName = this.lastName,
         location = this.location,
-        timestamp = System.currentTimeMillis()
+        timestamp = System.currentTimeMillis(),
     )
 }

@@ -1,11 +1,7 @@
 package com.hamdan.forzenbook.post.core.viewmodel
 
-import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hamdan.forzenbook.core.GlobalConstants
-import com.hamdan.forzenbook.core.GlobalConstants.TOKEN_KEY
 import com.hamdan.forzenbook.core.InvalidTokenException
 import com.hamdan.forzenbook.post.core.domain.SendImagePostUseCase
 import com.hamdan.forzenbook.post.core.domain.SendTextPostUseCase
@@ -43,16 +39,14 @@ abstract class BasePostViewModel(
         if (text.length < POST_LENGTH_LIMIT) postState = PostState.Content(PostContent.Text(text))
     }
 
-    fun sendPostClicked(context: Context) {
+    fun sendPostClicked() {
         when ((postState as PostState.Content).content) {
             is PostContent.Image -> {
-                Log.v("Hamdan", "in SendImage")
-                sendImage(context)
+                sendImage()
             }
 
             is PostContent.Text -> {
-                Log.v("Hamdan", "in SendText")
-                sendText(context)
+                sendText()
             }
         }
     }
@@ -62,18 +56,13 @@ abstract class BasePostViewModel(
         postState = PostState.Content(PostContent.Image(filePath))
     }
 
-    private fun sendText(context: Context) {
+    private fun sendText() {
         postState.asTextOrNull()?.let {
             postState = PostState.Loading
             viewModelScope.launch {
                 try {
-                    context.getSharedPreferences(
-                        GlobalConstants.TOKEN_PREFERENCE_LOCATION,
-                        Context.MODE_PRIVATE
-                    ).getString(TOKEN_KEY, null)?.let { token ->
-                        sendTextPostUseCase(token, it.text)
-                        postState = PostState.Content(PostContent.Text())
-                    } ?: throw (InvalidTokenException())
+                    sendTextPostUseCase(it.text)
+                    postState = PostState.Content(PostContent.Text())
                 } catch (e: InvalidTokenException) {
                     postState = PostState.InvalidLogin
                 } catch (e: Exception) {
@@ -83,19 +72,14 @@ abstract class BasePostViewModel(
         }
     }
 
-    private fun sendImage(context: Context) {
+    private fun sendImage() {
         postState.asImageOrNull()?.let {
             it.filePath?.let { path ->
                 viewModelScope.launch {
                     try {
-                        context.getSharedPreferences(
-                            GlobalConstants.TOKEN_PREFERENCE_LOCATION,
-                            Context.MODE_PRIVATE
-                        ).getString(TOKEN_KEY, null)?.let { token ->
-                            sendImagePostUseCase(token, path)
-                            File(path).delete()
-                            postState = PostState.Content(PostContent.Image())
-                        } ?: throw (InvalidTokenException())
+                        sendImagePostUseCase(path)
+                        File(path).delete()
+                        postState = PostState.Content(PostContent.Image())
                     } catch (e: InvalidTokenException) {
                         File(path).delete()
                         postState = PostState.InvalidLogin
@@ -109,10 +93,7 @@ abstract class BasePostViewModel(
     }
 
     fun kickBackToLogin() {
-        reset()
-    }
-
-    private fun reset() {
+        // intending to just reset the viewmodel here and have the view navigate to login
         postState = PostState.Content(PostContent.Text())
     }
 

@@ -14,11 +14,12 @@ data class UserResponse(
     @SerializedName("avatarUrl") val avatarUrl: String? = null,
 )
 
-fun UserResponse.toUserEntity(nameFormat: String): UserEntity {
+fun UserResponse.toUserEntity(): UserEntity {
     return UserEntity(
         userId = this.userId,
         userIcon = this.avatarUrl,
-        name = String.format(nameFormat, this.firstName, this.lastName),
+        firstName = this.firstName,
+        lastName = this.lastName,
         location = this.location,
         timestamp = System.currentTimeMillis()
     )
