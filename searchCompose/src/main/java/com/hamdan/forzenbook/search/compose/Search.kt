@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import com.hamdan.forzenbook.compose.core.composables.BackgroundColumn
+import com.hamdan.forzenbook.compose.core.composables.ForzenbookDialog
 import com.hamdan.forzenbook.compose.core.composables.InputField
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.dimens
@@ -19,6 +20,7 @@ fun SearchContent(
     state: BaseSearchViewModel.SearchState,
     onSearchTextChange: (String) -> Unit,
     onSubmitSearch: () -> Unit,
+    onErrorDismiss: () -> Unit,
     kickBackToLogin: () -> Unit,
 ) {
     when (state) {
@@ -31,7 +33,20 @@ fun SearchContent(
         }
 
         BaseSearchViewModel.SearchState.Error -> {
-            // Todo show an error dialog with normal search
+            MainContent(
+                "",
+                onSearchTextChange,
+                onSubmitSearch,
+            )
+            ForzenbookDialog(
+                title = stringResource(id = R.string.generic_error_title),
+                body = stringResource(id = R.string.search_error_body),
+                buttonText = stringResource(
+                    id = R.string.generic_dialog_confirm
+                )
+            ) {
+                onErrorDismiss()
+            }
         }
 
         BaseSearchViewModel.SearchState.InvalidLogin -> {

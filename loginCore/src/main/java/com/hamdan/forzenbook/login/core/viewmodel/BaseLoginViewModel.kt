@@ -50,13 +50,13 @@ abstract class BaseLoginViewModel(
 
     protected abstract var loginState: LoginState
 
-    fun checkLoggedIn(context: Context) {
+    fun checkLoggedIn() {
         viewModelScope.launch {
-            try {
+            loginState = try {
                 loginGetStoredCredentialsUseCase()
-                loginState = LoginState.LoggedIn
+                LoginState.LoggedIn
             } catch (e: Exception) {
-                loginState = LoginState.Content(LoginContent.Email())
+                LoginState.Content(LoginContent.Email())
             }
         }
     }
@@ -178,6 +178,6 @@ abstract class BaseLoginViewModel(
     }
 }
 
-fun BaseLoginViewModel.LoginState.getContent(): BaseLoginViewModel.LoginContent {
-    return (this as BaseLoginViewModel.LoginState.Content).content
-}
+// not made safe as if used in the wrong spot the app should crash, it is not intended to act in that way
+fun BaseLoginViewModel.LoginState.getContent(): BaseLoginViewModel.LoginContent =
+    (this as BaseLoginViewModel.LoginState.Content).content

@@ -40,9 +40,6 @@ import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.dimens
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.typography
 import com.hamdan.forzenbook.post.core.viewmodel.BasePostViewModel
-import com.hamdan.forzenbook.post.core.viewmodel.asContentOrNull
-import com.hamdan.forzenbook.post.core.viewmodel.asImageOrNull
-import com.hamdan.forzenbook.post.core.viewmodel.asTextOrNull
 import com.hamdan.forzenbook.ui.core.R
 
 @Composable
@@ -103,11 +100,11 @@ private fun TextPostContent(
 ) {
     val focusRequester = remember { FocusRequester() }
     val keyboard = LocalSoftwareKeyboardController.current
-    val showLabel = state.asTextOrNull()?.text.isNullOrEmpty()
+    val showLabel = state is BasePostViewModel.PostState.Content && state.content is BasePostViewModel.PostContent.Text && (state.content as BasePostViewModel.PostContent.Text).text.isEmpty()
     StandardContent(
         onToggleClicked = onToggleClicked,
         onSendClicked = onSendClicked,
-        selected = state.asContentOrNull() is BasePostViewModel.PostContent.Text
+        selected = state is BasePostViewModel.PostState.Content && state.content is BasePostViewModel.PostContent.Text
     ) { padding ->
         BackgroundColumn(
             modifier = Modifier
@@ -119,7 +116,7 @@ private fun TextPostContent(
             color = ForzenbookTheme.colors.colors.tertiary,
         ) {
             PostTextField(
-                text = state.asTextOrNull()?.text ?: "",
+                text = if (state is BasePostViewModel.PostState.Content && state.content is BasePostViewModel.PostContent.Text) (state.content as BasePostViewModel.PostContent.Text).text else "",
                 label = if (showLabel) stringResource(id = R.string.post_text_label) else null,
                 focusRequester = focusRequester,
                 onValueChange = {
@@ -137,11 +134,12 @@ private fun ImagePostContent(
     onSendClicked: () -> Unit,
     onGalleryClicked: () -> Unit,
 ) {
-    val image = state.asImageOrNull()?.filePath
+    val image =
+        if (state is BasePostViewModel.PostState.Content && state.content is BasePostViewModel.PostContent.Image) (state.content as BasePostViewModel.PostContent.Image).filePath else null
     StandardContent(
         onToggleClicked = onToggleClicked,
         onSendClicked = onSendClicked,
-        selected = state.asContentOrNull() is BasePostViewModel.PostContent.Text,
+        selected = state is BasePostViewModel.PostState.Content && state.content is BasePostViewModel.PostContent.Text,
         additionalBottomContent = {
             if (image != null) {
                 SubmitButton(

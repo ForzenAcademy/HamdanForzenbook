@@ -18,8 +18,8 @@ public class LoginGetStoredCredentialsUseCaseImpl implements LoginGetStoredCrede
     @Override
     public void invoke() throws NullTokenException, FailTokenRetrievalException, IOException {
         User state = repository.getToken(null,null);
-        if (state == User.LOGGED_IN) {
-            // TODO logged in path when homepage implemented
-        } else throw new NullTokenException("null token");
+        if (state != User.LOGGED_IN) {
+            throw new NullTokenException("null token");
+        }
     }
 }

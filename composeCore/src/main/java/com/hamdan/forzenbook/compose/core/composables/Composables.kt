@@ -206,13 +206,11 @@ fun LoadingButton(
     Button(
         modifier = modifier
             .padding(horizontal = ForzenbookTheme.dimens.grid.x10)
-            .height(ForzenbookTheme.dimens.grid.x20)
             .fillMaxWidth(),
         onClick = {},
         content = {
             CircularProgressIndicator(
                 color = ForzenbookTheme.colors.colors.onPrimary,
-                modifier = Modifier.height(ForzenbookTheme.dimens.grid.x10),
             )
         },
         colors = ButtonDefaults.buttonColors(
@@ -388,10 +386,16 @@ fun ForzenbookDialog(
     AlertDialog(
         onDismissRequest = { onDismiss() },
         title = {
-            Text(text = title)
+            Text(
+                text = title,
+                color = ForzenbookTheme.colors.colors.onPrimary,
+            )
         },
         text = {
-            Text(text = body)
+            Text(
+                text = body,
+                color = ForzenbookTheme.colors.colors.onPrimary,
+            )
         },
         confirmButton = {
             Text(
@@ -406,6 +410,7 @@ fun ForzenbookDialog(
             )
         },
         modifier = modifier.padding(ForzenbookTheme.dimens.grid.x5),
+        // containerColor = ForzenbookTheme.colors.colors.primary,
     )
 }
 

@@ -28,7 +28,6 @@ object LoginModule {
     @Provides
     @Named(MODULE_NAME)
     fun providesLoginRetrofit(): Retrofit {
-        // TODO remove this GsonBuilder when backend updates database to avoid sending malformed JSON
         val gson = GsonBuilder()
             .setLenient()
             .create()

@@ -1,8 +1,10 @@
 package com.hamdan.forzenbook.core
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import android.widget.DatePicker
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.graphics.drawable.toBitmap
 import coil.ImageLoader
@@ -11,6 +13,7 @@ import com.hamdan.forzenbook.ui.core.R
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.util.Calendar
 import java.util.regex.Pattern
 
 fun validateEmail(email: String): Boolean {
@@ -29,6 +32,42 @@ fun String.leftPad(): String {
     return if (this.length < 2) {
         "0$this"
     } else this
+}
+
+fun datePickerDialog(
+    context: Context,
+    birthDate: String,
+    onTextChange: (String) -> Unit,
+    onDateSubmission: () -> Unit,
+    onDateDismiss: () -> Unit
+) {
+    val calendar = Calendar.getInstance()
+    val currentYear = calendar.get(Calendar.YEAR)
+    val currentMonth = calendar.get(Calendar.MONTH)
+    val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
+    var selectedYear: Int = currentYear
+    var selectedMonth: Int = currentMonth
+    var selectedDay: Int = currentDay
+    if (birthDate.isNotEmpty()) {
+        val split = birthDate.split("-")
+        selectedYear = split[2].toInt()
+        selectedMonth = split[0].toInt() - 1
+        selectedDay = split[1].toInt()
+    }
+    DatePickerDialog(
+        context,
+        R.style.MySpinnerDatePickerStyle,
+        { _: DatePicker, year: Int, month: Int, day: Int ->
+            val birthDay = stringDate(month + 1, day, year, context)
+            onTextChange(birthDay)
+            onDateSubmission()
+        },
+        selectedYear,
+        selectedMonth,
+        selectedDay
+    ).apply {
+        setOnDismissListener { onDateDismiss() }
+    }.show()
 }
 
 suspend fun saveBitmapFromUri(

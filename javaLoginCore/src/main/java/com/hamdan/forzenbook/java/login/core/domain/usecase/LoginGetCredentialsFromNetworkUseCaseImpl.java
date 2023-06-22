@@ -18,8 +18,8 @@ public class LoginGetCredentialsFromNetworkUseCaseImpl implements LoginGetCreden
     @Override
     public void invoke(String email, String code) throws NullTokenException, FailTokenRetrievalException, IOException {
         User userState = repository.getToken(email, code);
-        if (userState == User.LOGGED_IN) {
-            // TODO logged in path when homepage implemented
-        } else throw new NullTokenException("null token");
+        if (userState != User.LOGGED_IN) {
+            throw new NullTokenException("null token");
+        }
     }
 }

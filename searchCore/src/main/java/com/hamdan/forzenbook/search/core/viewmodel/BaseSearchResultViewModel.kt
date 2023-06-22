@@ -63,16 +63,8 @@ abstract class BaseSearchResultViewModel(
     fun kickBackToLogin() {
         searchResultState = SearchResultState.InvalidLogin
     }
-}
 
-fun BaseSearchResultViewModel.SearchResultState.asContentOrNull(): BaseSearchResultViewModel.SearchResultState.Content? {
-    return this as? BaseSearchResultViewModel.SearchResultState.Content
-}
-
-fun BaseSearchResultViewModel.SearchResultState.asLoadingOrNull(): BaseSearchResultViewModel.SearchResultState.Loading? {
-    return this as? BaseSearchResultViewModel.SearchResultState.Loading
-}
-
-fun BaseSearchResultViewModel.SearchResultState.asErrorOrNull(): BaseSearchResultViewModel.SearchResultState.Error? {
-    return this as? BaseSearchResultViewModel.SearchResultState.Error
+    fun onErrorDismiss(){
+        searchResultState = SearchResultState.Content()
+    }
 }

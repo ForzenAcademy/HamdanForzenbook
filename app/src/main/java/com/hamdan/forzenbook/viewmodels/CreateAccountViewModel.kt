@@ -54,7 +54,6 @@ class CreateAccountViewModel @Inject constructor(
                 when (result) {
                     CreateAccountResult.CREATE_SUCCESS -> {
                         createAccountState = CreateAccountState.AccountCreated
-                        // send to login page
                     }
                     CreateAccountResult.CREATE_EXISTS -> {
                         createAccountState =

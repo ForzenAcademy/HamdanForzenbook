@@ -1,6 +1,5 @@
 package com.hamdan.forzenbook.search.core.viewmodel
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -45,17 +44,18 @@ abstract class BaseSearchViewModel(
     fun onSearchSubmit(
         onSuccess: () -> Unit,
         onError: () -> Unit,
-    ){
-        searchState.asSearching()?.let { state ->
+    ) {
+        val state = searchState
+        if (state is SearchState.Searching) {
             viewModelScope.launch {
                 try {
                     searchForPostByStringUseCase(state.query)
                     onSuccess()
                 } catch (e: InvalidTokenException) {
-                    Log.v("Hamdan", e.message.toString())
+                    println(e.message.toString())
                     searchState = SearchState.InvalidLogin
                 } catch (e: Exception) {
-                    Log.v("Hamdan", e.message.toString())
+                    println(e.message.toString())
                     onError()
                     searchState = SearchState.Error
                 }
@@ -66,9 +66,12 @@ abstract class BaseSearchViewModel(
     fun onUpdateSearch(text: String) = updateSearchText(text)
 
     fun navigateQuery(): String {
-        return searchState.asSearching()?.query?.let {
-            "/-1/${searchState.asSearching()?.query}/"
-        } ?: throw (Exception("Query or state invalid"))
+        val state = searchState
+        return if (state is SearchState.Searching) {
+            "/-1/${state.query}/"
+        } else {
+            throw (Exception("Query or state invalid"))
+        }
     }
 
     fun navigateUser(id: Int): String = "/$id/%20/"
@@ -82,10 +85,8 @@ abstract class BaseSearchViewModel(
     fun kickBackToLogin() {
         searchState = SearchState.Searching()
     }
-}
 
-fun BaseSearchViewModel.SearchState.asSearching(): BaseSearchViewModel.SearchState.Searching? {
-    return this as? BaseSearchViewModel.SearchState.Searching
+    fun onErrorDismiss() {
+        searchState = SearchState.Searching()
+    }
 }
-
-// Todo remove these as? extension functions, they are pointless, instead use the if is format
