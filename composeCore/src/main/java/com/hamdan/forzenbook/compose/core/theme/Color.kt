@@ -1,29 +1,47 @@
 package com.hamdan.forzenbook.compose.core.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 val COLOR_LION_YELLOW = Color(0xffffe226)
+val LIGHT_GRAY = Color.LightGray.copy(alpha = .8f)
 
 val darkTheme = darkColorScheme(
-    background = COLOR_LION_YELLOW,
-    primary = Color.Black,
-    onPrimary = Color.White,
-    tertiary = Color(0xFFeeeeee),
-    surface = Color.DarkGray,
+    background = Color.Black,
+    onBackground = Color.White,
+    primary = COLOR_LION_YELLOW,
+    onPrimary = Color.Black,
+    primaryContainer = Color(0xFF222222),
+    onPrimaryContainer = Color.White,
+    tertiary = Color(0xFF111111),
+    onTertiary = Color.White,
+    surface = Color(0xFF222222), // standard dark theme middle ground for cards
     onSurface = Color.White,
-    onError = Color.Red,
-    onBackground = Color.Black,
+    onSurfaceVariant = LIGHT_GRAY,
 )
 
 val lightTheme = lightColorScheme(
-    background = COLOR_LION_YELLOW,
-    primary = Color.Black,
-    onPrimary = Color.White,
-    tertiary = Color(0xFFeeeeee),
-    surface = Color.DarkGray,
-    onSurface = Color.White,
-    onError = Color.Red,
+    background = Color.White,
     onBackground = Color.Black,
+    primary = COLOR_LION_YELLOW,
+    onPrimary = Color.Black,
+    primaryContainer = Color.Black,
+    onPrimaryContainer = Color.White,
+    tertiary = Color(0xFFeeeeee),
+    onTertiary = Color.Black,
+    surface = Color.White, // color of cards middle ground
+    onSurface = Color.Black,
+    onSurfaceVariant = Color.DarkGray,
 )
+
+data class AdditionalColors(
+    val inputFieldContainer: Color,
+    val onInputFieldContainer: Color,
+    val spacerColor: Color,
+)
+
+@Composable
+fun dayNightColor(light: Color, dark: Color): Color = if (isSystemInDarkTheme()) dark else light

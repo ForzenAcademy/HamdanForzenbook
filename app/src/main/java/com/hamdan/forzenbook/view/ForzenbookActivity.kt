@@ -16,7 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.forzenbook.search.results.compose.SearchResultContent
 import com.hamdan.forzenbook.compose.core.LocalNavController
-import com.hamdan.forzenbook.compose.core.composables.ForzenbookBottomNavigationBar
+import com.hamdan.forzenbook.compose.core.composewidgets.ForzenbookBottomNavigationBar
 import com.hamdan.forzenbook.compose.core.theme.ForzenBookTheme
 import com.hamdan.forzenbook.core.GlobalConstants.NAVIGATION_ERROR
 import com.hamdan.forzenbook.core.GlobalConstants.NAVIGATION_QUERY
@@ -61,19 +61,20 @@ class ForzenbookActivity : ComponentActivity() {
             it?.let {
                 postViewModel.viewModelScope.launch {
                     saveBitmapFromUri(
-                        it,
-                        this@ForzenbookActivity,
-                        {
+                        uri = it,
+                        context = this@ForzenbookActivity,
+                        onError = {
                             postViewModel.updateImage(null)
                         },
-                    ) { file ->
-                        postViewModel.updateImage(file.path)
-                    }
+                        onImageSaved = { file ->
+                            postViewModel.updateImage(file.path)
+                        }
+                    )
                 }
             }
         }
         val navigationItems = listOf(NAVBAR_HOME, NAVBAR_SEARCH)
-        loginViewModel.checkLoggedIn()
+//        loginViewModel.checkLoggedIn()
         setContent {
             ForzenBookTheme {
                 val bottomNav: @Composable () -> Unit =

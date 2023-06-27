@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -28,17 +29,15 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import com.hamdan.forzenbook.compose.core.composables.BackgroundColumn
-import com.hamdan.forzenbook.compose.core.composables.ForzenbookDialog
-import com.hamdan.forzenbook.compose.core.composables.ForzenbookTopAppBar
-import com.hamdan.forzenbook.compose.core.composables.LoadingOverlay
-import com.hamdan.forzenbook.compose.core.composables.PillToggleSwitch
-import com.hamdan.forzenbook.compose.core.composables.PostTextField
-import com.hamdan.forzenbook.compose.core.composables.SubmitButton
-import com.hamdan.forzenbook.compose.core.composables.TitleText
-import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
-import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.dimens
-import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.typography
+import com.hamdan.forzenbook.compose.core.composewidgets.BackgroundColumn
+import com.hamdan.forzenbook.compose.core.composewidgets.ForzenbookDialog
+import com.hamdan.forzenbook.compose.core.composewidgets.ForzenbookTopAppBar
+import com.hamdan.forzenbook.compose.core.composewidgets.LoadingOverlay
+import com.hamdan.forzenbook.compose.core.composewidgets.PillToggleSwitch
+import com.hamdan.forzenbook.compose.core.composewidgets.PostTextField
+import com.hamdan.forzenbook.compose.core.composewidgets.SubmitButton
+import com.hamdan.forzenbook.compose.core.composewidgets.TitleText
+import com.hamdan.forzenbook.compose.core.theme.dimens
 import com.hamdan.forzenbook.post.core.viewmodel.BasePostViewModel
 import com.hamdan.forzenbook.ui.core.R
 
@@ -100,7 +99,8 @@ private fun TextPostContent(
 ) {
     val focusRequester = remember { FocusRequester() }
     val keyboard = LocalSoftwareKeyboardController.current
-    val showLabel = state is BasePostViewModel.PostState.Content && state.content is BasePostViewModel.PostContent.Text && (state.content as BasePostViewModel.PostContent.Text).text.isEmpty()
+    val showLabel =
+        state is BasePostViewModel.PostState.Content && state.content is BasePostViewModel.PostContent.Text && (state.content as BasePostViewModel.PostContent.Text).text.isEmpty()
     StandardContent(
         onToggleClicked = onToggleClicked,
         onSendClicked = onSendClicked,
@@ -113,7 +113,7 @@ private fun TextPostContent(
                     keyboard?.show()
                     focusRequester.requestFocus()
                 },
-            color = ForzenbookTheme.colors.colors.tertiary,
+            color = MaterialTheme.colorScheme.tertiary,
         ) {
             PostTextField(
                 text = if (state is BasePostViewModel.PostState.Content && state.content is BasePostViewModel.PostContent.Text) (state.content as BasePostViewModel.PostContent.Text).text else "",
@@ -144,11 +144,11 @@ private fun ImagePostContent(
             if (image != null) {
                 SubmitButton(
                     modifier = Modifier.padding(
-                        horizontal = ForzenbookTheme.dimens.grid.x6,
-                        vertical = ForzenbookTheme.dimens.grid.x2
+                        horizontal = MaterialTheme.dimens.grid.x6,
+                        vertical = MaterialTheme.dimens.grid.x2
                     ),
                     label = stringResource(id = R.string.post_gallery_change_image),
-                    style = ForzenbookTheme.typography.titleSmall,
+                    style = MaterialTheme.typography.titleSmall,
                     enabled = true
                 ) {
                     onGalleryClicked()
@@ -159,26 +159,26 @@ private fun ImagePostContent(
         BackgroundColumn(
             modifier = Modifier.padding(padding),
             scrollable = false,
-            color = ForzenbookTheme.colors.colors.tertiary,
+            color = MaterialTheme.colorScheme.tertiary,
             arrangement = Arrangement.Center,
         ) {
             if (image == null) {
                 SubmitButton(
-                    modifier = Modifier.padding(horizontal = ForzenbookTheme.dimens.grid.x6),
+                    modifier = Modifier.padding(horizontal = MaterialTheme.dimens.grid.x6),
                     label = stringResource(id = R.string.post_gallery_button_text),
-                    style = ForzenbookTheme.typography.titleSmall,
+                    style = MaterialTheme.typography.titleSmall,
                     enabled = true
                 ) {
                     onGalleryClicked()
                 }
             } else {
-                Spacer(modifier = Modifier.height(ForzenbookTheme.dimens.grid.x2))
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.grid.x2))
                 Image(
                     bitmap = BitmapFactory.decodeFile(image).asImageBitmap(),
                     contentDescription = stringResource(id = R.string.post_send_image),
                     modifier = Modifier
-                        .padding(ForzenbookTheme.dimens.grid.x2)
-                        .clip(RoundedCornerShape(ForzenbookTheme.dimens.grid.x4))
+                        .padding(MaterialTheme.dimens.grid.x2)
+                        .clip(RoundedCornerShape(MaterialTheme.dimens.grid.x4))
                 )
             }
         }
@@ -192,7 +192,7 @@ private fun ErrorContent(
     StandardContent {
         BackgroundColumn(
             Modifier.padding(it),
-            color = ForzenbookTheme.colors.colors.tertiary
+            color = MaterialTheme.colorScheme.tertiary
         ) {}
     }
     ForzenbookDialog(
@@ -206,6 +206,12 @@ private fun ErrorContent(
 
 @Composable
 private fun LoadingContent() {
+    StandardContent {
+        BackgroundColumn(
+            Modifier.padding(it),
+            color = MaterialTheme.colorScheme.tertiary
+        ) {}
+    }
     LoadingOverlay()
 }
 
@@ -225,9 +231,9 @@ private fun StandardContent(
                 Image(
                     painterResource(id = R.drawable.send_post_icon),
                     contentDescription = stringResource(id = R.string.post_send_icon),
-                    colorFilter = ColorFilter.tint(ForzenbookTheme.colors.colors.primary),
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary),
                     modifier = Modifier
-                        .padding(ForzenbookTheme.dimens.grid.x3)
+                        .padding(MaterialTheme.dimens.grid.x3)
                         .clickable { onSendClicked() },
                 )
             }
@@ -236,8 +242,8 @@ private fun StandardContent(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(ForzenbookTheme.colors.colors.tertiary)
-                    .padding(vertical = ForzenbookTheme.dimens.grid.x2),
+                    .background(MaterialTheme.colorScheme.tertiary)
+                    .padding(vertical = MaterialTheme.dimens.grid.x2),
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,7 +21,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -30,18 +28,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.hamdan.forzenbook.compose.core.LocalNavController
-import com.hamdan.forzenbook.compose.core.composables.BackgroundColumn
-import com.hamdan.forzenbook.compose.core.composables.ErrorText
-import com.hamdan.forzenbook.compose.core.composables.ForzenbookDialog
-import com.hamdan.forzenbook.compose.core.composables.ForzenbookTopAppBar
-import com.hamdan.forzenbook.compose.core.composables.InputField
-import com.hamdan.forzenbook.compose.core.composables.LoadingButton
-import com.hamdan.forzenbook.compose.core.composables.PreventScreenActionsDuringLoad
-import com.hamdan.forzenbook.compose.core.composables.SubmitButton
-import com.hamdan.forzenbook.compose.core.composables.TitleText
-import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
-import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.dimens
-import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.typography
+import com.hamdan.forzenbook.compose.core.composewidgets.BackgroundColumn
+import com.hamdan.forzenbook.compose.core.composewidgets.ErrorText
+import com.hamdan.forzenbook.compose.core.composewidgets.ForzenbookDialog
+import com.hamdan.forzenbook.compose.core.composewidgets.ForzenbookTopAppBar
+import com.hamdan.forzenbook.compose.core.composewidgets.InputField
+import com.hamdan.forzenbook.compose.core.composewidgets.LoadingButton
+import com.hamdan.forzenbook.compose.core.composewidgets.PreventScreenActionsDuringLoad
+import com.hamdan.forzenbook.compose.core.composewidgets.SubmitButton
+import com.hamdan.forzenbook.compose.core.composewidgets.TitleText
+import com.hamdan.forzenbook.compose.core.theme.additionalColors
+import com.hamdan.forzenbook.compose.core.theme.dimens
 import com.hamdan.forzenbook.core.Entry
 import com.hamdan.forzenbook.core.EntryError
 import com.hamdan.forzenbook.core.datePickerDialog
@@ -195,14 +192,19 @@ private fun MainContent(
     }
     TextField(
         value = birthDate,
-        label = { Text(text = stringResource(R.string.create_account_birth_date_prompt)) },
+        label = {
+            Text(
+                text = stringResource(R.string.create_account_birth_date_prompt),
+                style = MaterialTheme.typography.bodySmall,
+            )
+        },
         onValueChange = {},
         readOnly = true,
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                horizontal = ForzenbookTheme.dimens.grid.x10,
-                vertical = ForzenbookTheme.dimens.grid.x2
+                horizontal = MaterialTheme.dimens.grid.x10,
+                vertical = MaterialTheme.dimens.grid.x2
             )
             .clickable {
                 onDateFieldClick()
@@ -211,22 +213,19 @@ private fun MainContent(
             Icon(
                 imageVector = Icons.Default.DateRange,
                 contentDescription = stringResource(id = R.string.calendar_icon),
-                modifier = Modifier
-                    .size(ForzenbookTheme.dimens.imageSizes.small)
             )
         },
         enabled = false,
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            containerColor = Color.White,
-            disabledTextColor = ForzenbookTheme.colors.colors.onBackground,
-            disabledPlaceholderColor = ForzenbookTheme.colors.colors.onBackground,
-            disabledLabelColor = ForzenbookTheme.colors.colors.onBackground,
+            containerColor = MaterialTheme.additionalColors.inputFieldContainer,
+            disabledTextColor = MaterialTheme.additionalColors.onInputFieldContainer,
+            disabledPlaceholderColor = MaterialTheme.additionalColors.onInputFieldContainer,
+            disabledLabelColor = MaterialTheme.additionalColors.onInputFieldContainer,
             // For Icons
-            disabledLeadingIconColor = MaterialTheme.colorScheme.primary,
-            disabledTrailingIconColor = MaterialTheme.colorScheme.secondary,
+            disabledTrailingIconColor = MaterialTheme.additionalColors.onInputFieldContainer,
             disabledBorderColor = MaterialTheme.colorScheme.outline,
         ),
-        textStyle = ForzenbookTheme.typography.headlineMedium,
+        textStyle = MaterialTheme.typography.bodyLarge,
         maxLines = ONE_LINE,
     )
     if (birthDate.isNotEmpty() && !stateBirthDate.error.isValid()) {
@@ -281,7 +280,7 @@ private fun MainContent(
             ErrorText(error = stringResource(R.string.create_account_location_error))
         }
     }
-    Spacer(modifier = Modifier.height(ForzenbookTheme.dimens.grid.x3))
+    Spacer(modifier = Modifier.height(MaterialTheme.dimens.grid.x3))
     if (isLoading) {
         LoadingButton()
     } else {

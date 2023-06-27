@@ -1,31 +1,28 @@
 package com.hamdan.forzenbook.mainpage.compose
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.hamdan.forzenbook.compose.core.composables.FeedBackground
-import com.hamdan.forzenbook.compose.core.composables.FeedImagePost
-import com.hamdan.forzenbook.compose.core.composables.FeedTextPost
-import com.hamdan.forzenbook.compose.core.composables.ForzenbookDialog
-import com.hamdan.forzenbook.compose.core.composables.ForzenbookTopAppBar
-import com.hamdan.forzenbook.compose.core.composables.PostCard
-import com.hamdan.forzenbook.compose.core.composables.TitleText
-import com.hamdan.forzenbook.compose.core.composables.UserRow
-import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
-import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.dimens
+import com.hamdan.forzenbook.compose.core.composewidgets.Divider
+import com.hamdan.forzenbook.compose.core.composewidgets.FeedBackground
+import com.hamdan.forzenbook.compose.core.composewidgets.FeedImagePost
+import com.hamdan.forzenbook.compose.core.composewidgets.FeedTextPost
+import com.hamdan.forzenbook.compose.core.composewidgets.ForzenbookDialog
+import com.hamdan.forzenbook.compose.core.composewidgets.ForzenbookTopAppBar
+import com.hamdan.forzenbook.compose.core.composewidgets.PostCard
+import com.hamdan.forzenbook.compose.core.composewidgets.TitleText
+import com.hamdan.forzenbook.compose.core.composewidgets.UserRow
+import com.hamdan.forzenbook.compose.core.theme.dimens
 import com.hamdan.forzenbook.core.GlobalConstants.LOGIN_BASE_URL
 import com.hamdan.forzenbook.core.PostData
 import com.hamdan.forzenbook.mainpage.core.viewmodel.BaseFeedViewModel
@@ -93,9 +90,9 @@ private fun MainContent(
                     Icon(
                         imageVector = Icons.Filled.Add,
                         contentDescription = stringResource(id = R.string.create_post_button),
-                        tint = ForzenbookTheme.colors.colors.onBackground,
+                        tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier
-                            .padding(ForzenbookTheme.dimens.grid.x2)
+                            .padding(MaterialTheme.dimens.grid.x2)
                             .clickable { onCreatePostClicked() },
                     )
                 },
@@ -116,16 +113,10 @@ private fun MainContent(
                         item.date,
                         { onNameClick(item.posterId) },
                     )
-                    Spacer(
-                        modifier = Modifier
-                            .padding(ForzenbookTheme.dimens.grid.x2)
-                            .background(ForzenbookTheme.colors.colors.primary.copy(alpha = .3f))
-                            .fillMaxWidth()
-                            .height(ForzenbookTheme.dimens.borderGrid.x1)
-                    )
                     if (item.type == PostData.IMAGE_TYPE) {
                         FeedImagePost(LOGIN_BASE_URL + item.body)
                     } else {
+                        Divider()
                         FeedTextPost(item.body)
                     }
                     if (index == posts.size - 1 || posts.isEmpty()) {

@@ -1,21 +1,17 @@
 package com.hamdan.forzenbook.compose.core.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import com.hamdan.forzenbook.compose.core.LocalReplacementColors
 
 private const val SMALL_SCREEN_DP_WIDTH = 320
-
-data class ReplacementColors(
-    val colors: ColorScheme
-)
+private const val DISABLED_ALPHA = .38f
 
 data class ReplacementTypography(
     val defaultFontFamily: FontFamily,
@@ -26,21 +22,23 @@ data class ReplacementTypography(
     val h4: TextStyle
 )
 
+// This style of theming is more flexible as it allows the creation of more themes easily
 @Composable
 fun ForzenBookTheme(content: @Composable () -> Unit) {
-    val replacementColors: ReplacementColors = if (isSystemInDarkTheme()) {
-        ReplacementColors(darkTheme)
+    val colors = if (isSystemInDarkTheme()) {
+        darkTheme
     } else {
-        ReplacementColors(lightTheme)
+        lightTheme
     }
-    CompositionLocalProvider(
-        LocalReplacementColors provides replacementColors,
-    ) {
-        MaterialTheme(
-            colorScheme = replacementColors.colors,
-            content = content
-        )
-    }
+
+    val typography = typographyDefault
+
+    MaterialTheme(
+        colorScheme = colors,
+        typography = typography,
+        shapes = Shapes(),
+        content = content
+    )
 }
 
 private val NormalGrid = GridDimensions(
@@ -60,44 +58,35 @@ private val borderDimensionsStatic = BorderDimensions(
 private val NormalImages = ImageSizes(24.dp, 40.dp, 60.dp, 200.dp)
 private val SmallImages = ImageSizes(24.dp, 40.dp, 60.dp, 160.dp)
 
-object ForzenbookTheme {
-    val colors: ReplacementColors
-        @Composable
-        get() = LocalReplacementColors.current
-
-    val ForzenbookTheme.dimens: Dimens
-        @Composable
-        get() = if (LocalConfiguration.current.screenWidthDp <= SMALL_SCREEN_DP_WIDTH) {
-            // small
-            Dimens(
-                SmallGrid,
-                borderDimensionsStatic,
-                SmallImages
-            )
-        } else {
-            // average
-            Dimens(
-                NormalGrid,
-                borderDimensionsStatic,
-                NormalImages
-            )
-        }
-
-    val ForzenbookTheme.typography: androidx.compose.material3.Typography
-        @Composable
-        get() = if (LocalConfiguration.current.screenWidthDp <= SMALL_SCREEN_DP_WIDTH) {
-            // small
-            typographySmall
-        } else {
-            // average
-            typographyDefault
-        }
-}
-
 val MaterialTheme.staticDimens: Dimens
     @Composable
     get() = Dimens(
         NormalGrid,
         borderDimensionsStatic,
         NormalImages
+    )
+val MaterialTheme.dimens: Dimens
+    @Composable
+    get() = if (LocalConfiguration.current.screenWidthDp <= SMALL_SCREEN_DP_WIDTH) {
+        // small
+        Dimens(
+            SmallGrid,
+            borderDimensionsStatic,
+            SmallImages
+        )
+    } else {
+        // average
+        Dimens(
+            NormalGrid,
+            borderDimensionsStatic,
+            NormalImages
+        )
+    }
+
+val MaterialTheme.additionalColors: AdditionalColors
+    @Composable
+    get() = AdditionalColors(
+        inputFieldContainer = dayNightColor(light = Color(0xFFeeeeee), dark = Color(0xFFeeeeee)),
+        onInputFieldContainer = dayNightColor(light = Color.Black, dark = Color.Black),
+        spacerColor = colorScheme.onSurface.copy(alpha = .15f)
     )

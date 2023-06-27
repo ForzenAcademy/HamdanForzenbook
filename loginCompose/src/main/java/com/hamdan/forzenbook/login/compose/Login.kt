@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -15,17 +16,15 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import com.hamdan.forzenbook.compose.core.composables.BackgroundColumn
-import com.hamdan.forzenbook.compose.core.composables.ErrorText
-import com.hamdan.forzenbook.compose.core.composables.ForzenbookDialog
-import com.hamdan.forzenbook.compose.core.composables.InputField
-import com.hamdan.forzenbook.compose.core.composables.LoadingButton
-import com.hamdan.forzenbook.compose.core.composables.LoginTitleSection
-import com.hamdan.forzenbook.compose.core.composables.PreventScreenActionsDuringLoad
-import com.hamdan.forzenbook.compose.core.composables.SubmitButton
-import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
-import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.dimens
-import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.typography
+import com.hamdan.forzenbook.compose.core.composewidgets.BackgroundColumn
+import com.hamdan.forzenbook.compose.core.composewidgets.ErrorText
+import com.hamdan.forzenbook.compose.core.composewidgets.ForzenbookDialog
+import com.hamdan.forzenbook.compose.core.composewidgets.InputField
+import com.hamdan.forzenbook.compose.core.composewidgets.LoadingButton
+import com.hamdan.forzenbook.compose.core.composewidgets.LoginTitleSection
+import com.hamdan.forzenbook.compose.core.composewidgets.PreventScreenActionsDuringLoad
+import com.hamdan.forzenbook.compose.core.composewidgets.SubmitButton
+import com.hamdan.forzenbook.compose.core.theme.dimens
 import com.hamdan.forzenbook.core.Entry
 import com.hamdan.forzenbook.core.EntryError
 import com.hamdan.forzenbook.login.core.viewmodel.BaseLoginViewModel
@@ -44,8 +43,8 @@ fun MainLoginContent(
 ) {
     BackgroundColumn {
         Image(
-            modifier = Modifier.size(ForzenbookTheme.dimens.imageSizes.large),
-            painter = painterResource(id = R.drawable.logo_render_full_notext),
+            modifier = Modifier.size(MaterialTheme.dimens.imageSizes.large),
+            painter = painterResource(id = R.drawable.logo_render_full_nobackground),
             contentDescription = stringResource(id = R.string.lion_icon),
         )
         LoginTitleSection(title = stringResource(id = R.string.app_name))
@@ -159,7 +158,7 @@ private fun MainContent(
             }
         }
     }
-    Spacer(modifier = Modifier.height(ForzenbookTheme.dimens.grid.x5))
+    Spacer(modifier = Modifier.height(MaterialTheme.dimens.grid.x5))
     if (isLoading) {
         LoadingButton()
     } else {
@@ -169,15 +168,16 @@ private fun MainContent(
             enabled = textError.isValid()
         )
     }
-    Spacer(modifier = Modifier.height(ForzenbookTheme.dimens.grid.x5))
+    Spacer(modifier = Modifier.height(MaterialTheme.dimens.grid.x5))
     Text(
         text = stringResource(R.string.login_create_account_text),
-        style = ForzenbookTheme.typography.bodyLarge,
+        style = MaterialTheme.typography.bodyLarge,
         modifier = Modifier
             .clickable {
                 onCreateAccountPress()
             }
-            .padding(ForzenbookTheme.dimens.grid.x3)
+            .padding(MaterialTheme.dimens.grid.x3),
+        color = MaterialTheme.colorScheme.onBackground
     )
     if (showInfo) {
         ForzenbookDialog(

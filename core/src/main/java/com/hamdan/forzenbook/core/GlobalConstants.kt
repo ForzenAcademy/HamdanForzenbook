@@ -10,4 +10,5 @@ object GlobalConstants {
     const val NAVIGATION_USERID = "userId"
     const val NAVIGATION_QUERY = "queryString"
     const val NAVIGATION_ERROR = "error"
+    const val ONE_LINE = 1
 }
