@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.hamdan.forzenbook.legacy.core.view.utils.DialogUtils
 import com.hamdan.forzenbook.legacy.core.viewmodels.LegacyFeedViewModel
 import com.hamdan.forzenbook.mainpage.core.viewmodel.BaseFeedViewModel
 import com.hamdan.forzenbook.ui.core.R
@@ -60,8 +61,15 @@ class LegacyMainPageActivity : ComponentActivity() {
                             }
 
                             is BaseFeedViewModel.FeedState.Error -> {
-                                // Todo create a dialog
                                 binding.feedPostsRecycler.isVisible = false
+                                DialogUtils.standardAlertDialog(
+                                    this@LegacyMainPageActivity,
+                                    getString(R.string.login_error_title),
+                                    getString(R.string.feed_error_body),
+                                    getString(R.string.generic_dialog_confirm)
+                                ) {
+                                    feedViewModel.onErrorDismiss()
+                                }
                             }
 
                             is BaseFeedViewModel.FeedState.InvalidLogin -> {

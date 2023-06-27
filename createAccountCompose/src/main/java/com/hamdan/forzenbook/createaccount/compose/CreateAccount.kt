@@ -1,7 +1,5 @@
 package com.hamdan.forzenbook.createaccount.compose
 
-import android.app.DatePickerDialog
-import android.widget.DatePicker
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
@@ -46,11 +44,10 @@ import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.dimens
 import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.typography
 import com.hamdan.forzenbook.core.Entry
 import com.hamdan.forzenbook.core.EntryError
-import com.hamdan.forzenbook.core.stringDate
+import com.hamdan.forzenbook.core.datePickerDialog
 import com.hamdan.forzenbook.createaccount.core.viewmodel.BaseCreateAccountViewModel
 import com.hamdan.forzenbook.createaccount.core.viewmodel.getContent
 import com.hamdan.forzenbook.ui.core.R
-import java.util.Calendar
 
 private const val ONE_LINE = 1
 
@@ -74,6 +71,7 @@ fun CreateAccountContent(
                 onNavigateUp()
             }
         }
+
         is BaseCreateAccountViewModel.CreateAccountState.Content -> {
             ContentWrapper {
                 MainContent(
@@ -91,17 +89,20 @@ fun CreateAccountContent(
                 )
             }
         }
+
         is BaseCreateAccountViewModel.CreateAccountState.Error -> {
             ContentWrapper {
                 ErrorContent(state.errorId, onErrorDismiss)
             }
         }
+
         BaseCreateAccountViewModel.CreateAccountState.Loading -> {
             ContentWrapper {
                 LoadingContent()
             }
             PreventScreenActionsDuringLoad()
         }
+
         else -> {
             throw Exception("Illegal unknown state")
         }
@@ -222,7 +223,8 @@ private fun MainContent(
             disabledLabelColor = ForzenbookTheme.colors.colors.onBackground,
             // For Icons
             disabledLeadingIconColor = MaterialTheme.colorScheme.primary,
-            disabledTrailingIconColor = MaterialTheme.colorScheme.secondary
+            disabledTrailingIconColor = MaterialTheme.colorScheme.secondary,
+            disabledBorderColor = MaterialTheme.colorScheme.outline,
         ),
         textStyle = ForzenbookTheme.typography.headlineMedium,
         maxLines = ONE_LINE,
@@ -292,40 +294,22 @@ private fun MainContent(
     Spacer(modifier = Modifier.height(60.dp))
     val context = LocalContext.current
     if (isDateDialogOpen) {
-        val calendar = Calendar.getInstance()
-        val currentYear = calendar.get(Calendar.YEAR)
-        val currentMonth = calendar.get(Calendar.MONTH)
-        val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
-        var selectedYear: Int = currentYear
-        var selectedMonth: Int = currentMonth
-        var selectedDay: Int = currentDay
-        if (birthDate.isNotEmpty()) {
-            val split = birthDate.split("-")
-            selectedYear = split[2].toInt()
-            selectedMonth = split[0].toInt() - 1
-            selectedDay = split[1].toInt()
-        }
         LaunchedEffect(Unit) {
-            DatePickerDialog(
+            datePickerDialog(
                 context,
-                R.style.MySpinnerDatePickerStyle,
-                { _: DatePicker, year: Int, month: Int, day: Int ->
-                    birthDate = stringDate(month + 1, day, year, context)
+                birthDate,
+                {
                     onTextChange(
                         Entry(firstName, stateFirstName.error),
                         Entry(lastName, stateLastName.error),
-                        Entry(birthDate, stateBirthDate.error),
+                        Entry(it, stateBirthDate.error),
                         Entry(email, stateEmail.error),
                         Entry(location, stateLocation.error),
                     )
-                    onDateSubmission()
                 },
-                selectedYear,
-                selectedMonth,
-                selectedDay
-            ).apply {
-                setOnDismissListener { onDateDismiss() }
-            }.show()
+                onDateSubmission,
+                onDateDismiss
+            )
         }
     }
 }

@@ -64,7 +64,7 @@ class LegacyLoginActivity : ComponentActivity() {
                 return@setOnEditorActionListener false
             }
 
-            loginModel.checkLoggedIn(context)
+            loginModel.checkLoggedIn()
 
             loginModel.viewModelScope.launch(Dispatchers.IO) {
                 loginModel.state.collect { state ->

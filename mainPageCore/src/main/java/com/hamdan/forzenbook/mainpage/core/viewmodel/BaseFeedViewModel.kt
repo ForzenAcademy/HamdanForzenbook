@@ -36,4 +36,8 @@ abstract class BaseFeedViewModel(
     fun kickBackToLogin() {
         feedState = FeedState.Content()
     }
+
+    fun onErrorDismiss() {
+        feedState = FeedState.Content()
+    }
 }

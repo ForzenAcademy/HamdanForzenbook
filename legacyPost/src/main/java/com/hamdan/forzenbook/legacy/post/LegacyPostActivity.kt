@@ -15,7 +15,6 @@ import com.hamdan.forzenbook.core.saveBitmapFromUri
 import com.hamdan.forzenbook.legacy.core.view.utils.DialogUtils
 import com.hamdan.forzenbook.legacy.core.viewmodels.LegacyPostViewModel
 import com.hamdan.forzenbook.post.core.viewmodel.BasePostViewModel
-import com.hamdan.forzenbook.post.core.viewmodel.asContentOrNull
 import com.hamdan.forzenbook.ui.core.R
 import com.hamdan.forzenbook.ui.core.databinding.ActivityLegacyPostBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -184,7 +183,7 @@ class LegacyPostActivity : ComponentActivity() {
                 }
             }
             inputPostText.addTextChangedListener {
-                if (postViewModel.state.value.asContentOrNull() is BasePostViewModel.PostContent.Text) {
+                if (postViewModel.state.value is BasePostViewModel.PostState.Content && (postViewModel.state.value as BasePostViewModel.PostState.Content).content is BasePostViewModel.PostContent.Text) {
                     postViewModel.updateText(it.toString())
                 }
             }

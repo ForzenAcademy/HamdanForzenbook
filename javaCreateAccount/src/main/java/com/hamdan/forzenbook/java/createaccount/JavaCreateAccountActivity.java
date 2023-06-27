@@ -72,9 +72,7 @@ public class JavaCreateAccountActivity extends ComponentActivity {
                                             );
                                         },
                                         () -> model.createAccountDateDialogSubmitClicked(),
-                                        () -> {
-                                            model.createAccountDateDialogDismiss();
-                                        }
+                                        () -> model.createAccountDateDialogDismiss()
                                 );
                                 model.onDateDialogCreate();
                             }

@@ -7,6 +7,7 @@ import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountEntrys
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountUseCase
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountValidationUseCase
 
+// the createAccountUseCase is used individualy in the correct legacy or current viewmodel
 abstract class BaseCreateAccountViewModel(
     private val createAccountValidationUseCase: CreateAccountValidationUseCase,
     private val createAccountUseCase: CreateAccountUseCase,
@@ -53,11 +54,9 @@ abstract class BaseCreateAccountViewModel(
         )
     }
 
-    private fun createAccountNormalView() {
+    fun createAccountDismissErrorClicked() {
         createAccountState = CreateAccountState.Content(CreateAccountContent())
     }
-
-    fun createAccountDismissErrorClicked() = createAccountNormalView()
 
     fun updateCreateAccountTextAndErrors(
         firstName: Entry,

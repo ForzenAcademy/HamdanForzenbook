@@ -57,11 +57,12 @@ abstract class BasePostViewModel(
     }
 
     private fun sendText() {
-        postState.asTextOrNull()?.let {
+        val state = postState
+        if(state is PostState.Content && state.content is PostContent.Text){
             postState = PostState.Loading
             viewModelScope.launch {
                 try {
-                    sendTextPostUseCase(it.text)
+                    sendTextPostUseCase(state.content.text)
                     postState = PostState.Content(PostContent.Text())
                 } catch (e: InvalidTokenException) {
                     postState = PostState.InvalidLogin
@@ -73,8 +74,9 @@ abstract class BasePostViewModel(
     }
 
     private fun sendImage() {
-        postState.asImageOrNull()?.let {
-            it.filePath?.let { path ->
+        val state = postState
+        if(state is PostState.Content && state.content is PostContent.Image){
+            state.content.filePath?.let { path ->
                 viewModelScope.launch {
                     try {
                         sendImagePostUseCase(path)
@@ -104,16 +106,4 @@ abstract class BasePostViewModel(
     companion object {
         private const val POST_LENGTH_LIMIT = 256
     }
-}
-
-fun BasePostViewModel.PostState.asContentOrNull(): BasePostViewModel.PostContent? {
-    return (this as? BasePostViewModel.PostState.Content)?.content
-}
-
-fun BasePostViewModel.PostState.asImageOrNull(): BasePostViewModel.PostContent.Image? {
-    return this.asContentOrNull() as? BasePostViewModel.PostContent.Image
-}
-
-fun BasePostViewModel.PostState.asTextOrNull(): BasePostViewModel.PostContent.Text? {
-    return this.asContentOrNull() as? BasePostViewModel.PostContent.Text
 }

@@ -19,7 +19,6 @@ class LoginViewModel @Inject constructor(
     getTokenFromDatabaseUseCase,
     requestValidationCode
 ) {
-
     private val _state: MutableState<LoginState> =
         mutableStateOf(LoginState.Content(LoginContent.Email()))
     val state: MutableState<LoginState>

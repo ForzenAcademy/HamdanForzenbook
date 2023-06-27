@@ -73,7 +73,7 @@ class ForzenbookActivity : ComponentActivity() {
             }
         }
         val navigationItems = listOf(NAVBAR_HOME, NAVBAR_SEARCH)
-        loginViewModel.checkLoggedIn(this)
+        loginViewModel.checkLoggedIn()
         setContent {
             ForzenBookTheme {
                 val bottomNav: @Composable () -> Unit =
@@ -129,9 +129,9 @@ class ForzenbookActivity : ComponentActivity() {
                             )
                         }
                         composable(FEED_PAGE) {
-                            // Todo remove later
+                            // Todo remove later based on implementation requirements
                             LaunchedEffect(Unit) {
-                                feedViewModel.loadMore()
+                                if (feedViewModel.state.value.posts.isEmpty()) feedViewModel.loadMore()
                             }
                             FeedPage(
                                 state = feedViewModel.state.value,
@@ -157,6 +157,9 @@ class ForzenbookActivity : ComponentActivity() {
                                 bottomBar = bottomNav,
                                 onCreatePostClicked = {
                                     navController.navigate(POST_PAGE)
+                                },
+                                onErrorDismiss = {
+                                    feedViewModel.onErrorDismiss()
                                 }
                             ) {
                                 loginViewModel.kickBackToLogin(this@ForzenbookActivity)
@@ -182,6 +185,9 @@ class ForzenbookActivity : ComponentActivity() {
                                         navController.navigate(SEARCH_RESULTS_PAGE + searchViewModel.navigateQuery() + "true")
                                     }
                                 },
+                                onErrorDismiss = {
+                                    searchViewModel.onErrorDismiss()
+                                }
                             ) {
                                 loginViewModel.kickBackToLogin(this@ForzenbookActivity)
                                 searchViewModel.kickBackToLogin()
@@ -239,7 +245,8 @@ class ForzenbookActivity : ComponentActivity() {
                                         )
                                     }
                                 },
-                                bottomBar = bottomNav
+                                bottomBar = bottomNav,
+                                onErrorDismiss = { searchViewModel.onErrorDismiss() }
                             ) {
                                 loginViewModel.kickBackToLogin(this@ForzenbookActivity)
                                 searchResultViewModel.kickBackToLogin()

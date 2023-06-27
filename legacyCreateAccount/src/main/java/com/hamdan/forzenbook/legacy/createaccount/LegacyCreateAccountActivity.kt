@@ -8,9 +8,9 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.core.EntryError
+import com.hamdan.forzenbook.core.datePickerDialog
 import com.hamdan.forzenbook.createaccount.core.viewmodel.BaseCreateAccountViewModel
 import com.hamdan.forzenbook.createaccount.core.viewmodel.getContent
-import com.hamdan.forzenbook.legacy.core.view.utils.DialogUtils.datePickerDialog
 import com.hamdan.forzenbook.legacy.core.view.utils.DialogUtils.standardAlertDialog
 import com.hamdan.forzenbook.legacy.core.viewmodels.LegacyCreateAccountViewModel
 import com.hamdan.forzenbook.ui.core.R
@@ -69,6 +69,7 @@ class LegacyCreateAccountActivity : ComponentActivity() {
                                 BaseCreateAccountViewModel.CreateAccountState.AccountCreated -> {
                                     createAccountModel.navigateUpPressed()
                                 }
+
                                 is BaseCreateAccountViewModel.CreateAccountState.Content -> {
                                     createAccountClickBlocker.isVisible = false
                                     createAccountSubmitText.isVisible = true
@@ -88,11 +89,19 @@ class LegacyCreateAccountActivity : ComponentActivity() {
                                                 onTextChange = {
                                                     inputBirthDateText.setText(it)
                                                     createAccountModel.updateCreateAccountTextAndErrors(
-                                                        firstName = accountContent.firstName.copy(text = firstNameValue),
-                                                        lastName = accountContent.firstName.copy(text = lastNameValue),
-                                                        birthDay = accountContent.firstName.copy(text = it),
+                                                        firstName = accountContent.firstName.copy(
+                                                            text = firstNameValue
+                                                        ),
+                                                        lastName = accountContent.firstName.copy(
+                                                            text = lastNameValue
+                                                        ),
+                                                        birthDay = accountContent.firstName.copy(
+                                                            text = it
+                                                        ),
                                                         email = accountContent.firstName.copy(text = emailValue),
-                                                        location = accountContent.firstName.copy(text = locationValue),
+                                                        location = accountContent.firstName.copy(
+                                                            text = locationValue
+                                                        ),
                                                     )
                                                 },
                                                 onDateSubmission = {
@@ -142,10 +151,12 @@ class LegacyCreateAccountActivity : ComponentActivity() {
                                         emailErrorText.apply {
                                             if (!accountContent.email.error.isValid() && accountContent.email.text.isNotEmpty()) {
                                                 if (accountContent.email.error == EntryError.EmailError.Length) {
-                                                    text = getString(R.string.login_email_error_length)
+                                                    text =
+                                                        getString(R.string.login_email_error_length)
                                                     isVisible = true
                                                 } else if (accountContent.email.error == EntryError.EmailError.InvalidFormat) {
-                                                    text = getString(R.string.login_email_error_format)
+                                                    text =
+                                                        getString(R.string.login_email_error_format)
                                                     isVisible = true
                                                 }
                                             } else {
@@ -156,6 +167,7 @@ class LegacyCreateAccountActivity : ComponentActivity() {
                                             accountContent.location.error == EntryError.LocationError.Length
                                     }
                                 }
+
                                 is BaseCreateAccountViewModel.CreateAccountState.Error -> {
                                     createAccountClickBlocker.isVisible = false
                                     createAccountSubmitText.isVisible = true
@@ -168,11 +180,13 @@ class LegacyCreateAccountActivity : ComponentActivity() {
                                         onDismiss = { createAccountModel.createAccountDismissErrorClicked() }
                                     )
                                 }
+
                                 BaseCreateAccountViewModel.CreateAccountState.Loading -> {
                                     createAccountClickBlocker.isVisible = true
                                     createAccountSubmitText.isVisible = false
                                     createAccountSubmitProgressIndicator.isVisible = true
                                 }
+
                                 else -> {
                                     throw Exception("Illegal unknown state")
                                 }

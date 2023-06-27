@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import com.hamdan.forzenbook.compose.core.composables.FeedBackground
 import com.hamdan.forzenbook.compose.core.composables.FeedImagePost
 import com.hamdan.forzenbook.compose.core.composables.FeedTextPost
+import com.hamdan.forzenbook.compose.core.composables.ForzenbookDialog
 import com.hamdan.forzenbook.compose.core.composables.ForzenbookTopAppBar
 import com.hamdan.forzenbook.compose.core.composables.PostCard
 import com.hamdan.forzenbook.compose.core.composables.TitleText
@@ -37,6 +38,7 @@ fun FeedPage(
     onNameClick: (Int) -> Unit,
     bottomBar: @Composable () -> Unit,
     onCreatePostClicked: () -> Unit,
+    onErrorDismiss: () -> Unit,
     kickBackToLogin: () -> Unit,
 ) {
     when (state) {
@@ -58,7 +60,13 @@ fun FeedPage(
                 onNameClick = onNameClick,
                 bottomBar = bottomBar
             )
-            // Todo pop open an error dialog, will need to implement when more info is given on the feed page regarding this
+            ForzenbookDialog(
+                title = stringResource(id = R.string.generic_error_title),
+                body = stringResource(id = R.string.feed_error_body),
+                buttonText = stringResource(id = R.string.generic_dialog_confirm),
+            ) {
+                onErrorDismiss()
+            }
         }
 
         else -> {

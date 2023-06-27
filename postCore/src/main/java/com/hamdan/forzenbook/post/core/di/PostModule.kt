@@ -21,7 +21,6 @@ import javax.inject.Named
 @InstallIn(ViewModelComponent::class)
 @Module
 object PostModule {
-    // Todo fill out with any items needed to be injected by dagger for PostViewModel
     @Provides
     @Named(MODULE_NAME)
     fun providesPostRetrofit(): Retrofit {

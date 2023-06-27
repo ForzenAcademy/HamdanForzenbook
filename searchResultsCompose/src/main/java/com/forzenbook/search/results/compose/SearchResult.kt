@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import com.hamdan.forzenbook.compose.core.composables.FeedBackground
 import com.hamdan.forzenbook.compose.core.composables.FeedImagePost
 import com.hamdan.forzenbook.compose.core.composables.FeedTextPost
+import com.hamdan.forzenbook.compose.core.composables.ForzenbookDialog
 import com.hamdan.forzenbook.compose.core.composables.ForzenbookTopAppBar
 import com.hamdan.forzenbook.compose.core.composables.PostCard
 import com.hamdan.forzenbook.compose.core.composables.UserRow
@@ -32,6 +33,7 @@ fun SearchResultContent(
     state: BaseSearchResultViewModel.SearchResultState,
     onNameClick: (Int) -> Unit,
     bottomBar: @Composable () -> Unit,
+    onErrorDismiss: () -> Unit,
     kickBackToLogin: () -> Unit,
 ) {
     when (state) {
@@ -44,7 +46,7 @@ fun SearchResultContent(
         }
 
         is BaseSearchResultViewModel.SearchResultState.Error -> {
-            ErrorContent(bottomBar)
+            ErrorContent(bottomBar, onErrorDismiss)
         }
 
         is BaseSearchResultViewModel.SearchResultState.Loading -> {
@@ -54,6 +56,7 @@ fun SearchResultContent(
         BaseSearchResultViewModel.SearchResultState.InvalidLogin -> {
             kickBackToLogin()
         }
+
         else -> {
             throw Exception("Illegal unknown state")
         }
@@ -124,7 +127,7 @@ private fun MainContent(
     StandardContent(
         titleText = {
             Text(
-                stringResource(id = R.string.search_title_query),
+                stringResource(id = R.string.search_result_title_query),
                 color = ForzenbookTheme.colors.colors.primary
             )
         },
@@ -141,6 +144,7 @@ private fun MainContent(
 @Composable
 private fun ErrorContent(
     bottomBar: @Composable () -> Unit,
+    onErrorDismiss: () -> Unit,
 ) {
     StandardContent(
         titleText = {
@@ -149,6 +153,13 @@ private fun ErrorContent(
         bottomBar = bottomBar,
     ) {
         FeedBackground(modifier = Modifier.padding(it), hideLoadIndicator = true) {}
+    }
+    ForzenbookDialog(
+        title = stringResource(id = R.string.generic_error_title),
+        body = stringResource(id = R.string.search_result_error),
+        buttonText = stringResource(id = R.string.generic_dialog_confirm),
+    ) {
+        onErrorDismiss()
     }
 }
 
@@ -159,7 +170,7 @@ private fun LoadingContent(
     StandardContent(
         titleText = {
             Text(
-                stringResource(id = R.string.search_loading_title),
+                stringResource(id = R.string.search_result_loading_title),
                 color = ForzenbookTheme.colors.colors.primary
             )
         },

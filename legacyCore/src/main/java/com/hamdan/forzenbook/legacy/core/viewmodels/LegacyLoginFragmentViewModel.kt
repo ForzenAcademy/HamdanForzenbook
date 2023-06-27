@@ -33,7 +33,9 @@ class LegacyLoginFragmentViewModel @Inject constructor(
         }
 
     fun login() {
-        // Todo use navigator to navigate to main page FA-Jamie please make ticket big sadge
+        // Todo use navigator to navigate to main page when implemented
+        // only bother with this if a client actualy needs it to be in Fragments, for now
+        // Java and Fragments will not be developed further
     }
 
     fun createAccountLinkPressed(fragmentManager: FragmentManager) {
