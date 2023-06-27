@@ -8,6 +8,9 @@ class NavigatorImpl : Navigator {
     override fun navigateToLogin(context: Context) {
     }
 
+    override fun navigateToFeed(context: Context) {
+    }
+
     override fun navigateToCreateAccount(context: Context) {
     }
 

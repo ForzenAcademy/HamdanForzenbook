@@ -19,12 +19,19 @@
             android:gravity="center"
             android:orientation="horizontal">
 
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/postProfileIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <androidx.cardview.widget.CardView
+                android:id="@+id/postProfilePictureHolder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:cardCornerRadius="@dimen/gridx12">
 
                 <ImageView
+                    android:id="@+id/feedProfilePicture"
                     android:layout_width="@dimen/staticGridx10"
                     android:layout_height="@dimen/staticGridx10"
                     android:src="@drawable/logo_render_full_notext" />

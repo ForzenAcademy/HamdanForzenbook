@@ -33,7 +33,7 @@ class LegacyLoginViewModel @Inject constructor(
         }
 
     fun login(context: Context) {
-        // Todo use navigator to navigate to main page FA-Jamie please make ticket big sadge
+        navigator.navigateToFeed(context)
     }
 
     fun createAccountLinkPressed(context: Context) {

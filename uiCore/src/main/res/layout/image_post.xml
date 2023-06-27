@@ -18,12 +18,19 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/postProfileIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <androidx.cardview.widget.CardView
+                android:id="@+id/postProfilePictureHolder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:cardCornerRadius="@dimen/gridx12">
 
                 <ImageView
+                    android:id="@+id/feedProfilePicture"
                     android:layout_width="@dimen/staticGridx10"
                     android:layout_height="@dimen/staticGridx10"
                     android:src="@drawable/logo_render_full_notext" />
@@ -63,14 +70,26 @@
             style="@style/postSpacer" />
 
         <androidx.cardview.widget.CardView
+            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:cardCornerRadius="@dimen/gridx4">
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/postImageIndicator"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
             <ImageView
+                android:id="@+id/feedPostImage"
+                android:visibility="gone"
+                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/logo_render_full_notext" />
+                android:scaleType="centerInside"
+                android:adjustViewBounds="true"
+                android:background="@color/red"
+                android:contentDescription="@string/feed_post_image" />
         </androidx.cardview.widget.CardView>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
