@@ -9,20 +9,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.hamdan.forzenbook.compose.core.composables.FeedBackground
-import com.hamdan.forzenbook.compose.core.composables.FeedImagePost
-import com.hamdan.forzenbook.compose.core.composables.FeedTextPost
-import com.hamdan.forzenbook.compose.core.composables.ForzenbookDialog
-import com.hamdan.forzenbook.compose.core.composables.ForzenbookTopAppBar
-import com.hamdan.forzenbook.compose.core.composables.PostCard
-import com.hamdan.forzenbook.compose.core.composables.UserRow
-import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
-import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.dimens
+import com.hamdan.forzenbook.compose.core.composewidgets.FeedBackground
+import com.hamdan.forzenbook.compose.core.composewidgets.FeedImagePost
+import com.hamdan.forzenbook.compose.core.composewidgets.FeedTextPost
+import com.hamdan.forzenbook.compose.core.composewidgets.ForzenbookDialog
+import com.hamdan.forzenbook.compose.core.composewidgets.ForzenbookTopAppBar
+import com.hamdan.forzenbook.compose.core.composewidgets.PostCard
+import com.hamdan.forzenbook.compose.core.composewidgets.UserRow
+import com.hamdan.forzenbook.compose.core.theme.dimens
 import com.hamdan.forzenbook.core.GlobalConstants
 import com.hamdan.forzenbook.core.PostData
 import com.hamdan.forzenbook.search.core.viewmodel.BaseSearchResultViewModel
@@ -103,10 +103,10 @@ private fun ContentBody(
                 )
                 Spacer(
                     modifier = Modifier
-                        .padding(ForzenbookTheme.dimens.grid.x2)
-                        .background(ForzenbookTheme.colors.colors.primary.copy(alpha = .3f))
+                        .padding(MaterialTheme.dimens.grid.x2)
+                        .background(MaterialTheme.colorScheme.primary.copy(alpha = .3f))
                         .fillMaxWidth()
-                        .height(ForzenbookTheme.dimens.borderGrid.x1)
+                        .height(MaterialTheme.dimens.borderGrid.x1)
                 )
                 if (item.type == PostData.IMAGE_TYPE) {
                     FeedImagePost(GlobalConstants.LOGIN_BASE_URL + item.body)
@@ -128,7 +128,7 @@ private fun MainContent(
         titleText = {
             Text(
                 stringResource(id = R.string.search_result_title_query),
-                color = ForzenbookTheme.colors.colors.primary
+                color = MaterialTheme.colorScheme.primary
             )
         },
         bottomBar = bottomBar,
@@ -171,7 +171,7 @@ private fun LoadingContent(
         titleText = {
             Text(
                 stringResource(id = R.string.search_result_loading_title),
-                color = ForzenbookTheme.colors.colors.primary
+                color = MaterialTheme.colorScheme.primary
             )
         },
         bottomBar = bottomBar,

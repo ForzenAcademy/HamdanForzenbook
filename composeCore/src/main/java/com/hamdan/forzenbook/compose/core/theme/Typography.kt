@@ -19,83 +19,50 @@ val defaultFontFamily = FontFamily(
 )
 
 val typographyDefault = Typography(
-    headlineLarge = TextStyle(
+    displayLarge = TextStyle(
         fontFamily = defaultFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 44.sp
+        fontSize = 57.sp
     ),
-    headlineMedium = TextStyle(
+    displayMedium = TextStyle(
+        fontFamily = defaultFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 45.sp
+    ),
+    displaySmall = TextStyle(
         fontFamily = defaultFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 36.sp
     ),
-    headlineSmall = TextStyle(
-        fontFamily = defaultFontFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 28.sp
-    ),
-    titleLarge = TextStyle(
-        fontFamily = defaultFontFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 40.sp
-    ),
-    titleMedium = TextStyle(
+    headlineLarge = TextStyle(
         fontFamily = defaultFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 32.sp
     ),
-    titleSmall = TextStyle(
+    headlineMedium = TextStyle(
+        fontFamily = defaultFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 28.sp
+    ),
+    headlineSmall = TextStyle(
         fontFamily = defaultFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 24.sp
     ),
-    bodyLarge = TextStyle(
+    titleLarge = TextStyle(
         fontFamily = defaultFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 20.sp
+        fontSize = 22.sp
     ),
-    bodyMedium = TextStyle(
+    titleMedium = TextStyle(
         fontFamily = defaultFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp
     ),
-    bodySmall = TextStyle(
-        fontFamily = defaultFontFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 12.sp
-    ),
-)
-
-val typographySmall = Typography(
-    headlineLarge = TextStyle(
-        fontFamily = defaultFontFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 40.sp
-    ),
-    headlineMedium = TextStyle(
-        fontFamily = defaultFontFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 32.sp
-    ),
-    headlineSmall = TextStyle(
-        fontFamily = defaultFontFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 24.sp
-    ),
-    titleLarge = TextStyle(
-        fontFamily = defaultFontFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 36.sp
-    ),
-    titleMedium = TextStyle(
-        fontFamily = defaultFontFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 28.sp
-    ),
     titleSmall = TextStyle(
         fontFamily = defaultFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 20.sp
+        fontSize = 14.sp
     ),
     bodyLarge = TextStyle(
         fontFamily = defaultFontFamily,

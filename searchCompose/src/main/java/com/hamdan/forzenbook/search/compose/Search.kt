@@ -2,16 +2,15 @@ package com.hamdan.forzenbook.search.compose
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import com.hamdan.forzenbook.compose.core.composables.BackgroundColumn
-import com.hamdan.forzenbook.compose.core.composables.ForzenbookDialog
-import com.hamdan.forzenbook.compose.core.composables.InputField
-import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme
-import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.dimens
-import com.hamdan.forzenbook.compose.core.theme.ForzenbookTheme.typography
+import com.hamdan.forzenbook.compose.core.composewidgets.BackgroundColumn
+import com.hamdan.forzenbook.compose.core.composewidgets.ForzenbookDialog
+import com.hamdan.forzenbook.compose.core.composewidgets.InputField
+import com.hamdan.forzenbook.compose.core.theme.dimens
 import com.hamdan.forzenbook.search.core.viewmodel.BaseSearchViewModel
 import com.hamdan.forzenbook.ui.core.R
 
@@ -65,17 +64,16 @@ fun MainContent(
     onSearchTextChange: (String) -> Unit,
     onSubmitSearch: () -> Unit,
 ) {
-    BackgroundColumn(color = ForzenbookTheme.colors.colors.tertiary) {
+    BackgroundColumn(color = MaterialTheme.colorScheme.tertiary) {
         InputField(
             modifier = Modifier.fillMaxWidth(),
             label = stringResource(id = R.string.search_label),
             value = searchText,
             padding = PaddingValues(
-                vertical = ForzenbookTheme.dimens.grid.x4,
-                horizontal = ForzenbookTheme.dimens.grid.x3,
+                vertical = MaterialTheme.dimens.grid.x4,
+                horizontal = MaterialTheme.dimens.grid.x3,
             ),
             onValueChange = onSearchTextChange,
-            textStyle = ForzenbookTheme.typography.bodyLarge,
             imeAction = ImeAction.Done,
             onDone = { onSubmitSearch() },
         )
