@@ -52,9 +52,9 @@ abstract class BaseLoginViewModel(
 
     fun checkLoggedIn() {
         viewModelScope.launch {
-            loginState = try {
+            try {
                 loginGetStoredCredentialsUseCase()
-                LoginState.LoggedIn
+                loginState = LoginState.LoggedIn
             } catch (e: Exception) {
                 LoginState.Content(LoginContent.Email())
             }

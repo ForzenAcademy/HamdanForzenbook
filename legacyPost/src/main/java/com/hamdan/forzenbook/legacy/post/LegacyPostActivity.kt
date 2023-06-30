@@ -102,7 +102,7 @@ class LegacyPostActivity : ComponentActivity() {
                 postChangeImage.isVisible = false
             }
             postLayoutToolBar.setNavigationOnClickListener {
-                postViewModel.backButtonPressed(this@LegacyPostActivity)
+                finish()
             }
             postLayoutToolBar.inflateMenu(R.menu.post_menu)
             postLayoutToolBar.setOnMenuItemClickListener { item ->

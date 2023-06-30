@@ -47,7 +47,7 @@ class LegacyMainPageActivity : ComponentActivity() {
                 // nothing needs to happen as this is the page it would go to
             }
             feedSearchButton.setOnClickListener {
-                // Todo navigator navigate to search page when created
+                feedViewModel.onSearchClicked(this@LegacyMainPageActivity)
             }
 
             feedViewModel.viewModelScope.launch(Dispatchers.IO) {

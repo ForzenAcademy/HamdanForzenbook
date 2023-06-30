@@ -29,7 +29,6 @@ abstract class BaseFeedViewModel(
             } catch (e: Exception) {
                 FeedState.InvalidLogin()
             }
-            // Todo adjust this based on how we take the feed from the server in the final implementation
         }
     }
 

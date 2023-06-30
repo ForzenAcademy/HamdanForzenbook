@@ -46,7 +46,7 @@ class LegacyLoginFragment : Fragment() {
             loginClickBlocker.setOnClickListener { } // only has an on click to actually block clicks
 
             loginSubmitButton.setOnClickListener {
-                loginModel.loginClicked(context)
+                loginModel.loginClicked()
             }
 
             loginCreateAccountLink.setOnClickListener {
@@ -56,7 +56,7 @@ class LegacyLoginFragment : Fragment() {
             inputEmailText.setOnEditorActionListener { _, action, _ ->
                 return@setOnEditorActionListener if (action == EditorInfo.IME_ACTION_DONE) {
                     KeyboardUtils.hideKeyboard(context, inputEmailText)
-                    loginModel.loginClicked(context)
+                    loginModel.loginClicked()
                     true
                 } else false
             }
@@ -64,7 +64,7 @@ class LegacyLoginFragment : Fragment() {
             inputCodeText.setOnEditorActionListener { _, action, _ ->
                 if (action == EditorInfo.IME_ACTION_DONE) {
                     if (loginSubmittable) {
-                        loginModel.loginClicked(context)
+                        loginModel.loginClicked()
                         KeyboardUtils.hideKeyboard(context, inputCodeText)
                         return@setOnEditorActionListener true
                     }
@@ -72,7 +72,7 @@ class LegacyLoginFragment : Fragment() {
                 return@setOnEditorActionListener false
             }
 
-            loginModel.checkLoggedIn(context)
+            loginModel.checkLoggedIn()
 
             loginModel.viewModelScope.launch(Dispatchers.IO) {
                 loginModel.state.collect { state ->
@@ -132,6 +132,7 @@ class LegacyLoginFragment : Fragment() {
                                     }
                                 }
                             }
+
                             is BaseLoginViewModel.LoginState.Error -> {
                                 loginClickBlocker.isVisible = false
                                 loginSubmitText.isVisible = true
@@ -145,11 +146,13 @@ class LegacyLoginFragment : Fragment() {
                                     loginModel.loginDismissErrorClicked()
                                 }.show(parentFragmentManager, null)
                             }
+
                             is BaseLoginViewModel.LoginState.Loading -> {
                                 loginClickBlocker.isVisible = true
                                 loginSubmitText.isVisible = false
                                 loginSubmitProgressIndicator.isVisible = true
                             }
+
                             BaseLoginViewModel.LoginState.LoggedIn -> {
                                 loginModel.login()
                                 return@withContext

@@ -31,6 +31,7 @@
             <option value="$PROJECT_DIR$/legacyLoginFragment" />
             <option value="$PROJECT_DIR$/legacyMainPage" />
             <option value="$PROJECT_DIR$/legacyPost" />
+            <option value="$PROJECT_DIR$/legacySearch" />
             <option value="$PROJECT_DIR$/loginCompose" />
             <option value="$PROJECT_DIR$/loginCore" />
             <option value="$PROJECT_DIR$/mainPageCompose" />

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/searchResultMainBody"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?legacySecondaryBackground"
+        android:orientation="vertical">
+
+<!--        <Toolbar-->
+<!--            android:id="@+id/searchResultLayoutToolBar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="top"-->
+<!--            android:background="?legacyBackground"-->
+<!--            android:elevation="@dimen/staticGridx1"-->
+<!--            android:paddingEnd="@dimen/gridx1">-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="left|center"-->
+<!--                android:maxLines="1"-->
+<!--                android:singleLine="true"-->
+<!--                android:text="@string/search_result_title_query"-->
+<!--                android:textColor="?legacyOnBackground"-->
+<!--                android:textSize="@dimen/body2" />-->
+
+<!--        </Toolbar>-->
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?legacyBackground">
+
+            <Toolbar
+                android:id="@+id/searchResultLayoutToolBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="@dimen/staticGridx1"
+                android:navigationIcon="@drawable/back_arrow"
+                android:paddingEnd="@dimen/gridx9">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="@string/search_result_title_query"
+                    android:textColor="?legacyOnBackground"
+                    android:textSize="@dimen/subtitle1" />
+
+            </Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/searchResultPostsRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/staticGridx12"
+            android:visibility="visible">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/searchResultBottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="?legacyBackground"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/searchResultHomeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="@dimen/gridx2">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|top"
+                android:src="@drawable/home_icon"
+                android:tint="?legacyOnBackground" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:text="@string/home_nav_text"
+                android:textColor="?legacyOnBackground" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/searchResultSearchButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="@dimen/gridx2">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|top"
+                android:src="@drawable/search_icon"
+                android:tint="?legacyOnBackground" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:text="@string/search_nav_text"
+                android:textColor="?legacyOnBackground" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

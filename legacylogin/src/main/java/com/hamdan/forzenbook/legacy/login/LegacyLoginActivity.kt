@@ -42,12 +42,12 @@ class LegacyLoginActivity : ComponentActivity() {
             }
 
             loginCreateAccountLink.setOnClickListener {
-                loginModel.createAccountLinkPressed(this@LegacyLoginActivity)
+                loginModel.createAccountLinkPressed(context)
             }
 
             inputEmailText.setOnEditorActionListener { _, action, _ ->
                 return@setOnEditorActionListener if (action == EditorInfo.IME_ACTION_DONE) {
-                    KeyboardUtils.hideKeyboard(this@LegacyLoginActivity, inputEmailText)
+                    KeyboardUtils.hideKeyboard(context, inputEmailText)
                     loginModel.loginClicked()
                     true
                 } else false
@@ -57,7 +57,7 @@ class LegacyLoginActivity : ComponentActivity() {
                 if (action == EditorInfo.IME_ACTION_DONE) {
                     if (loginSubmittable) {
                         loginModel.loginClicked()
-                        KeyboardUtils.hideKeyboard(this@LegacyLoginActivity, inputCodeText)
+                        KeyboardUtils.hideKeyboard(context, inputCodeText)
                         return@setOnEditorActionListener true
                     }
                 }
@@ -112,7 +112,7 @@ class LegacyLoginActivity : ComponentActivity() {
                                             else false
                                         if (loginContent.showInfoDialog) {
                                             standardAlertDialog(
-                                                this@LegacyLoginActivity,
+                                                context,
                                                 getString(R.string.login_info_title),
                                                 getString(R.string.login_info),
                                                 getString(R.string.generic_dialog_confirm)
@@ -123,9 +123,10 @@ class LegacyLoginActivity : ComponentActivity() {
                                     }
                                 }
                             }
+
                             is BaseLoginViewModel.LoginState.Error -> {
                                 standardAlertDialog(
-                                    this@LegacyLoginActivity,
+                                    context,
                                     getString(R.string.login_error_title),
                                     getString(R.string.login_error),
                                     getString(R.string.generic_dialog_confirm)
@@ -133,14 +134,17 @@ class LegacyLoginActivity : ComponentActivity() {
                                     loginModel.loginDismissErrorClicked()
                                 }
                             }
+
                             is BaseLoginViewModel.LoginState.Loading -> {
                                 loginClickBlocker.isVisible = true
                                 loginSubmitText.isVisible = false
                                 loginSubmitProgressIndicator.isVisible = true
                             }
+
                             BaseLoginViewModel.LoginState.LoggedIn -> {
-                                loginModel.login(this@LegacyLoginActivity)
+                                loginModel.login(context)
                             }
+
                             else -> {
                                 throw Exception("Illegal unknown state")
                             }

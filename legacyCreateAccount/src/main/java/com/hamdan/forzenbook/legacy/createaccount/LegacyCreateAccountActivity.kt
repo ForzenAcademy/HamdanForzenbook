@@ -48,7 +48,7 @@ class LegacyCreateAccountActivity : ComponentActivity() {
                 )
             }
             createAccountLayoutToolBar.setNavigationOnClickListener {
-                createAccountModel.backIconPressed(this@LegacyCreateAccountActivity)
+                finish()
             }
 
             inputLocationText.setOnEditorActionListener { _, action, _ ->

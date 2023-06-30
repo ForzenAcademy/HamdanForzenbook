@@ -17,6 +17,17 @@ class NavigatorImpl : Navigator {
     override fun navigateToPost(context: Context) {
     }
 
+    override fun navigateToSearchResult(
+        context: Context,
+        query: String?,
+        id: Int?,
+        error: Boolean
+    ) {
+    }
+
     override fun kickToLogin(context: Context) {
+    }
+
+    override fun navigateToSearch(context: Context) {
     }
 }

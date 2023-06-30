@@ -113,3 +113,13 @@ fun getToken(context: Context): String? {
         Context.MODE_PRIVATE
     ).getString(GlobalConstants.TOKEN_KEY, null)
 }
+
+fun removeToken(context: Context) {
+    context.getSharedPreferences(
+        GlobalConstants.TOKEN_PREFERENCE_LOCATION,
+        Context.MODE_PRIVATE
+    ).edit().apply {
+        remove(GlobalConstants.TOKEN_KEY)
+        apply()
+    }
+}

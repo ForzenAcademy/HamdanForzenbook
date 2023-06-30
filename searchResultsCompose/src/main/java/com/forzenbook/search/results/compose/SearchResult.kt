@@ -1,11 +1,7 @@
 package com.forzenbook.search.results.compose
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -15,14 +11,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.hamdan.forzenbook.compose.core.composewidgets.Divider
 import com.hamdan.forzenbook.compose.core.composewidgets.FeedBackground
 import com.hamdan.forzenbook.compose.core.composewidgets.FeedImagePost
 import com.hamdan.forzenbook.compose.core.composewidgets.FeedTextPost
 import com.hamdan.forzenbook.compose.core.composewidgets.ForzenbookDialog
 import com.hamdan.forzenbook.compose.core.composewidgets.ForzenbookTopAppBar
 import com.hamdan.forzenbook.compose.core.composewidgets.PostCard
+import com.hamdan.forzenbook.compose.core.composewidgets.TitleText
 import com.hamdan.forzenbook.compose.core.composewidgets.UserRow
-import com.hamdan.forzenbook.compose.core.theme.dimens
 import com.hamdan.forzenbook.core.GlobalConstants
 import com.hamdan.forzenbook.core.PostData
 import com.hamdan.forzenbook.search.core.viewmodel.BaseSearchResultViewModel
@@ -101,13 +98,7 @@ private fun ContentBody(
                     item.date,
                     { onNameClick(item.posterId) },
                 )
-                Spacer(
-                    modifier = Modifier
-                        .padding(MaterialTheme.dimens.grid.x2)
-                        .background(MaterialTheme.colorScheme.primary.copy(alpha = .3f))
-                        .fillMaxWidth()
-                        .height(MaterialTheme.dimens.borderGrid.x1)
-                )
+                Divider()
                 if (item.type == PostData.IMAGE_TYPE) {
                     FeedImagePost(GlobalConstants.LOGIN_BASE_URL + item.body)
                 } else {
@@ -126,10 +117,7 @@ private fun MainContent(
 ) {
     StandardContent(
         titleText = {
-            Text(
-                stringResource(id = R.string.search_result_title_query),
-                color = MaterialTheme.colorScheme.primary
-            )
+            TitleText(text = stringResource(id = R.string.search_result_title_query))
         },
         bottomBar = bottomBar,
     ) {

@@ -74,7 +74,7 @@ class ForzenbookActivity : ComponentActivity() {
             }
         }
         val navigationItems = listOf(NAVBAR_HOME, NAVBAR_SEARCH)
-//        loginViewModel.checkLoggedIn()
+        loginViewModel.checkLoggedIn()
         setContent {
             ForzenBookTheme {
                 val bottomNav: @Composable () -> Unit =
@@ -179,12 +179,13 @@ class ForzenbookActivity : ComponentActivity() {
                                 },
                                 onSubmitSearch = {
                                     searchViewModel.onSearchSubmit(
-                                        {
+                                        onSuccess = {
                                             navController.navigate(SEARCH_RESULTS_PAGE + searchViewModel.navigateQuery() + "false")
                                         },
-                                    ) {
-                                        navController.navigate(SEARCH_RESULTS_PAGE + searchViewModel.navigateQuery() + "true")
-                                    }
+                                        onError = {
+                                            navController.navigate(SEARCH_RESULTS_PAGE + searchViewModel.navigateQuery() + "true")
+                                        },
+                                    )
                                 },
                                 onErrorDismiss = {
                                     searchViewModel.onErrorDismiss()
