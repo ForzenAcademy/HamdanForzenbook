@@ -10,17 +10,19 @@ data class UserResponse(
     @SerializedName("first_name") val firstName: String,
     @SerializedName("last_name") val lastName: String,
     @SerializedName("location") val location: String,
+    @SerializedName("profile_image") val profileImage: String,
+    @SerializedName("about_me") val aboutMe: String,
     @SerializedName("created_at") val createdAt: String,
-    @SerializedName("avatarUrl") val avatarUrl: String? = null,
 )
 
 fun UserResponse.toUserEntity(): UserEntity {
     return UserEntity(
         userId = this.userId,
-        userIcon = this.avatarUrl,
+        userImage = this.profileImage,
         firstName = this.firstName,
         lastName = this.lastName,
         location = this.location,
-        timestamp = System.currentTimeMillis()
+        timestamp = System.currentTimeMillis(),
+        aboutMe = aboutMe,
     )
 }

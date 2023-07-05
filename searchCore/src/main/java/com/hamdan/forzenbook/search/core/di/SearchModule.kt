@@ -39,7 +39,7 @@ object SearchModule {
             .setLenient()
             .create()
         return Retrofit.Builder()
-            .baseUrl(GlobalConstants.LOGIN_BASE_URL)
+            .baseUrl(GlobalConstants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }

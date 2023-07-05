@@ -1,7 +1,6 @@
 package com.hamdan.forzenbook.legacy.core.adapters
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -222,7 +221,7 @@ fun PostData.toFeedItemViewModel(): FeedItemViewModel {
                 date = this.date,
                 location = this.posterLocation,
                 posterId = this.posterId,
-                imageUri = GlobalConstants.LOGIN_BASE_URL + this.body,
+                imageUri = GlobalConstants.BASE_URL + this.body,
             )
         }
 

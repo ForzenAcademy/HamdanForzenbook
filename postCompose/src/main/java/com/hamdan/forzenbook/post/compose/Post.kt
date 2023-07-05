@@ -19,26 +19,24 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.hamdan.forzenbook.compose.core.composewidgets.BackgroundColumn
 import com.hamdan.forzenbook.compose.core.composewidgets.ForzenbookDialog
 import com.hamdan.forzenbook.compose.core.composewidgets.ForzenbookTopAppBar
+import com.hamdan.forzenbook.compose.core.composewidgets.FullScreenCickableTextField
 import com.hamdan.forzenbook.compose.core.composewidgets.LoadingOverlay
 import com.hamdan.forzenbook.compose.core.composewidgets.PillToggleSwitch
-import com.hamdan.forzenbook.compose.core.composewidgets.PostTextField
 import com.hamdan.forzenbook.compose.core.composewidgets.SubmitButton
 import com.hamdan.forzenbook.compose.core.composewidgets.TitleText
 import com.hamdan.forzenbook.compose.core.theme.dimens
+import com.hamdan.forzenbook.core.StateException
 import com.hamdan.forzenbook.post.core.viewmodel.BasePostViewModel
 import com.hamdan.forzenbook.post.core.viewmodel.BasePostViewModel.Companion.POST_LENGTH_LIMIT
 import com.hamdan.forzenbook.ui.core.R
@@ -85,9 +83,7 @@ fun Post(
             kickBackToLogin()
         }
 
-        else -> {
-            throw Exception("Illegal unknown state")
-        }
+        else -> throw StateException()
     }
 }
 
@@ -99,8 +95,6 @@ private fun TextPostContent(
     onToggleClicked: () -> Unit,
     onSendClicked: () -> Unit,
 ) {
-    val focusRequester = remember { FocusRequester() }
-    val keyboard = LocalSoftwareKeyboardController.current
     val showLabel =
         state is BasePostViewModel.PostState.Content && state.content is BasePostViewModel.PostContent.Text && (state.content as BasePostViewModel.PostContent.Text).text.isEmpty()
     StandardContent(
@@ -108,29 +102,13 @@ private fun TextPostContent(
         onSendClicked = onSendClicked,
         selected = state is BasePostViewModel.PostState.Content && state.content is BasePostViewModel.PostContent.Text
     ) { padding ->
-        BackgroundColumn(
-            modifier = Modifier
-                .padding(padding)
-                .clickable {
-                    keyboard?.show()
-                    focusRequester.requestFocus()
-                },
-            color = MaterialTheme.colorScheme.tertiary,
-        ) {
-            if (state is BasePostViewModel.PostState.Content && state.content is BasePostViewModel.PostContent.Text && (state.content as BasePostViewModel.PostContent.Text).text.length >= POST_LENGTH_LIMIT) {
-                Text(
-                    text = stringResource(id = R.string.post_warning_text, POST_LENGTH_LIMIT),
-                    modifier = Modifier.padding(top = MaterialTheme.dimens.grid.x1),
-                    color = MaterialTheme.colorScheme.onTertiary
-                )
-            }
-            PostTextField(
-                text = if (state is BasePostViewModel.PostState.Content && state.content is BasePostViewModel.PostContent.Text) (state.content as BasePostViewModel.PostContent.Text).text else "",
-                label = if (showLabel) stringResource(id = R.string.post_text_label) else null,
-                focusRequester = focusRequester,
-                onValueChange = onTextChange,
-            )
-        }
+        FullScreenCickableTextField(
+            modifier = Modifier.padding(padding),
+            text = if (state is BasePostViewModel.PostState.Content && state.content is BasePostViewModel.PostContent.Text) (state.content as BasePostViewModel.PostContent.Text).text else "",
+            label = if (showLabel) stringResource(id = R.string.post_text_label) else null,
+            backgroundColor = MaterialTheme.colorScheme.tertiary,
+            onTextChange = onTextChange
+        )
     }
 }
 
@@ -256,9 +234,9 @@ private fun StandardContent(
             ) {
                 additionalBottomContent()
                 PillToggleSwitch(
-                    imageLeftRes = R.drawable.pill_text_selected,
+                    imageLeftRes = R.drawable.text_icon,
                     leftDescriptionRes = R.string.text_toggle_text,
-                    imageRightRes = R.drawable.pill_image_selected,
+                    imageRightRes = R.drawable.image_icon,
                     rightDescriptionRes = R.string.text_toggle_image,
                     selected = selected,
                 ) {

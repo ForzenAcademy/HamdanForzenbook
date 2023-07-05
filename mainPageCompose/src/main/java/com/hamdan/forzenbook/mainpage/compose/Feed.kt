@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -23,7 +22,7 @@ import com.hamdan.forzenbook.compose.core.composewidgets.PostCard
 import com.hamdan.forzenbook.compose.core.composewidgets.TitleText
 import com.hamdan.forzenbook.compose.core.composewidgets.UserRow
 import com.hamdan.forzenbook.compose.core.theme.dimens
-import com.hamdan.forzenbook.core.GlobalConstants.LOGIN_BASE_URL
+import com.hamdan.forzenbook.core.GlobalConstants.BASE_URL
 import com.hamdan.forzenbook.core.PostData
 import com.hamdan.forzenbook.mainpage.core.viewmodel.BaseFeedViewModel
 import com.hamdan.forzenbook.ui.core.R
@@ -33,6 +32,7 @@ fun FeedPage(
     state: BaseFeedViewModel.FeedState,
     onRequestMorePosts: () -> Unit,
     onNameClick: (Int) -> Unit,
+    onIconClick: (Int) -> Unit,
     bottomBar: @Composable () -> Unit,
     onCreatePostClicked: () -> Unit,
     onErrorDismiss: () -> Unit,
@@ -44,8 +44,9 @@ fun FeedPage(
                 onCreatePostClicked = onCreatePostClicked,
                 posts = state.posts,
                 onRequestMorePosts = onRequestMorePosts,
+                onIconClick = onIconClick,
                 onNameClick = onNameClick,
-                bottomBar = bottomBar
+                bottomBar = bottomBar,
             )
         }
 
@@ -54,8 +55,9 @@ fun FeedPage(
                 onCreatePostClicked = onCreatePostClicked,
                 posts = state.posts,
                 onRequestMorePosts = onRequestMorePosts,
+                onIconClick = onIconClick,
                 onNameClick = onNameClick,
-                bottomBar = bottomBar
+                bottomBar = bottomBar,
             )
             ForzenbookDialog(
                 title = stringResource(id = R.string.generic_error_title),
@@ -72,12 +74,12 @@ fun FeedPage(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MainContent(
     onCreatePostClicked: () -> Unit,
     posts: List<PostData>,
     onRequestMorePosts: () -> Unit,
+    onIconClick: (Int) -> Unit,
     onNameClick: (Int) -> Unit,
     bottomBar: @Composable () -> Unit,
 ) {
@@ -106,15 +108,16 @@ private fun MainContent(
             itemsIndexed(posts) { index, item ->
                 PostCard {
                     UserRow(
-                        item.posterIcon,
+                        BASE_URL + item.posterIcon,
                         item.posterFirstName,
                         item.posterLastName,
                         item.posterLocation,
                         item.date,
-                        { onNameClick(item.posterId) },
+                        onNameClick = { onNameClick(item.posterId) },
+                        onProfileIconClick = { onIconClick(item.posterId) },
                     )
                     if (item.type == PostData.IMAGE_TYPE) {
-                        FeedImagePost(LOGIN_BASE_URL + item.body)
+                        FeedImagePost(BASE_URL + item.body)
                     } else {
                         Divider()
                         FeedTextPost(item.body)

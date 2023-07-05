@@ -41,6 +41,7 @@ import com.hamdan.forzenbook.compose.core.theme.additionalColors
 import com.hamdan.forzenbook.compose.core.theme.dimens
 import com.hamdan.forzenbook.core.Entry
 import com.hamdan.forzenbook.core.EntryError
+import com.hamdan.forzenbook.core.StateException
 import com.hamdan.forzenbook.core.datePickerDialog
 import com.hamdan.forzenbook.createaccount.core.viewmodel.BaseCreateAccountViewModel
 import com.hamdan.forzenbook.createaccount.core.viewmodel.getContent
@@ -101,7 +102,7 @@ fun CreateAccountContent(
         }
 
         else -> {
-            throw Exception("Illegal unknown state")
+            throw StateException()
         }
     }
 }

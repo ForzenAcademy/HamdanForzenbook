@@ -20,6 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.hamdan.forzenbook.compose.core.LocalNavController
 import com.hamdan.forzenbook.compose.core.theme.dimens
+import com.hamdan.forzenbook.core.NavBarItem
 import com.hamdan.forzenbook.core.NavigationItem
 import com.hamdan.forzenbook.ui.core.R
 
@@ -83,9 +84,20 @@ fun ForzenbookBottomNavigationBar(navIcons: List<NavigationItem>) {
                 },
                 alwaysShowLabel = true,
                 onClick = {
-                    navigator?.navigate(it.page) {
-                        popUpTo(it.page)
-                        launchSingleTop = true
+                    when (it.navBarItem) {
+                        NavBarItem.PROFILE -> {
+                            navigator?.navigate(it.page + "/null") {
+                                popUpTo(it.page)
+                                launchSingleTop = true
+                            }
+                        }
+
+                        else -> {
+                            navigator?.navigate(it.page) {
+                                popUpTo(it.page)
+                                launchSingleTop = true
+                            }
+                        }
                     }
                 },
                 colors = NavigationBarItemDefaults.colors(

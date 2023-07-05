@@ -64,6 +64,8 @@ dependencies {
     implementation project(':searchCore')
     implementation project(':searchCompose')
     implementation project(':searchResultsCompose')
+    implementation project(':profileCore')
+    implementation project(':profileCompose')
 
     // MockK
     testImplementation("io.mockk:mockk:1.13.4")

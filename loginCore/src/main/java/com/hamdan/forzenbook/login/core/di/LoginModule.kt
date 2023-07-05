@@ -2,7 +2,7 @@ package com.hamdan.forzenbook.login.core.di
 
 import android.content.Context
 import com.google.gson.GsonBuilder
-import com.hamdan.forzenbook.core.GlobalConstants.LOGIN_BASE_URL
+import com.hamdan.forzenbook.core.GlobalConstants.BASE_URL
 import com.hamdan.forzenbook.login.core.data.network.LoginService
 import com.hamdan.forzenbook.login.core.data.repository.LoginRepository
 import com.hamdan.forzenbook.login.core.data.repository.LoginRepositoryImpl
@@ -32,7 +32,7 @@ object LoginModule {
             .setLenient()
             .create()
         return Retrofit.Builder()
-            .baseUrl(LOGIN_BASE_URL)
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }

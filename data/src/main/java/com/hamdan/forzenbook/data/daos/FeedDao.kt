@@ -28,7 +28,21 @@ interface FeedDao {
 
     @Query(
         """
-            DELETE FROM ${PostEntity.TABLE_NAME} WHERE ${PostEntity.POST_ID} = :postId
+            SELECT * FROM ${PostEntity.TABLE_NAME} WHERE ${PostEntity.POST_ID} > :postId ORDER BY ${PostEntity.POST_ID} ASC LIMIT :size
+        """
+    )
+    suspend fun getForwardPagedPosts(postId: Int, size: Int): List<PostEntity>
+
+    @Query(
+        """
+            SELECT * FROM ${PostEntity.TABLE_NAME} WHERE ${PostEntity.POST_ID} < :postId ORDER BY ${PostEntity.POST_ID} DESC LIMIT :size
+        """
+    )
+    suspend fun getBackwardPagedPosts(postId: Int, size: Int): List<PostEntity>
+
+    @Query(
+        """
+            DELETE FROM ${PostEntity.TABLE_NAME} WHERE ${PostEntity.POST_ID} = :postId 
         """
     )
     suspend fun deleteSpecificPost(postId: Int)

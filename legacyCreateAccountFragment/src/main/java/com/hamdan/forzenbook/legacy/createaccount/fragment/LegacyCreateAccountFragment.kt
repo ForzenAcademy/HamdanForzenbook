@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.core.EntryError
+import com.hamdan.forzenbook.core.StateException
 import com.hamdan.forzenbook.createaccount.core.viewmodel.BaseCreateAccountViewModel
 import com.hamdan.forzenbook.createaccount.core.viewmodel.getContent
 import com.hamdan.forzenbook.legacy.core.view.utils.DialogUtils
@@ -181,7 +182,7 @@ class LegacyCreateAccountFragment : Fragment() {
                                 createAccountSubmitProgressIndicator.isVisible = true
                             }
                             else -> {
-                                throw Exception("Illegal unknown state")
+                                throw StateException()
                             }
                         }
                     }

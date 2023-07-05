@@ -7,4 +7,5 @@ object NavigationDestinations {
     const val FEED_PAGE = "FEED_PAGE"
     const val SEARCH_PAGE = "SEARCH_PAGE"
     const val SEARCH_RESULTS_PAGE = "SEARCH_RESULTS_PAGE"
+    const val PROFILE_PAGE = "PROFILE_PAGE"
 }

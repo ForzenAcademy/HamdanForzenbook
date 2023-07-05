@@ -32,4 +32,11 @@ interface UserDao {
         """
     )
     suspend fun deleteOldUsers(currentTime: Long)
+
+    @Query(
+        """
+             UPDATE ${UserEntity.TABLE_NAME} SET  ${UserEntity.USER_PROFILE_IMAGE} = :newImagePath WHERE(${UserEntity.USER_ID} = :userId)
+        """
+    )
+    suspend fun updateUserImage(newImagePath: String, userId: Int)
 }

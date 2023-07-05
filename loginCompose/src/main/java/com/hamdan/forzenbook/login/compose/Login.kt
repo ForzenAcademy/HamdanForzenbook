@@ -27,6 +27,7 @@ import com.hamdan.forzenbook.compose.core.composewidgets.SubmitButton
 import com.hamdan.forzenbook.compose.core.theme.dimens
 import com.hamdan.forzenbook.core.Entry
 import com.hamdan.forzenbook.core.EntryError
+import com.hamdan.forzenbook.core.StateException
 import com.hamdan.forzenbook.login.core.viewmodel.BaseLoginViewModel
 import com.hamdan.forzenbook.login.core.viewmodel.getContent
 import com.hamdan.forzenbook.ui.core.R
@@ -82,9 +83,7 @@ fun MainLoginContent(
                 }
             }
 
-            else -> {
-                throw Exception("Illegal unknown state")
-            }
+            else -> throw StateException()
         }
     }
 }

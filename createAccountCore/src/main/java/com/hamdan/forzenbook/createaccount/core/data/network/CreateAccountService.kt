@@ -14,7 +14,7 @@ interface CreateAccountService {
         @Field(BIRTH_DATE) birthDate: Date,
         @Field(FIRST_NAME) firstName: String,
         @Field(LAST_NAME) lastName: String,
-        @Field(LOCATION) location: String
+        @Field(LOCATION) location: String,
     ): Response<CreateAccountResponse>
     companion object {
         private const val EMAIL = "email"

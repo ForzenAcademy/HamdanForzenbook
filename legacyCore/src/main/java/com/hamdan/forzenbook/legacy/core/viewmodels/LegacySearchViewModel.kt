@@ -1,6 +1,7 @@
 package com.hamdan.forzenbook.legacy.core.viewmodels
 
 import android.content.Context
+import com.hamdan.forzenbook.core.StateException
 import com.hamdan.forzenbook.legacy.core.view.Navigator
 import com.hamdan.forzenbook.search.core.domain.SearchForPostByIdUseCase
 import com.hamdan.forzenbook.search.core.domain.SearchForPostByStringUseCase
@@ -39,7 +40,7 @@ class LegacySearchViewModel @Inject constructor(
         if (tempState is SearchState.Searching) {
             return tempState.query
         }
-        throw Exception("Illegal state for this call")
+        throw StateException()
     }
 
     fun sendToResultSuccessQuery(context: Context) {

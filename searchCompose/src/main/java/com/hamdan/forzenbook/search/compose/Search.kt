@@ -18,6 +18,7 @@ import com.hamdan.forzenbook.compose.core.composewidgets.BackgroundColumn
 import com.hamdan.forzenbook.compose.core.composewidgets.ForzenbookDialog
 import com.hamdan.forzenbook.compose.core.composewidgets.InputField
 import com.hamdan.forzenbook.compose.core.theme.dimens
+import com.hamdan.forzenbook.core.StateException
 import com.hamdan.forzenbook.search.core.viewmodel.BaseSearchViewModel
 import com.hamdan.forzenbook.ui.core.R
 
@@ -59,9 +60,7 @@ fun SearchContent(
             kickBackToLogin()
         }
 
-        else -> {
-            throw Exception("Illegal unknown state")
-        }
+        else -> throw StateException()
     }
 }
 
