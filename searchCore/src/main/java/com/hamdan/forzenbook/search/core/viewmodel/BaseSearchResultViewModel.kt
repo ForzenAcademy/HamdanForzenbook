@@ -64,7 +64,7 @@ abstract class BaseSearchResultViewModel(
         searchResultState = SearchResultState.InvalidLogin
     }
 
-    fun onErrorDismiss(){
+    fun onErrorDismiss() {
         searchResultState = SearchResultState.Content()
     }
 }

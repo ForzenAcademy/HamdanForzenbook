@@ -27,5 +27,7 @@
         <activity android:name="com.hamdan.forzenbook.legacy.createaccount.LegacyCreateAccountActivity" />
         <activity android:name="com.hamdan.forzenbook.legacy.post.LegacyPostActivity" />
         <activity android:name="com.hamdan.forzenbook.legacy.mainpage.view.LegacyMainPageActivity" />
+        <activity android:name="com.hamdan.forzenbook.legacy.search.LegacySearchActivity" />
+        <activity android:name="com.hamdan.forzenbook.legacy.search.LegacySearchResultActivity" />
     </application>
 </manifest>

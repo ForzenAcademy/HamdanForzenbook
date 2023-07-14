@@ -67,7 +67,7 @@ fun ForzenbookBottomNavigationBar(navIcons: List<NavigationItem>) {
     ) {
         navIcons.forEach {
             NavigationBarItem(
-                selected = false,
+                selected = navigator?.currentDestination?.route == it.page,
                 icon = {
                     Icon(
                         painter = painterResource(id = it.icon),

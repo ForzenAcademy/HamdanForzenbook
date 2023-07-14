@@ -37,11 +37,14 @@ android {
 dependencies {
 
     //Modules
+    implementation project(":core")
     api project(":legacyCore")
     implementation project(":legacyLogin")
     implementation project(":legacyCreateAccount")
     implementation project(":legacyPost")
     implementation project(":legacyMainPage")
+    implementation project(":legacySearch")
+//    implementation project(":legacySearchResult")
 
     // Hilt
     implementation "com.google.dagger:hilt-android:2.44"

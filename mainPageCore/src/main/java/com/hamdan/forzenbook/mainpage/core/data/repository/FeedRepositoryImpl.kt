@@ -3,6 +3,7 @@ package com.hamdan.forzenbook.mainpage.core.data.repository
 import android.content.Context
 import com.hamdan.forzenbook.core.InvalidTokenException
 import com.hamdan.forzenbook.core.getToken
+import com.hamdan.forzenbook.core.removeToken
 import com.hamdan.forzenbook.data.daos.FeedDao
 import com.hamdan.forzenbook.data.daos.UserDao
 import com.hamdan.forzenbook.data.entities.Postable
@@ -48,13 +49,8 @@ class FeedRepositoryImpl(
                 }
             }
             return postables
-            // Todo will need to make this give specified values?
-            // Only will need to do that if we have time to develop a service experience, otherwise this is on the backburner
         }
+        removeToken(context)
         throw (Exception("retrieval issue"))
     }
-
-    /* Todo
-    We will need to account for the fact we will be given 10 things to be shown by the service at a time
-     */
 }

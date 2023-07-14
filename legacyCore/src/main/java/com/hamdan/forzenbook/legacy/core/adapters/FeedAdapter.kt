@@ -1,5 +1,7 @@
 package com.hamdan.forzenbook.legacy.core.adapters
 
+import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +21,7 @@ class FeedAdapter(
     private val getDataSize: () -> Int,
     private val getDataType: (Int) -> Int,
     private val onLoadMore: () -> Unit,
-    private val onNameClick: (Int) -> Unit,
+    private val onNameClick: (Context, Int) -> Unit,
 ) : RecyclerView.Adapter<ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -91,18 +93,21 @@ abstract class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
 class ImageViewHolder(
     private val binding: ImagePostBinding,
-    private val onNameClick: (Int) -> Unit
+    private val onNameClick: (Context, Int) -> Unit
 ) :
     ViewHolder(binding.root) {
     override fun bind(model: FeedItemViewModel) {
         val imageModel = model as ImageFeedItemViewModel
+        val context = binding.root.context
         binding.apply {
             feedUserName.text = this.root.context.getString(
                 R.string.user_name,
                 imageModel.firstName,
                 imageModel.lastName
             )
-            feedUserName.setOnClickListener { onNameClick(imageModel.posterId) }
+            feedUserName.setOnClickListener {
+                onNameClick(context,imageModel.posterId)
+            }
             feedUserDate.text = imageModel.date
             feedUserLocation.text = imageModel.location
             val imageLoader = ImageLoader(itemView.context)
@@ -146,17 +151,23 @@ class ImageViewHolder(
     }
 }
 
-class TextViewHolder(private val binding: TextPostBinding, private val onNameClick: (Int) -> Unit) :
+class TextViewHolder(
+    private val binding: TextPostBinding,
+    private val onNameClick: (Context, Int) -> Unit
+) :
     ViewHolder(binding.root) {
     override fun bind(model: FeedItemViewModel) {
         val textModel = model as TextFeedItemViewModel
+        val context = binding.root.context
         binding.apply {
             feedUserName.text = this.root.context.getString(
                 R.string.user_name,
                 textModel.firstName,
                 textModel.lastName
             )
-            feedUserName.setOnClickListener { onNameClick(textModel.posterId) }
+            feedUserName.setOnClickListener {
+                onNameClick(context,textModel.posterId)
+            }
             feedUserDate.text = textModel.date
             feedUserLocation.text = textModel.location
             feedPostText.text = textModel.postText

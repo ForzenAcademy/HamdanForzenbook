@@ -7,5 +7,7 @@ interface Navigator {
     fun navigateToFeed(context: Context)
     fun navigateToCreateAccount(context: Context)
     fun navigateToPost(context: Context)
+    fun navigateToSearchResult(context: Context, query: String? = null, id: Int? = null, error: Boolean)
+    fun navigateToSearch(context: Context)
     fun kickToLogin(context: Context)
 }
