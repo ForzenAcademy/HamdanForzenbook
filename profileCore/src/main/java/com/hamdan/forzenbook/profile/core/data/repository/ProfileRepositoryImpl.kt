@@ -2,6 +2,7 @@ package com.hamdan.forzenbook.profile.core.data.repository
 
 import android.content.Context
 import com.hamdan.forzenbook.core.GlobalConstants.PAGED_POSTS_SIZE
+import com.hamdan.forzenbook.core.GlobalConstants.POSTS_MAX_SIZE
 import com.hamdan.forzenbook.core.InvalidTokenException
 import com.hamdan.forzenbook.core.NetworkRetrievalException
 import com.hamdan.forzenbook.core.getToken
@@ -49,12 +50,14 @@ class ProfileRepositoryImpl(
 
         val body = response.body() ?: throw NetworkRetrievalException()
 
+        val posts = convertPosts(body)
+
         return ProfileInfo(
             firstName = body.firstName,
             lastName = body.lastName,
             userId = body.userId,
             isOwner = userId == null,
-            postSet = convertPosts(body),
+            postSet = if (posts.size > POSTS_MAX_SIZE) posts.subList(0, POSTS_MAX_SIZE) else posts,
             userIconPath = body.profileImage,
             dateJoined = body.created,
             aboutUser = body.aboutMe
@@ -100,12 +103,12 @@ class ProfileRepositoryImpl(
         return try {
             val user = userDao.getUser(userId).first()
 
-            if (pagingDirection == PagingDirection.FORWARD) {
-                feedDao.getForwardPagedPosts(postId, PAGED_POSTS_SIZE).map {
+            if (pagingDirection == PagingDirection.DOWN) {
+                feedDao.getDownPagedPosts(postId, PAGED_POSTS_SIZE).map {
                     Postable(it, user)
                 }
             } else {
-                feedDao.getBackwardPagedPosts(postId, PAGED_POSTS_SIZE).map {
+                feedDao.getUpPagedPosts(postId, PAGED_POSTS_SIZE).map {
                     Postable(it, user)
                 }
             }

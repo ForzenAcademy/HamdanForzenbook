@@ -62,7 +62,7 @@ fun CreateAccountContent(
 ) {
     val navigator = LocalNavController.current
     when (state) {
-        BaseCreateAccountViewModel.CreateAccountState.AccountCreated -> {
+        is BaseCreateAccountViewModel.CreateAccountState.AccountCreated -> {
             ContentWrapper {}
             LaunchedEffect(Unit) {
                 navigator?.navigateUp()
@@ -73,12 +73,12 @@ fun CreateAccountContent(
         is BaseCreateAccountViewModel.CreateAccountState.Content -> {
             ContentWrapper {
                 MainContent(
-                    stateFirstName = state.getContent().createAccountContent.firstName,
-                    stateLastName = state.getContent().createAccountContent.lastName,
-                    stateBirthDate = state.getContent().createAccountContent.birthDay,
-                    stateEmail = state.getContent().createAccountContent.email,
-                    stateLocation = state.getContent().createAccountContent.location,
-                    isDateDialogOpen = state.getContent().createAccountContent.isDateDialogOpen,
+                    stateFirstName = state.getContent().createAccountData.firstName,
+                    stateLastName = state.getContent().createAccountData.lastName,
+                    stateBirthDate = state.getContent().createAccountData.birthDay,
+                    stateEmail = state.getContent().createAccountData.email,
+                    stateLocation = state.getContent().createAccountData.location,
+                    isDateDialogOpen = state.getContent().createAccountData.isDateDialogOpen,
                     onTextChange = onTextChange,
                     onDateSubmission = onDateSubmission,
                     onDateDismiss = onDateDismiss,
@@ -94,7 +94,7 @@ fun CreateAccountContent(
             }
         }
 
-        BaseCreateAccountViewModel.CreateAccountState.Loading -> {
+        is BaseCreateAccountViewModel.CreateAccountState.Loading -> {
             ContentWrapper {
                 LoadingContent()
             }
@@ -107,7 +107,6 @@ fun CreateAccountContent(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ContentWrapper(content: @Composable ColumnScope.() -> Unit) {
     Scaffold(
@@ -146,6 +145,7 @@ private fun MainContent(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     InputField(
+        modifier = Modifier.padding(top = MaterialTheme.dimens.grid.x2),
         label = stringResource(R.string.create_account_first_name_prompt),
         value = firstName,
         onValueChange = {
@@ -208,6 +208,7 @@ private fun MainContent(
                 vertical = MaterialTheme.dimens.grid.x2
             )
             .clickable {
+                focusManager.clearFocus(true)
                 onDateFieldClick()
             },
         trailingIcon = {

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -32,12 +33,18 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -115,18 +122,22 @@ fun BackgroundColumn(
 @Composable
 fun ForzenbookDialog(
     modifier: Modifier = Modifier,
-    title: String,
+    title: String?,
     body: String,
     buttonText: String,
     onDismiss: () -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = { onDismiss() },
-        title = {
-            Text(
-                text = title,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
+        title = if (title == null) {
+            null
+        } else {
+            {
+                Text(
+                    text = title,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+            }
         },
         text = {
             Text(
@@ -146,7 +157,7 @@ fun ForzenbookDialog(
                 color = MaterialTheme.colorScheme.onSurface,
             )
         },
-        containerColor = MaterialTheme.colorScheme.surface, // something very strange going on in dark mode refuses to take the color
+        containerColor = MaterialTheme.colorScheme.surface,
         modifier = modifier.padding(MaterialTheme.dimens.grid.x5),
     )
 }
@@ -154,7 +165,7 @@ fun ForzenbookDialog(
 @Composable
 fun FeedBackground(
     modifier: Modifier = Modifier,
-    hideLoadIndicator: Boolean = false,
+    showLoadIndicator: Boolean = false,
     content: LazyListScope.() -> Unit,
 ) {
     LazyColumn(
@@ -165,7 +176,7 @@ fun FeedBackground(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         content()
-        if (!hideLoadIndicator) {
+        if (showLoadIndicator) {
             item {
                 CircularProgressIndicator(modifier = Modifier.padding(16.dp))
             }
@@ -325,6 +336,25 @@ fun Divider(
             .background(MaterialTheme.additionalColors.spacerColor)
             .fillMaxWidth()
             .height(height)
+    )
+}
+
+@Composable
+fun KeyboardMonitor(
+    onKeyboardVisibilityChanged: (Boolean) -> Unit,
+) {
+    var y: Float? by remember { mutableStateOf(null) }
+    Box(
+        modifier = Modifier
+            .fillMaxHeight()
+            .imePadding()
+            .onGloballyPositioned {
+                if (y == null) {
+                    y = it.positionInWindow().y
+                } else {
+                    onKeyboardVisibilityChanged(y != it.positionInWindow().y)
+                }
+            }
     )
 }
 

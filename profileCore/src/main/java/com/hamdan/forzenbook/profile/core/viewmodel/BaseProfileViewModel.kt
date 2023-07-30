@@ -6,8 +6,8 @@ import com.hamdan.forzenbook.core.GlobalConstants.PAGED_POSTS_SIZE
 import com.hamdan.forzenbook.core.GlobalConstants.POSTS_MAX_SIZE
 import com.hamdan.forzenbook.core.PostData
 import com.hamdan.forzenbook.core.StateException
-import com.hamdan.forzenbook.profile.core.domain.GetBackwardPostsUseCase
-import com.hamdan.forzenbook.profile.core.domain.GetForwardPostsUseCase
+import com.hamdan.forzenbook.profile.core.domain.GetNewerPostsUseCase
+import com.hamdan.forzenbook.profile.core.domain.GetOlderPostsUseCase
 import com.hamdan.forzenbook.profile.core.domain.GetPersonalProfileUseCase
 import com.hamdan.forzenbook.profile.core.domain.GetProfileByUserUseCase
 import com.hamdan.forzenbook.profile.core.domain.SendAboutUpdateUseCase
@@ -15,8 +15,8 @@ import com.hamdan.forzenbook.profile.core.domain.SendIconUpdateUseCase
 import kotlinx.coroutines.launch
 
 abstract class BaseProfileViewModel(
-    private val getBackwardPostsUseCase: GetBackwardPostsUseCase,
-    private val getForwardPostsUseCase: GetForwardPostsUseCase,
+    private val getNewerPostsUseCase: GetNewerPostsUseCase,
+    private val getOlderPostsUseCase: GetOlderPostsUseCase,
     private val getProfileByUserUseCase: GetProfileByUserUseCase,
     private val getPersonalProfileUseCase: GetPersonalProfileUseCase,
     private val sendAboutUpdateUseCase: SendAboutUpdateUseCase,
@@ -26,10 +26,11 @@ abstract class BaseProfileViewModel(
     data class ProfileData(
         val firstName: String,
         val lastName: String,
-        val id: Int,
+        val userId: Int,
         val isOwner: Boolean,
         val postSet: List<PostData> = emptyList(),
         val firstPostId: Int?,
+        val lastPostId: Int? = null,
         val userIconPath: String,
         val dateJoined: String,
         val aboutUser: String,
@@ -134,7 +135,7 @@ abstract class BaseProfileViewModel(
                 try {
                     profileState = currentState.copy(editContent = EditingContent.Loading)
                     viewModelScope.launch {
-                        sendAboutUpdateUseCase(it.id, currentState.editContent.newAbout)
+                        sendAboutUpdateUseCase(it.userId, currentState.editContent.newAbout)
                         profileState = currentState.copy(
                             profileData = it.copy(aboutUser = currentState.editContent.newAbout),
                             editContent = EditingContent.None
@@ -174,7 +175,7 @@ abstract class BaseProfileViewModel(
                             profileState = currentState.copy(
                                 profileData = data.copy(
                                     userIconPath = sendIconUpdateUseCase(
-                                        data.id,
+                                        data.userId,
                                         it
                                     )
                                 ),
@@ -229,72 +230,40 @@ abstract class BaseProfileViewModel(
         val currentState = profileState
         currentState.profileData?.let { data ->
             viewModelScope.launch {
-                when (currentState) {
-                    is ProfileState.Content -> {
-                        try {
-                            currentState.apply {
-                                var postsAvailable = true
-                                data.postSet.forEach {
-                                    if (it.postId == data.firstPostId) {
-                                        postsAvailable = false
-                                    }
-                                }
-                                if (postsAvailable && data.postSet.size == POSTS_MAX_SIZE) {
-                                    profileState = copy(
-                                        profileData = data.copy(
-                                            postSet = getBackwardPostsUseCase(
-                                                data.id,
-                                                data.postSet[0].postId,
-                                            ) + data.postSet.subList(
-                                                0,
-                                                data.postSet.size - PAGED_POSTS_SIZE,
-                                            )
-                                        )
-                                    )
-                                }
-                            }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                            profileState = ProfileState.Error(
-                                profileData = data.copy(postSet = emptyList()),
-                                error = ProfileError.Posts
+                try {
+                    val newPosts = getNewerPostsUseCase(
+                        data.userId,
+                        data.postSet[0].postId,
+                    )
+                    val subList =
+                        if (data.postSet.size < POSTS_MAX_SIZE && data.lastPostId != null) {
+                            data.postSet.subList(
+                                0,
+                                data.postSet.size - data.postSet.size % PAGED_POSTS_SIZE
+                            )
+                        } else {
+                            data.postSet.subList(
+                                0,
+                                data.postSet.size - PAGED_POSTS_SIZE,
                             )
                         }
-                    }
-
-                    is ProfileState.Editing -> {
-                        try {
-                            currentState.apply {
-                                var postsAvailable = true
-                                data.postSet.forEach {
-                                    if (it.postId == data.firstPostId) {
-                                        postsAvailable = false
-                                    }
-                                }
-                                if (postsAvailable && data.postSet.size == POSTS_MAX_SIZE) {
-                                    profileState = copy(
-                                        profileData = data.copy(
-                                            postSet = getBackwardPostsUseCase(
-                                                data.id,
-                                                data.postSet[0].postId,
-                                            ) + data.postSet.subList(
-                                                0,
-                                                data.postSet.size - PAGED_POSTS_SIZE,
-                                            )
-                                        )
-                                    )
-                                }
-                            }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                            profileState = ProfileState.Error(
-                                profileData = data.copy(postSet = emptyList()),
-                                error = ProfileError.Posts,
-                            )
+                    profileState = when (currentState) {
+                        is ProfileState.Content -> {
+                            currentState.copy(profileData = data.copy(postSet = newPosts + subList))
                         }
-                    }
 
-                    else -> throw StateException()
+                        is ProfileState.Editing -> {
+                            currentState.copy(profileData = data.copy(postSet = newPosts + subList))
+                        }
+
+                        else -> throw StateException()
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    profileState = ProfileState.Error(
+                        profileData = data.copy(postSet = emptyList()),
+                        error = ProfileError.Posts
+                    )
                 }
             }
         } ?: throw StateException()
@@ -304,74 +273,38 @@ abstract class BaseProfileViewModel(
         val currentState = profileState
         currentState.profileData?.let { data ->
             viewModelScope.launch {
-                when (currentState) {
-                    is ProfileState.Content -> {
-                        try {
-                            if (data.postSet.size % PAGED_POSTS_SIZE == 0 && data.postSet.size < POSTS_MAX_SIZE) {
-                                profileState = currentState.copy(
-                                    profileData = data.copy(
-                                        postSet = data.postSet + getForwardPostsUseCase(
-                                            data.id,
-                                            data.postSet.last().postId,
-                                        )
-                                    )
-                                )
-                            } else if (data.postSet.size == POSTS_MAX_SIZE) {
-                                profileState = currentState.copy(
-                                    profileData = data.copy(
-                                        postSet = data.postSet.subList(
-                                            PAGED_POSTS_SIZE,
-                                            data.postSet.size
-                                        ) + getForwardPostsUseCase(
-                                            data.id,
-                                            data.postSet.last().postId,
-                                        )
-                                    )
-                                )
-                            }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                            profileState = ProfileState.Error(
-                                profileData = data.copy(postSet = emptyList()),
-                                error = ProfileError.Posts,
-                            )
-                        }
+                try {
+                    val subList = data.postSet.subList(
+                        PAGED_POSTS_SIZE,
+                        data.postSet.size
+                    )
+                    val newPosts: List<PostData> = getOlderPostsUseCase(
+                        data.userId,
+                        data.postSet.last().postId,
+                    )
+                    var lastPostId: Int? = null
+                    if (newPosts.isEmpty()) {
+                        lastPostId = data.postSet.last().postId
+                    } else if (newPosts.size < PAGED_POSTS_SIZE) {
+                        lastPostId = newPosts.last().postId
                     }
-
-                    is ProfileState.Editing -> {
-                        try {
-                            if (data.postSet.size % PAGED_POSTS_SIZE == 0 && data.postSet.size < POSTS_MAX_SIZE) {
-                                profileState = currentState.copy(
-                                    profileData = data.copy(
-                                        postSet = data.postSet + getForwardPostsUseCase(
-                                            data.id,
-                                            data.postSet.last().postId,
-                                        )
-                                    )
-                                )
-                            } else if (data.postSet.size == POSTS_MAX_SIZE) {
-                                profileState = currentState.copy(
-                                    profileData = data.copy(
-                                        postSet = data.postSet.subList(
-                                            PAGED_POSTS_SIZE,
-                                            data.postSet.size
-                                        ) + getForwardPostsUseCase(
-                                            data.id,
-                                            data.postSet.last().postId,
-                                        )
-                                    )
-                                )
-                            }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                            profileState = ProfileState.Error(
-                                profileData = data.copy(postSet = emptyList()),
-                                error = ProfileError.Posts,
-                            )
+                    profileState = when (currentState) {
+                        is ProfileState.Content -> {
+                            currentState.copy(profileData = data.copy(postSet = subList + newPosts, lastPostId = lastPostId,))
                         }
-                    }
 
-                    else -> throw StateException()
+                        is ProfileState.Editing -> {
+                            currentState.copy(profileData = data.copy(postSet = subList + newPosts, lastPostId = lastPostId))
+                        }
+
+                        else -> throw StateException()
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    profileState = ProfileState.Error(
+                        profileData = data.copy(postSet = emptyList()),
+                        error = ProfileError.Posts,
+                    )
                 }
             }
         } ?: throw StateException()

@@ -24,7 +24,6 @@ class SearchRepositoryImpl(
             removeToken(context)
             throw InvalidTokenException()
         }
-
         val postable = mutableListOf<Postable>()
         service.getPosts(id = id, token = token).body()?.forEach {
             val user = userDao.getUser(it.userId)

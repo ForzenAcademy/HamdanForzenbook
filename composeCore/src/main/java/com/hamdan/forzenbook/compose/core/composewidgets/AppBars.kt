@@ -29,6 +29,7 @@ import com.hamdan.forzenbook.ui.core.R
 fun ForzenbookTopAppBar(
     modifier: Modifier = Modifier,
     showBackIcon: Boolean = true,
+    additionalOnBack: (() -> Unit)? = null,
     titleSection: @Composable () -> Unit,
     actions: @Composable (() -> Unit)? = null,
 ) {
@@ -43,7 +44,12 @@ fun ForzenbookTopAppBar(
         colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
         navigationIcon = if (showBackIcon) {
             {
-                IconButton(onClick = { navigator?.navigateUp() }) {
+                IconButton(
+                    onClick = {
+                        additionalOnBack?.invoke()
+                        navigator?.navigateUp()
+                    }
+                ) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = stringResource(id = R.string.back_arrow),

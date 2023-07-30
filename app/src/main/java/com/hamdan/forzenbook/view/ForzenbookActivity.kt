@@ -104,7 +104,7 @@ class ForzenbookActivity : ComponentActivity() {
                 CompositionLocalProvider(LocalNavController provides navController) {
                     NavHost(
                         navController = navController,
-                        startDestination = LOGIN_PAGE,
+                        startDestination = FEED_PAGE,
                     ) {
                         composable(LOGIN_PAGE) {
                             MainLoginContent(
@@ -115,8 +115,11 @@ class ForzenbookActivity : ComponentActivity() {
                                 onErrorDismiss = {
                                     loginViewModel.loginDismissErrorClicked()
                                 },
+                                onBackPressed = {
+                                    loginViewModel.backPressed()
+                                },
                                 onTextChange = { entry ->
-                                    loginViewModel.updateText(entry)
+                                    loginViewModel.onTextChange(entry)
                                 },
                                 onSubmission = {
                                     loginViewModel.loginClicked()
@@ -125,7 +128,11 @@ class ForzenbookActivity : ComponentActivity() {
                                     navController.navigate(CREATE_ACCOUNT_PAGE)
                                 }
                             ) {
-                                navController.navigate(FEED_PAGE)
+                                navController.navigate(FEED_PAGE) {
+                                    popUpTo(LOGIN_PAGE) {
+                                        inclusive = true
+                                    }
+                                }
                             }
                         }
                         composable(CREATE_ACCOUNT_PAGE) {
@@ -190,8 +197,9 @@ class ForzenbookActivity : ComponentActivity() {
                             ) {
                                 loginViewModel.kickBackToLogin(this@ForzenbookActivity)
                                 navController.navigate(LOGIN_PAGE) {
-                                    popUpTo(LOGIN_PAGE)
-                                    launchSingleTop = true
+                                    popUpTo(FEED_PAGE) {
+                                        inclusive = true
+                                    }
                                 }
                                 feedViewModel.kickBackToLogin()
                             }
@@ -282,7 +290,7 @@ class ForzenbookActivity : ComponentActivity() {
                                 loginViewModel.kickBackToLogin(this@ForzenbookActivity)
                                 searchResultViewModel.kickBackToLogin()
                                 navController.navigate(LOGIN_PAGE) {
-                                    popUpTo(LOGIN_PAGE)
+                                    popUpTo(0)
                                     launchSingleTop = true
                                 }
                             }
@@ -293,15 +301,19 @@ class ForzenbookActivity : ComponentActivity() {
                                 onTextChange = { postViewModel.updateText(it) },
                                 onToggleClicked = { postViewModel.toggleClicked() },
                                 onDialogDismiss = { postViewModel.dialogDismissClicked() },
+                                onBackPressed = { postViewModel.onBackPressed() },
                                 onGalleryClicked = { launchGalleryImageGetter(postLauncher) },
                                 onSendClicked = {
                                     postViewModel.sendPostClicked()
-                                }
+                                    navController.navigateUp()
+                                },
                             ) {
                                 loginViewModel.kickBackToLogin(this@ForzenbookActivity)
                                 postViewModel.kickBackToLogin()
                                 navController.navigate(LOGIN_PAGE) {
-                                    popUpTo(LOGIN_PAGE)
+                                    popUpTo(LOGIN_PAGE) {
+                                        inclusive = true
+                                    }
                                     launchSingleTop = true
                                 }
                             }

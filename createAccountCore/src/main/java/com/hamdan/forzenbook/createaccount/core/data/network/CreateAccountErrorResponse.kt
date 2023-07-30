@@ -1,5 +1,5 @@
 package com.hamdan.forzenbook.createaccount.core.data.network
 
-data class CreateAccountResponse(
+data class CreateAccountErrorResponse(
     val reason: String?
 )

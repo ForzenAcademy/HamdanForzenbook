@@ -28,17 +28,17 @@ interface FeedDao {
 
     @Query(
         """
-            SELECT * FROM ${PostEntity.TABLE_NAME} WHERE ${PostEntity.POST_ID} > :postId ORDER BY ${PostEntity.POST_ID} ASC LIMIT :size
+            SELECT * FROM ${PostEntity.TABLE_NAME} WHERE ${PostEntity.POST_ID} < :postId ORDER BY ${PostEntity.POST_ID} ASC LIMIT :size
         """
     )
-    suspend fun getForwardPagedPosts(postId: Int, size: Int): List<PostEntity>
+    suspend fun getDownPagedPosts(postId: Int, size: Int): List<PostEntity>
 
     @Query(
         """
-            SELECT * FROM ${PostEntity.TABLE_NAME} WHERE ${PostEntity.POST_ID} < :postId ORDER BY ${PostEntity.POST_ID} DESC LIMIT :size
+            SELECT * FROM ${PostEntity.TABLE_NAME} WHERE ${PostEntity.POST_ID} > :postId ORDER BY ${PostEntity.POST_ID} DESC LIMIT :size
         """
     )
-    suspend fun getBackwardPagedPosts(postId: Int, size: Int): List<PostEntity>
+    suspend fun getUpPagedPosts(postId: Int, size: Int): List<PostEntity>
 
     @Query(
         """

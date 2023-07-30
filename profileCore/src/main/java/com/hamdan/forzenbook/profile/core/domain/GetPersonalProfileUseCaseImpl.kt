@@ -13,7 +13,7 @@ class GetPersonalProfileUseCaseImpl(
         return ProfileData(
             firstName = info.firstName,
             lastName = info.lastName,
-            id = info.userId,
+            userId = info.userId,
             isOwner = info.isOwner,
             postSet = postData,
             userIconPath = info.userIconPath,

@@ -75,7 +75,7 @@ class LegacyCreateAccountActivity : ComponentActivity() {
                                     createAccountClickBlocker.isVisible = false
                                     createAccountSubmitText.isVisible = true
                                     createAccountSubmitProgressIndicator.isVisible = false
-                                    state.createAccountContent.let { accountContent ->
+                                    state.createAccountData.let { accountContent ->
                                         firstNameValue = accountContent.firstName.text
                                         lastNameValue = accountContent.lastName.text
                                         birthDateValue = accountContent.birthDay.text
@@ -194,7 +194,7 @@ class LegacyCreateAccountActivity : ComponentActivity() {
                     }
                 }
             }
-            createAccountModel.state.value.getContent().createAccountContent.apply {
+            createAccountModel.state.value.getContent().createAccountData.apply {
                 inputFirstNameText.addTextChangedListener {
                     createAccountModel.updateCreateAccountTextAndErrors(
                         firstName = this.firstName.copy(text = it.toString()),

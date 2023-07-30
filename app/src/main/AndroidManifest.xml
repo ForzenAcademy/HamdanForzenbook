@@ -16,6 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Forzenbook"
         android:windowSoftInputMode="adjustResize"
+        android:usesCleartextTraffic="true"
         tools:targetApi="33">
         <activity
             android:name=".view.ForzenbookActivity"

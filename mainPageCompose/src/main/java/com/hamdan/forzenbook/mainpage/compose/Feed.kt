@@ -9,7 +9,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.hamdan.forzenbook.compose.core.composewidgets.Divider
@@ -43,6 +42,7 @@ fun FeedPage(
             MainContent(
                 onCreatePostClicked = onCreatePostClicked,
                 posts = state.posts,
+                showLoadIndicator = state.loading,
                 onRequestMorePosts = onRequestMorePosts,
                 onIconClick = onIconClick,
                 onNameClick = onNameClick,
@@ -54,6 +54,7 @@ fun FeedPage(
             MainContent(
                 onCreatePostClicked = onCreatePostClicked,
                 posts = state.posts,
+                showLoadIndicator = false,
                 onRequestMorePosts = onRequestMorePosts,
                 onIconClick = onIconClick,
                 onNameClick = onNameClick,
@@ -78,6 +79,7 @@ fun FeedPage(
 private fun MainContent(
     onCreatePostClicked: () -> Unit,
     posts: List<PostData>,
+    showLoadIndicator: Boolean,
     onRequestMorePosts: () -> Unit,
     onIconClick: (Int) -> Unit,
     onNameClick: (Int) -> Unit,
@@ -104,6 +106,7 @@ private fun MainContent(
     ) { padding ->
         FeedBackground(
             modifier = Modifier.padding(padding),
+            showLoadIndicator = showLoadIndicator,
         ) {
             itemsIndexed(posts) { index, item ->
                 PostCard {
@@ -122,12 +125,13 @@ private fun MainContent(
                         Divider()
                         FeedTextPost(item.body)
                     }
-                    if (index == posts.size - 1 || posts.isEmpty()) {
-                        // Trigger loading more data when the last item is displayed
-                        LaunchedEffect(Unit) {
-                            onRequestMorePosts()
-                        }
-                    }
+                    // Todo if wanting to use a paging style should observe scroll to more appropriately match it
+//                    if (index == posts.size - 1 || posts.isEmpty()) {
+//                        // Trigger loading more data when the last item is displayed
+//                        LaunchedEffect(Unit) {
+//                            onRequestMorePosts()
+//                        }
+//                    }
                 }
             }
         }

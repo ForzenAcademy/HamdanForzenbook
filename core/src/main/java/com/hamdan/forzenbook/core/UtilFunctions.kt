@@ -108,10 +108,12 @@ fun launchGalleryImageGetter(contentLauncher: ActivityResultLauncher<String>) {
 }
 
 fun getToken(context: Context): String? {
-    return context.getSharedPreferences(
-        GlobalConstants.TOKEN_PREFERENCE_LOCATION,
-        Context.MODE_PRIVATE
-    ).getString(GlobalConstants.TOKEN_KEY, null)
+    // Todo remove this later
+    return "123"
+//    return context.getSharedPreferences(
+//        GlobalConstants.TOKEN_PREFERENCE_LOCATION,
+//        Context.MODE_PRIVATE
+//    ).getString(GlobalConstants.TOKEN_KEY, null)
 }
 
 fun removeToken(context: Context) {

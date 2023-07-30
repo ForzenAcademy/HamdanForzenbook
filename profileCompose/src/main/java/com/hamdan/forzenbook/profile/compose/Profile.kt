@@ -84,10 +84,8 @@ import com.hamdan.forzenbook.compose.core.theme.additionalColors
 import com.hamdan.forzenbook.compose.core.theme.dimens
 import com.hamdan.forzenbook.compose.core.theme.disabledAlpha
 import com.hamdan.forzenbook.compose.core.theme.staticDimens
-import com.hamdan.forzenbook.core.GlobalConstants
 import com.hamdan.forzenbook.core.GlobalConstants.BASE_URL
 import com.hamdan.forzenbook.core.GlobalConstants.ONE_LINE
-import com.hamdan.forzenbook.core.GlobalConstants.PAGED_POSTS_SIZE
 import com.hamdan.forzenbook.core.GlobalConstants.QUICK_ANIMATION_DURATION_MS
 import com.hamdan.forzenbook.core.PostData
 import com.hamdan.forzenbook.core.StateException
@@ -179,6 +177,7 @@ private fun MainContent(
             posts = postSet,
             isOwner = isOwner,
             firstPostId = firstPostId,
+            lastPostId = lastPostId,
             onBackPressed = onBackPressed,
             onEditPressed = onEditPressed,
             onSelectorPressed = onSelectorPressed,
@@ -206,6 +205,7 @@ private fun ErrorContent(
                         selectorState = bottomState,
                         about = aboutUser,
                         firstPostId = firstPostId,
+                        lastPostId = lastPostId,
                     )
                     ForzenbookDialog(
                         title = stringResource(id = R.string.generic_error_title),
@@ -235,6 +235,7 @@ private fun ErrorContent(
                         selectorState = bottomState,
                         about = aboutUser,
                         firstPostId = firstPostId,
+                        lastPostId = lastPostId,
                     )
                     ForzenbookDialog(
                         title = stringResource(id = R.string.generic_error_title),
@@ -253,6 +254,7 @@ private fun ErrorContent(
                         selectorState = bottomState,
                         about = aboutUser,
                         firstPostId = firstPostId,
+                        lastPostId = lastPostId,
                     )
                     ForzenbookDialog(
                         title = stringResource(id = R.string.generic_error_title),
@@ -271,6 +273,7 @@ private fun ErrorContent(
                         selectorState = bottomState,
                         about = aboutUser,
                         firstPostId = firstPostId,
+                        lastPostId = lastPostId,
                     )
                     ForzenbookDialog(
                         title = stringResource(id = R.string.generic_error_title),
@@ -300,6 +303,7 @@ private fun LoadingContent(
                 selectorState = bottomState,
                 about = aboutUser,
                 firstPostId = firstPostId,
+                lastPostId = lastPostId,
             )
         }
     }
@@ -331,6 +335,7 @@ private fun EditingContent(
             selectorState = bottomState,
             about = aboutUser,
             firstPostId = firstPostId,
+            lastPostId = lastPostId,
             editingContent = state.editContent,
             onBackPressed = onBackPressed,
             onSelectorPressed = onSelectorPressed,
@@ -361,6 +366,7 @@ private fun BaseContent(
     isOwner: Boolean = false,
     editingContent: BaseProfileViewModel.EditingContent? = null,
     firstPostId: Int?,
+    lastPostId: Int?,
     onBackPressed: () -> Unit = {},
     onSelectorPressed: (ProfileContentSelector) -> Unit = {},
     onEditAboutPressed: () -> Unit = {},
@@ -495,14 +501,14 @@ private fun BaseContent(
                     }
                 }
                 // endregion
+
                 // region profileText
-                // name
                 TitleText(
                     text = stringResource(id = R.string.user_name, firstName, lastName),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold)
                 )
-                // join text
+
                 Text(
                     text = stringResource(id = R.string.profile_joined, dateJoined),
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = dateAlpha),
@@ -640,7 +646,7 @@ private fun BaseContent(
                         }
                     ) {
                         UserRow(
-                            item.posterIcon,
+                            BASE_URL + item.posterIcon,
                             item.posterFirstName,
                             item.posterLastName,
                             item.posterLocation,
@@ -648,12 +654,12 @@ private fun BaseContent(
                         )
                         Divider()
                         if (item.type == PostData.IMAGE_TYPE) {
-                            FeedImagePost(GlobalConstants.BASE_URL + item.body)
+                            FeedImagePost(BASE_URL + item.body)
                         } else {
                             FeedTextPost(item.body)
                         }
                     }
-                    if (item.postId == posts.last().postId && posts.size % PAGED_POSTS_SIZE == 0) {
+                    if (item == posts.last() && item.postId != lastPostId) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()

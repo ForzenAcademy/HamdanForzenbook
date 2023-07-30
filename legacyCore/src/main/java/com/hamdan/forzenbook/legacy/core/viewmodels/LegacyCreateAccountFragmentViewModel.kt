@@ -25,7 +25,7 @@ class LegacyCreateAccountFragmentViewModel @Inject constructor(
     createAccountUseCase
 ) {
     private val _state: MutableStateFlow<CreateAccountState> =
-        MutableStateFlow(CreateAccountState.Content(CreateAccountContent()))
+        MutableStateFlow(CreateAccountState.Content(CreateAccountData()))
     val state: StateFlow<CreateAccountState>
         get() = _state
 
@@ -41,7 +41,7 @@ class LegacyCreateAccountFragmentViewModel @Inject constructor(
 
     private fun createAccount(fragmentManager: FragmentManager) {
         viewModelScope.launch {
-            createAccountState.getContent().createAccountContent.let {
+            createAccountState.getContent().createAccountData.let {
                 createAccountState = CreateAccountState.Loading
                 val split = it.birthDay.text.split("-")
                 // convert date back to a readable format for the sql on the server
@@ -57,7 +57,7 @@ class LegacyCreateAccountFragmentViewModel @Inject constructor(
                     CreateAccountResult.CREATE_SUCCESS -> {
                         createAccountState = CreateAccountState.AccountCreated
                         navigator.navigateToLogin(fragmentManager)
-                        createAccountState = CreateAccountState.Content(CreateAccountContent())
+                        createAccountState = CreateAccountState.Content(CreateAccountData())
                         // send to login page
                     }
                     CreateAccountResult.CREATE_EXISTS -> {

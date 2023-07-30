@@ -105,6 +105,10 @@ abstract class BasePostViewModel(
         postState = PostState.Content(PostContent.Text())
     }
 
+    fun onBackPressed() {
+        postState = PostState.Content(PostContent.Text())
+    }
+
     companion object {
         const val POST_LENGTH_LIMIT = 256
     }

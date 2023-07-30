@@ -26,14 +26,18 @@ abstract class BaseSearchViewModel(
         onSuccess: () -> Unit,
         onError: () -> Unit,
     ) {
+        Log.v("Hamdan","Searching by name")
         viewModelScope.launch {
             try {
                 searchForPostByIdUseCase(id)
                 onSuccess()
+                Log.v("Hamdan","Success")
             } catch (e: InvalidTokenException) {
+//                Log.v("Hamdan", "Name clicked")
                 Log.v("Hamdan", e.message.toString())
                 searchState = SearchState.InvalidLogin
             } catch (e: Exception) {
+//                Log.v("Hamdan", "Name clicked")
                 Log.v("Hamdan", e.message.toString())
                 onError()
                 searchState = SearchState.Error
@@ -45,6 +49,7 @@ abstract class BaseSearchViewModel(
         onSuccess: () -> Unit,
         onError: () -> Unit,
     ) {
+        Log.v("Hamdan","Searching")
         val state = searchState
         if (state is SearchState.Searching) {
             viewModelScope.launch {

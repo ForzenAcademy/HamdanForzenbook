@@ -1,26 +1,20 @@
 package com.hamdan.forzenbook.compose.core.theme
 
+import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 
 private const val SMALL_SCREEN_DP_WIDTH = 320
 private const val DISABLED_ALPHA = .38f
-
-data class ReplacementTypography(
-    val defaultFontFamily: FontFamily,
-    val h1: TextStyle,
-    val h2: TextStyle,
-    val button: TextStyle,
-    val h3: TextStyle,
-    val h4: TextStyle
-)
 
 // This style of theming is more flexible as it allows the creation of more themes easily
 @Composable
@@ -32,6 +26,17 @@ fun ForzenBookTheme(content: @Composable () -> Unit) {
     }
 
     val typography = typographyDefault
+
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as Activity).window
+            window.statusBarColor = colors.primary.toArgb()
+
+            WindowCompat.getInsetsController(window, view)
+                .isAppearanceLightStatusBars = true
+        }
+    }
 
     MaterialTheme(
         colorScheme = colors,

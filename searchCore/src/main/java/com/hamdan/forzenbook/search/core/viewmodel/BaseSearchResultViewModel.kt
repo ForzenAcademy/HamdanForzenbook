@@ -1,9 +1,11 @@
 package com.hamdan.forzenbook.search.core.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.core.InvalidTokenException
 import com.hamdan.forzenbook.core.PostData
+import com.hamdan.forzenbook.core.StateException
 import com.hamdan.forzenbook.search.core.domain.GetPostByStringUseCase
 import com.hamdan.forzenbook.search.core.domain.GetPostByUserIdUseCase
 import kotlinx.coroutines.Dispatchers
@@ -20,10 +22,9 @@ abstract class BaseSearchResultViewModel(
     sealed interface SearchResultState {
         data class Content(
             val posts: List<PostData> = listOf(),
-            val type: SearchResultType = SearchResultType.NONE
+            val type: SearchResultType = SearchResultType.NONE,
+            val loading: Boolean = false,
         ) : SearchResultState
-
-        object Loading : SearchResultState
 
         object Error : SearchResultState
 
@@ -35,31 +36,48 @@ abstract class BaseSearchResultViewModel(
     fun getResultsById(
         id: Int,
     ) {
-        searchResultState = SearchResultState.Loading
-        viewModelScope.launch(Dispatchers.IO) {
-            searchResultState = try {
-                SearchResultState.Content(getPostByUserIdUseCase(id), SearchResultType.ID)
-            } catch (e: InvalidTokenException) {
-                SearchResultState.InvalidLogin
-            } catch (e: Exception) {
-                SearchResultState.Error
+        val currentState = searchResultState
+        if (currentState is SearchResultState.Content) {
+            searchResultState = currentState.copy(loading = true)
+            viewModelScope.launch(Dispatchers.IO) {
+                searchResultState = try {
+                    SearchResultState.Content(
+                        getPostByUserIdUseCase(id),
+                        SearchResultType.ID,
+                        false
+                    )
+                } catch (e: InvalidTokenException) {
+                    SearchResultState.InvalidLogin
+                } catch (e: Exception) {
+                    Log.v("Hamdan",e.stackTrace.toString())
+                    SearchResultState.Error
+                }
             }
-        }
+        } else throw StateException()
     }
 
     fun getResultsByQuery(
         query: String,
     ) {
-        searchResultState = SearchResultState.Loading
-        viewModelScope.launch(Dispatchers.IO) {
-            searchResultState = try {
-                SearchResultState.Content(getPostByStringUseCase(query), SearchResultType.QUERY)
-            } catch (e: InvalidTokenException) {
-                SearchResultState.InvalidLogin
-            } catch (e: Exception) {
-                SearchResultState.Error
+        val currentState = searchResultState
+        if (currentState is SearchResultState.Content) {
+            searchResultState = currentState.copy(loading = true)
+            viewModelScope.launch(Dispatchers.IO) {
+                searchResultState = try {
+                    SearchResultState.Content(
+                        getPostByStringUseCase(query),
+                        SearchResultType.QUERY,
+                        false
+                    )
+                } catch (e: InvalidTokenException) {
+                    SearchResultState.InvalidLogin
+                } catch (e: Exception) {
+                    Log.v("Hamdan","result by query")
+                    Log.v("Hamdan",e.stackTrace.toString())
+                    SearchResultState.Error
+                }
             }
-        }
+        } else throw StateException()
     }
 
     fun errorDuringSearch() {

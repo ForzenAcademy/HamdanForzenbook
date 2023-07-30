@@ -3,6 +3,7 @@ package com.hamdan.forzenbook.createaccount.core.viewmodel
 import androidx.lifecycle.ViewModel
 import com.hamdan.forzenbook.core.Entry
 import com.hamdan.forzenbook.core.EntryError
+import com.hamdan.forzenbook.core.StateException
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountEntrys
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountUseCase
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountValidationUseCase
@@ -12,7 +13,7 @@ abstract class BaseCreateAccountViewModel(
     private val createAccountValidationUseCase: CreateAccountValidationUseCase,
     private val createAccountUseCase: CreateAccountUseCase,
 ) : ViewModel() {
-    data class CreateAccountContent(
+    data class CreateAccountData(
         val firstName: Entry = Entry("", EntryError.NameError.None),
         val lastName: Entry = Entry("", EntryError.NameError.None),
         val birthDay: Entry = Entry("", EntryError.BirthDateError.None),
@@ -22,40 +23,63 @@ abstract class BaseCreateAccountViewModel(
     )
 
     sealed interface CreateAccountState {
-        data class Content(val createAccountContent: CreateAccountContent) : CreateAccountState
-        data class Error(val errorId: Int) : CreateAccountState
-        object Loading : CreateAccountState
-        object AccountCreated : CreateAccountState
+        val createAccountData: CreateAccountData?
+
+        data class Content(override val createAccountData: CreateAccountData) : CreateAccountState
+        data class Error(
+            val errorId: Int,
+            override val createAccountData: CreateAccountData? = null
+        ) : CreateAccountState
+
+        data class Loading(override val createAccountData: CreateAccountData? = null) :
+            CreateAccountState
+
+        data class AccountCreated(override val createAccountData: CreateAccountData? = null) :
+            CreateAccountState
     }
 
     protected abstract var createAccountState: CreateAccountState
 
-    fun createAccountDateDialogClicked() = createAccountShowDateDialog()
-
-    private fun createAccountShowDateDialog() {
-        createAccountState = CreateAccountState.Content(
-            createAccountState.getContent().createAccountContent.copy(isDateDialogOpen = true)
-        )
+    fun createAccountDateDialogClicked() {
+        val currentState = createAccountState
+        if (currentState is CreateAccountState.Content) {
+            createAccountState = CreateAccountState.Content(
+                createAccountState.getContent().createAccountData.copy(isDateDialogOpen = true)
+            )
+        } else throw StateException()
     }
 
-    fun createAccountDateDialogSubmitClicked() = closeAccountShowDateDialog()
+    fun createAccountDateDialogSubmitClicked() {
+        val currentState = createAccountState
+        if (currentState is CreateAccountState.Content) {
+            createAccountState = CreateAccountState.Content(
+                createAccountState.getContent().createAccountData.copy(isDateDialogOpen = false)
+            )
+        } else throw StateException()
+    }
 
-    fun createAccountDateDialogDismiss() = closeAccountShowDateDialog()
+    fun createAccountDateDialogDismiss() {
+        val currentState = createAccountState
+        if (currentState is CreateAccountState.Content) {
+            createAccountState = CreateAccountState.Content(
+                createAccountState.getContent().createAccountData.copy(isDateDialogOpen = false)
+            )
+        } else throw StateException()
+    }
 
     fun navigateUpPressed() {
-        if (createAccountState is CreateAccountState.AccountCreated) {
-            createAccountState = CreateAccountState.Content(CreateAccountContent())
+        val currentState = createAccountState
+        if (currentState is CreateAccountState.AccountCreated) {
+            createAccountState = CreateAccountState.Content(CreateAccountData())
         }
     }
 
-    private fun closeAccountShowDateDialog() {
-        createAccountState = CreateAccountState.Content(
-            createAccountState.getContent().createAccountContent.copy(isDateDialogOpen = false)
-        )
-    }
-
     fun createAccountDismissErrorClicked() {
-        createAccountState = CreateAccountState.Content(CreateAccountContent())
+        val currentState = createAccountState
+        if (currentState is CreateAccountState.Error) {
+            createAccountState =
+                CreateAccountState.Content(currentState.createAccountData ?: CreateAccountData())
+        }
     }
 
     fun updateCreateAccountTextAndErrors(
@@ -68,17 +92,17 @@ abstract class BaseCreateAccountViewModel(
         val stringStates =
             createAccountValidationUseCase(
                 CreateAccountState.Content(
-                    createAccountState.getContent().createAccountContent.copy(
+                    createAccountState.getContent().createAccountData.copy(
                         firstName = firstName,
                         lastName = lastName,
                         birthDay = birthDay,
                         email = email,
                         location = location,
                     )
-                ).toCreateAccountEntrys()
+                ).toCreateAccountEntries()
             )
         createAccountState = CreateAccountState.Content(
-            createAccountState.getContent().createAccountContent.copy(
+            createAccountState.getContent().createAccountData.copy(
                 firstName = stringStates.firstName,
                 lastName = stringStates.lastName,
                 birthDay = stringStates.birthDay,
@@ -95,8 +119,8 @@ fun BaseCreateAccountViewModel.CreateAccountState.getContent() =
 fun BaseCreateAccountViewModel.CreateAccountState.getError() =
     this as BaseCreateAccountViewModel.CreateAccountState.Error
 
-fun BaseCreateAccountViewModel.CreateAccountState.toCreateAccountEntrys(): CreateAccountEntrys {
-    (this as BaseCreateAccountViewModel.CreateAccountState.Content).createAccountContent.apply {
+fun BaseCreateAccountViewModel.CreateAccountState.toCreateAccountEntries(): CreateAccountEntrys {
+    (this as BaseCreateAccountViewModel.CreateAccountState.Content).createAccountData.apply {
         return CreateAccountEntrys(
             firstName = this.firstName,
             lastName = this.lastName,

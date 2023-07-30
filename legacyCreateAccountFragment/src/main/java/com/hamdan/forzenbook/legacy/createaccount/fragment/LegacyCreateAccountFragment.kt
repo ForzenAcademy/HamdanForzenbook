@@ -78,7 +78,7 @@ class LegacyCreateAccountFragment : Fragment() {
                                 createAccountSubmitText.isVisible = true
                                 createAccountSubmitProgressIndicator.isVisible = false
 
-                                state.createAccountContent.let { stateContent ->
+                                state.createAccountData.let { stateContent ->
                                     firstNameValue = stateContent.firstName.text
                                     lastNameValue = stateContent.lastName.text
                                     birthDateValue = stateContent.birthDay.text
@@ -188,7 +188,7 @@ class LegacyCreateAccountFragment : Fragment() {
                     }
                 }
             }
-            createAccountModel.state.value.getContent().createAccountContent.apply {
+            createAccountModel.state.value.getContent().createAccountData.apply {
                 inputFirstNameText.addTextChangedListener {
                     createAccountModel.updateCreateAccountTextAndErrors(
                         firstName = this.firstName.copy(text = it.toString()),

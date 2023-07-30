@@ -8,6 +8,7 @@ import com.hamdan.forzenbook.core.EntryError
 import com.hamdan.forzenbook.core.GlobalConstants
 import com.hamdan.forzenbook.core.GlobalConstants.TOKEN_KEY
 import com.hamdan.forzenbook.core.GlobalConstants.TOKEN_PREFERENCE_LOCATION
+import com.hamdan.forzenbook.core.StateException
 import com.hamdan.forzenbook.core.validateEmail
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetCredentialsFromNetworkUseCase
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetStoredCredentialsUseCase
@@ -61,7 +62,7 @@ abstract class BaseLoginViewModel(
         }
     }
 
-    fun updateText(
+    fun onTextChange(
         entry: Entry,
     ) {
         if (loginState.getContent() is LoginContent.Email) {
@@ -106,7 +107,7 @@ abstract class BaseLoginViewModel(
         code: Entry,
     ) {
         val newCode = code.copy(
-            error = if (code.text.length > CODE_LENGTH_MAX) {
+            error = if (code.text.length != CODE_LENGTH_MAX) {
                 EntryError.CodeError.Length
             } else EntryError.CodeError.Valid
         )
@@ -171,6 +172,12 @@ abstract class BaseLoginViewModel(
         } else {
             requestLoginValidationCode()
         }
+    }
+
+    fun backPressed() {
+        if (loginState.getContent() is LoginContent.Code) {
+            loginState = LoginState.Content(LoginContent.Email())
+        } else throw StateException()
     }
 
     companion object {

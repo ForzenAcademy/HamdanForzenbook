@@ -12,7 +12,7 @@ class GetProfileByUserUseCaseImpl(
         return BaseProfileViewModel.ProfileData(
             firstName = info.firstName,
             lastName = info.lastName,
-            id = info.userId,
+            userId = info.userId,
             isOwner = info.isOwner,
             postSet = info.postSet.map { it.toPostData() },
             userIconPath = info.userIconPath,
