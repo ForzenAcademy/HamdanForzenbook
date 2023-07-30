@@ -97,6 +97,7 @@ fun FeedTextPost(text: String) {
     }
 }
 
+// Todo add color choice to parameters
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostTextField(
@@ -128,7 +129,6 @@ fun PostTextField(
         textStyle = MaterialTheme.typography.bodyLarge,
     )
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

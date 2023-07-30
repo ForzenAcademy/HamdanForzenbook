@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -39,6 +40,7 @@ import com.hamdan.forzenbook.compose.core.composewidgets.SubmitButton
 import com.hamdan.forzenbook.compose.core.composewidgets.TitleText
 import com.hamdan.forzenbook.compose.core.theme.dimens
 import com.hamdan.forzenbook.post.core.viewmodel.BasePostViewModel
+import com.hamdan.forzenbook.post.core.viewmodel.BasePostViewModel.Companion.POST_LENGTH_LIMIT
 import com.hamdan.forzenbook.ui.core.R
 
 @Composable
@@ -115,13 +117,18 @@ private fun TextPostContent(
                 },
             color = MaterialTheme.colorScheme.tertiary,
         ) {
+            if (state is BasePostViewModel.PostState.Content && state.content is BasePostViewModel.PostContent.Text && (state.content as BasePostViewModel.PostContent.Text).text.length >= POST_LENGTH_LIMIT) {
+                Text(
+                    text = stringResource(id = R.string.post_warning_text, POST_LENGTH_LIMIT),
+                    modifier = Modifier.padding(top = MaterialTheme.dimens.grid.x1),
+                    color = MaterialTheme.colorScheme.onTertiary
+                )
+            }
             PostTextField(
                 text = if (state is BasePostViewModel.PostState.Content && state.content is BasePostViewModel.PostContent.Text) (state.content as BasePostViewModel.PostContent.Text).text else "",
                 label = if (showLabel) stringResource(id = R.string.post_text_label) else null,
                 focusRequester = focusRequester,
-                onValueChange = {
-                    onTextChange(it)
-                }
+                onValueChange = onTextChange,
             )
         }
     }
