@@ -26,17 +26,19 @@ abstract class BasePostViewModel(
 
     protected abstract var postState: PostState
 
-    fun toggleClicked() = toggle()
-
-    private fun toggle() {
+    fun toggleClicked() {
+        val currentState = postState
         postState = PostState.Content(
-            if ((postState as PostState.Content).content is PostContent.Text) PostContent.Image()
+            if ((currentState as PostState.Content).content is PostContent.Text) PostContent.Image()
             else PostContent.Text()
         )
     }
 
     fun updateText(text: String) {
-        if (text.length < POST_LENGTH_LIMIT) postState = PostState.Content(PostContent.Text(text))
+        val currentState = postState
+        if (text.length <= POST_LENGTH_LIMIT && currentState is PostState.Content && currentState.content is PostContent.Text) {
+            postState = PostState.Content(PostContent.Text(text))
+        }
     }
 
     fun sendPostClicked() {
@@ -58,7 +60,7 @@ abstract class BasePostViewModel(
 
     private fun sendText() {
         val state = postState
-        if(state is PostState.Content && state.content is PostContent.Text){
+        if (state is PostState.Content && state.content is PostContent.Text && state.content.text.isNotEmpty() && state.content.text.length <= POST_LENGTH_LIMIT) {
             postState = PostState.Loading
             viewModelScope.launch {
                 try {
@@ -75,7 +77,7 @@ abstract class BasePostViewModel(
 
     private fun sendImage() {
         val state = postState
-        if(state is PostState.Content && state.content is PostContent.Image){
+        if (state is PostState.Content && state.content is PostContent.Image) {
             state.content.filePath?.let { path ->
                 viewModelScope.launch {
                     try {
@@ -104,6 +106,6 @@ abstract class BasePostViewModel(
     }
 
     companion object {
-        private const val POST_LENGTH_LIMIT = 256
+        const val POST_LENGTH_LIMIT = 256
     }
 }
