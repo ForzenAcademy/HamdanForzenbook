@@ -22,6 +22,11 @@ import com.hamdan.forzenbook.profile.core.domain.SendAboutUpdateUseCase
 import com.hamdan.forzenbook.profile.core.domain.SendAboutUpdateUseCaseImpl
 import com.hamdan.forzenbook.profile.core.domain.SendIconUpdateUseCase
 import com.hamdan.forzenbook.profile.core.domain.SendIconUpdateUseCaseImpl
+import com.hamdan.forzenbook.profile.core.domain.mocks.MockGetNewerPostsUseCase
+import com.hamdan.forzenbook.profile.core.domain.mocks.MockGetOlderPostsUseCase
+import com.hamdan.forzenbook.profile.core.domain.mocks.MockGetPersonalProfileUseCase
+import com.hamdan.forzenbook.profile.core.domain.mocks.MockSendAboutUpdateUseCase
+import com.hamdan.forzenbook.profile.core.domain.mocks.MockSendIconUpdateUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -84,18 +89,22 @@ object ProfileModule {
         return ProfileRepositoryImpl(feedDao, userDao, service, context)
     }
 
+    // Todo update names of some of the provides
+
     @Provides
     fun providesGetBackwardPostsUseCase(
         repository: ProfileRepository
     ): GetNewerPostsUseCase {
-        return GetNewerPostsUseCaseImpl(repository)
+        return MockGetNewerPostsUseCase()
+//        return GetNewerPostsUseCaseImpl(repository)
     }
 
     @Provides
     fun providesGetForwardPostsUseCase(
         repository: ProfileRepository
     ): GetOlderPostsUseCase {
-        return GetOlderPostsUseCaseImpl(repository)
+        return MockGetOlderPostsUseCase()
+//        return GetOlderPostsUseCaseImpl(repository)
     }
 
     @Provides
@@ -109,21 +118,24 @@ object ProfileModule {
     fun providesGetPersonalProfileUseCase(
         repository: ProfileRepository
     ): GetPersonalProfileUseCase {
-        return GetPersonalProfileUseCaseImpl(repository)
+        return MockGetPersonalProfileUseCase()
+        // return GetPersonalProfileUseCaseImpl(repository)
     }
 
     @Provides
     fun providesSendAboutUpdateUseCase(
         repository: ProfileRepository
     ): SendAboutUpdateUseCase {
-        return SendAboutUpdateUseCaseImpl(repository)
+        return MockSendAboutUpdateUseCase()
+        // return SendAboutUpdateUseCaseImpl(repository)
     }
 
     @Provides
     fun providesSendIconUpdateUseCase(
         repository: ProfileRepository
     ): SendIconUpdateUseCase {
-        return SendIconUpdateUseCaseImpl(repository)
+        return MockSendIconUpdateUseCase()
+        // return SendIconUpdateUseCaseImpl(repository)
     }
 
     private const val MODULE_NAME = "profile"

@@ -13,12 +13,12 @@ class MockGetNewerPostsUseCase : GetNewerPostsUseCase {
                     "Hamdan",
                     "Syed",
                     "Africa",
-                    "upload/pp_default.jpg",
+                    "https://cdn.dribbble.com/users/6255537/screenshots/14454071/media/0fd6c8dac9e38f5b5ca8ef6532eb703f.jpg?resize=400x0",
                     0,
                     postId - it,
-                    "${postId - it}",
+                    "post id: ${postId - it}",
                     "text",
-                    "some day"
+                    "2023-07-18 15:31:29"
                 )
             )
         }

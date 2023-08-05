@@ -1,6 +1,7 @@
 package com.hamdan.forzenbook.profile.core.data.repository
 
 import android.content.Context
+import com.hamdan.forzenbook.core.GlobalConstants.BASE_URL
 import com.hamdan.forzenbook.core.GlobalConstants.PAGED_POSTS_SIZE
 import com.hamdan.forzenbook.core.GlobalConstants.POSTS_MAX_SIZE
 import com.hamdan.forzenbook.core.InvalidTokenException
@@ -58,7 +59,7 @@ class ProfileRepositoryImpl(
             userId = body.userId,
             isOwner = userId == null,
             postSet = if (posts.size > POSTS_MAX_SIZE) posts.subList(0, POSTS_MAX_SIZE) else posts,
-            userIconPath = body.profileImage,
+            userIconPath = BASE_URL + body.profileImage,
             dateJoined = body.created,
             aboutUser = body.aboutMe
         )

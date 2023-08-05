@@ -387,7 +387,7 @@ private fun BaseContent(
     val topBarHeight = 64.dp // the height before showing top bar
     val topBarHeightFloat = with(density) { topBarHeight.toPx() }
     val dateAlpha = .8f
-    val userImagePath = BASE_URL + imagePath
+    val userImagePath = imagePath
 
     val postSizes = remember { mutableMapOf<Int, Int>() }
 
@@ -646,7 +646,7 @@ private fun BaseContent(
                         }
                     ) {
                         UserRow(
-                            BASE_URL + item.posterIcon,
+                            item.posterIcon,
                             item.posterFirstName,
                             item.posterLastName,
                             item.posterLocation,
@@ -654,7 +654,7 @@ private fun BaseContent(
                         )
                         Divider()
                         if (item.type == PostData.IMAGE_TYPE) {
-                            FeedImagePost(BASE_URL + item.body)
+                            FeedImagePost(item.body)
                         } else {
                             FeedTextPost(item.body)
                         }

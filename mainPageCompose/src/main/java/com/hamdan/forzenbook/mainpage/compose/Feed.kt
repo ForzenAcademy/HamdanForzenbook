@@ -111,7 +111,7 @@ private fun MainContent(
             itemsIndexed(posts) { index, item ->
                 PostCard {
                     UserRow(
-                        BASE_URL + item.posterIcon,
+                        item.posterIcon,
                         item.posterFirstName,
                         item.posterLastName,
                         item.posterLocation,
@@ -120,7 +120,7 @@ private fun MainContent(
                         onProfileIconClick = { onIconClick(item.posterId) },
                     )
                     if (item.type == PostData.IMAGE_TYPE) {
-                        FeedImagePost(BASE_URL + item.body)
+                        FeedImagePost(item.body)
                     } else {
                         Divider()
                         FeedTextPost(item.body)
