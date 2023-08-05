@@ -40,6 +40,8 @@ fun SubmitButton(
     label: String,
     enabled: Boolean,
     style: TextStyle = MaterialTheme.typography.titleMedium,
+    containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
+    textColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
     onSubmission: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -64,7 +66,7 @@ fun SubmitButton(
                 modifier = Modifier
                     .weight(1f)
                     .padding(MaterialTheme.dimens.grid.x2),
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                color = textColor,
                 textAlign = TextAlign.Center,
                 maxLines = ONE_LINE,
                 overflow = TextOverflow.Ellipsis,
@@ -73,7 +75,10 @@ fun SubmitButton(
             )
         },
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            containerColor = containerColor,
+            contentColor = containerColor,
+            disabledContainerColor = containerColor,
+            disabledContentColor = containerColor,
         ),
         enabled = true,
     )

@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.core.EntryError
+import com.hamdan.forzenbook.core.StateException
 import com.hamdan.forzenbook.core.datePickerDialog
 import com.hamdan.forzenbook.createaccount.core.viewmodel.BaseCreateAccountViewModel
 import com.hamdan.forzenbook.createaccount.core.viewmodel.getContent
@@ -187,9 +188,7 @@ class LegacyCreateAccountActivity : ComponentActivity() {
                                     createAccountSubmitProgressIndicator.isVisible = true
                                 }
 
-                                else -> {
-                                    throw Exception("Illegal unknown state")
-                                }
+                                else -> throw StateException()
                             }
                         }
                     }

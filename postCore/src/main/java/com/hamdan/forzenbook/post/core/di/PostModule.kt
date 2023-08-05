@@ -1,7 +1,7 @@
 package com.hamdan.forzenbook.post.core.di
 
 import android.content.Context
-import com.hamdan.forzenbook.core.GlobalConstants.LOGIN_BASE_URL
+import com.hamdan.forzenbook.core.GlobalConstants.BASE_URL
 import com.hamdan.forzenbook.post.core.data.network.PostService
 import com.hamdan.forzenbook.post.core.data.repository.PostRepository
 import com.hamdan.forzenbook.post.core.data.repository.PostRepositoryImpl
@@ -25,7 +25,7 @@ object PostModule {
     @Named(MODULE_NAME)
     fun providesPostRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(LOGIN_BASE_URL)
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

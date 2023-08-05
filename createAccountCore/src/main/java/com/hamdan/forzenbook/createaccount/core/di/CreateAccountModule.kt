@@ -1,6 +1,6 @@
 package com.hamdan.forzenbook.createaccount.core.di
 
-import com.hamdan.forzenbook.core.GlobalConstants.LOGIN_BASE_URL
+import com.hamdan.forzenbook.core.GlobalConstants.BASE_URL
 import com.hamdan.forzenbook.createaccount.core.data.network.CreateAccountService
 import com.hamdan.forzenbook.createaccount.core.data.repository.CreateAccountRepository
 import com.hamdan.forzenbook.createaccount.core.data.repository.CreateAccountRepositoryImpl
@@ -24,7 +24,7 @@ object CreateAccountModule {
     @Named(MODULE_NAME)
     fun providesCreateAccountRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(LOGIN_BASE_URL)
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

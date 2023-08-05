@@ -85,6 +85,24 @@
     -->
     <string name="home_nav_text">Home</string>
     <string name="search_nav_text">Search</string>
+    <string name="profile_nav_text">Profile</string>
+    <!--
+    Profile
+    -->
+    <string name="profile_title">Profile</string>
+    <string name="profile_joined">Joined: %1$s</string>
+    <string name="profile_error_body">There was an error when trying to view this profile</string>
+    <string name="profile_selector_about">About</string>
+    <string name="profile_selector_posts">Posts</string>
+    <string name="profile_edit_about_label">Edit About</string>
+    <string name="profile_error_loading_body">There was an error while loading this profile.</string>
+    <string name="profile_error_icon_body">There was an error with updating your profile image.</string>
+    <string name="profile_error_about_body">There was an error with updating your about me.</string>
+    <string name="profile_error_posts_body">There was an error when trying to view this users posts.</string>
+    <string name="profile_submit_change">Submit Change</string>
+    <string name="profile_about_default">Hello my name is %1$s %2$s!</string>
+    <string name="profile_paging_button_up">Load newer posts</string>
+    <string name="profile_paging_button_down">Load older posts</string>
     <!--
     Content Descriptions
     -->
@@ -102,4 +120,9 @@
     <string name="create_post_button">Create Post</string>
     <string name="home_nav_button">Home navigation Button</string>
     <string name="search_nav_button">Search navigation Button</string>
+    <string name="profile_nav_button">Profile navigation Button</string>
+    <string name="profile_edit_button">Edit Button for your profile</string>
+    <string name="profile_edit_submit_button">Edit Submit Button for your profile</string>
+    <string name="profile_change_image_description">Change Image Button</string>
+    <string name="profile_profile_picture">Users Profile Image</string>
 </resources>

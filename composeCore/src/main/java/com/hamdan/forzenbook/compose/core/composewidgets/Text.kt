@@ -1,5 +1,6 @@
 package com.hamdan.forzenbook.compose.core.composewidgets
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,15 +10,18 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -62,14 +66,18 @@ fun LoginTitleSection(
 }
 
 @Composable
-fun TitleText(text: String) {
+fun TitleText(
+    text: String,
+    color: Color = MaterialTheme.colorScheme.onPrimary,
+    style: TextStyle = MaterialTheme.typography.titleLarge
+) {
     Text(
         text = text,
         textAlign = TextAlign.Center,
-        color = MaterialTheme.colorScheme.onPrimary,
+        color = color,
         maxLines = GlobalConstants.ONE_LINE,
         overflow = TextOverflow.Ellipsis,
-        style = MaterialTheme.typography.titleLarge
+        style = style,
     )
 }
 
@@ -97,14 +105,59 @@ fun FeedTextPost(text: String) {
     }
 }
 
-// Todo add color choice to parameters
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun PostTextField(
+fun FullScreenCickableTextField(
+    modifier: Modifier = Modifier,
+    text: String,
+    label: String?,
+    backgroundColor: Color = MaterialTheme.colorScheme.background,
+    textFieldColors: TextFieldColors = OutlinedTextFieldDefaults.colors(
+        focusedTextColor = MaterialTheme.colorScheme.onBackground,
+        unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+        cursorColor = MaterialTheme.colorScheme.onBackground,
+        focusedContainerColor = Color.Transparent,
+        unfocusedContainerColor = Color.Transparent,
+        focusedLabelColor = Color.Transparent,
+    ),
+    onTextChange: (String) -> Unit,
+) {
+    val focusRequester = remember { FocusRequester() }
+    val keyboard = LocalSoftwareKeyboardController.current
+    BackgroundColumn(
+        modifier = modifier
+            .clickable {
+                keyboard?.show()
+                focusRequester.requestFocus()
+            },
+        color = backgroundColor,
+    ) {
+        FocusableTextField(
+            text = text,
+            label = label,
+            focusRequester = focusRequester,
+            onValueChange = onTextChange,
+            textFieldColors = textFieldColors,
+        )
+    }
+}
+
+@Composable
+fun FocusableTextField(
     modifier: Modifier = Modifier,
     text: String,
     label: String?,
     focusRequester: FocusRequester,
+    textFieldColors: TextFieldColors = OutlinedTextFieldDefaults.colors(
+        focusedTextColor = MaterialTheme.colorScheme.onBackground,
+        unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+        cursorColor = MaterialTheme.colorScheme.onBackground,
+        focusedContainerColor = Color.Transparent,
+        unfocusedContainerColor = Color.Transparent,
+        focusedLabelColor = Color.Transparent,
+        focusedBorderColor = Color.Transparent,
+        unfocusedBorderColor = Color.Transparent,
+    ),
     onValueChange: (String) -> Unit,
 ) {
     TextField(
@@ -118,19 +171,11 @@ fun PostTextField(
                 Text(text = label)
             }
         },
-        colors = TextFieldDefaults.textFieldColors(
-            textColor = MaterialTheme.colorScheme.onBackground,
-            cursorColor = MaterialTheme.colorScheme.onBackground,
-            containerColor = Color.Transparent,
-            focusedLabelColor = Color.Transparent,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-        ),
+        colors = textFieldColors,
         textStyle = MaterialTheme.typography.bodyLarge,
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InputField(
     modifier: Modifier = Modifier,
@@ -147,11 +192,12 @@ fun InputField(
     keyboardType: KeyboardType = KeyboardType.Text,
     onNext: KeyboardActionScope.() -> Unit = {},
     onDone: KeyboardActionScope.() -> Unit = {},
-    colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(
-        containerColor = MaterialTheme.additionalColors.inputFieldContainer,
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(
+        focusedContainerColor = MaterialTheme.additionalColors.inputFieldContainer,
+        unfocusedContainerColor = MaterialTheme.additionalColors.inputFieldContainer,
         focusedLabelColor = MaterialTheme.additionalColors.onInputFieldContainer,
-        placeholderColor = MaterialTheme.additionalColors.onInputFieldContainer,
-        textColor = MaterialTheme.additionalColors.onInputFieldContainer,
+        unfocusedTextColor = MaterialTheme.additionalColors.onInputFieldContainer,
+        focusedTextColor = MaterialTheme.additionalColors.onInputFieldContainer,
         unfocusedLabelColor = MaterialTheme.additionalColors.onInputFieldContainer,
         focusedBorderColor = MaterialTheme.additionalColors.onInputFieldContainer,
         cursorColor = MaterialTheme.additionalColors.onInputFieldContainer,

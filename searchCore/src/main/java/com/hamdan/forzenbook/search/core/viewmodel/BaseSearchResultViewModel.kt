@@ -13,9 +13,15 @@ abstract class BaseSearchResultViewModel(
     private val getPostByStringUseCase: GetPostByStringUseCase,
     private val getPostByUserIdUseCase: GetPostByUserIdUseCase
 ) : ViewModel() {
+    enum class SearchResultType {
+        QUERY, ID, NONE
+    }
 
     sealed interface SearchResultState {
-        data class Content(val posts: List<PostData> = listOf()) : SearchResultState
+        data class Content(
+            val posts: List<PostData> = listOf(),
+            val type: SearchResultType = SearchResultType.NONE
+        ) : SearchResultState
 
         object Loading : SearchResultState
 
@@ -32,7 +38,7 @@ abstract class BaseSearchResultViewModel(
         searchResultState = SearchResultState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             searchResultState = try {
-                SearchResultState.Content(getPostByUserIdUseCase(id))
+                SearchResultState.Content(getPostByUserIdUseCase(id), SearchResultType.ID)
             } catch (e: InvalidTokenException) {
                 SearchResultState.InvalidLogin
             } catch (e: Exception) {
@@ -47,7 +53,7 @@ abstract class BaseSearchResultViewModel(
         searchResultState = SearchResultState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             searchResultState = try {
-                SearchResultState.Content(getPostByStringUseCase(query))
+                SearchResultState.Content(getPostByStringUseCase(query), SearchResultType.QUERY)
             } catch (e: InvalidTokenException) {
                 SearchResultState.InvalidLogin
             } catch (e: Exception) {

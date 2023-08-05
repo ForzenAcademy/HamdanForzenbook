@@ -1,8 +1,10 @@
 package com.hamdan.forzenbook.compose.core.composewidgets
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +22,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
@@ -31,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -40,7 +44,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.hamdan.forzenbook.compose.core.theme.additionalColors
@@ -193,12 +196,13 @@ fun FeedImagePost(url: String) {
 
 @Composable
 fun UserRow(
-    icon: String? = null,
+    icon: String,
     firstName: String,
     lastName: String,
     location: String,
     date: String,
-    onNameClick: () -> Unit = {},
+    onNameClick: (() -> Unit)? = null,
+    onProfileIconClick: (() -> Unit)? = null,
 ) {
     Row(
         modifier = Modifier
@@ -207,16 +211,13 @@ fun UserRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(icon)
-                .build(),
-            placeholder = painterResource(id = R.drawable.logo_render_full_notext),
-            contentDescription = stringResource(id = R.string.feed_post_icon),
-            modifier = Modifier
-                .size(MaterialTheme.dimens.imageSizes.small)
-                .clip(MaterialTheme.cardShape(MaterialTheme.dimens.grid.x20)),
-            error = painterResource(id = R.drawable.logo_render_full_notext),
+        CircularNetworkImage(
+            modifier = Modifier.addIf(onProfileIconClick != null) {
+                Modifier.clickable { onProfileIconClick?.invoke() }
+            },
+            imageUrl = icon,
+            imageSize = MaterialTheme.dimens.imageSizes.small,
+            imageDescription = stringResource(R.string.feed_post_icon)
         )
         Column(
             modifier = Modifier
@@ -228,13 +229,65 @@ fun UserRow(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.clickable { onNameClick() },
+                modifier = Modifier.addIf(onNameClick != null) {
+                    Modifier.clickable { onNameClick?.invoke() }
+                },
                 color = MaterialTheme.colorScheme.onSurface
             )
             PostSubtitleText(text = location)
             PostSubtitleText(text = date)
         }
     }
+}
+
+@Composable
+fun CircularNetworkImage(
+    modifier: Modifier = Modifier,
+    imageUrl: String,
+    imageSize: Dp = MaterialTheme.dimens.imageSizes.small,
+    imageDescription: String,
+    onClick: (() -> Unit)? = null,
+    borderColor: Color? = null,
+) {
+    SubcomposeAsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(imageUrl)
+            .build(),
+        loading = { CircularProgressIndicator() },
+        contentDescription = imageDescription,
+        modifier = modifier
+            .size(imageSize)
+            .clip(CircleShape)
+            .addIf(borderColor != null) {
+                Modifier.border(
+                    MaterialTheme.dimens.borderGrid.x2,
+                    borderColor!!,
+                    CircleShape,
+                )
+            }
+            .addIf(onClick != null) {
+                Modifier.clickable { onClick?.invoke() }
+            },
+        error = {
+            Image(
+                modifier = modifier
+                    .size(imageSize)
+                    .clip(CircleShape)
+                    .addIf(borderColor != null) {
+                        Modifier.border(
+                            MaterialTheme.dimens.borderGrid.x2,
+                            borderColor!!,
+                            CircleShape,
+                        )
+                    }
+                    .addIf(onClick != null) {
+                        Modifier.clickable { onClick?.invoke() }
+                    },
+                painter = painterResource(id = R.drawable.logo_render_full_notext),
+                contentDescription = stringResource(id = R.string.lion_icon),
+            )
+        },
+    )
 }
 
 @Composable
@@ -273,4 +326,9 @@ fun Divider(
             .fillMaxWidth()
             .height(height)
     )
+}
+
+@SuppressLint("UnnecessaryComposedModifier") // needed to pass composable state to [other]
+fun Modifier.addIf(condition: Boolean, other: @Composable () -> Modifier): Modifier = composed {
+    then(if (condition) other() else Modifier)
 }

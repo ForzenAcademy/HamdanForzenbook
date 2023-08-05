@@ -20,14 +20,16 @@ import com.hamdan.forzenbook.compose.core.composewidgets.ForzenbookTopAppBar
 import com.hamdan.forzenbook.compose.core.composewidgets.PostCard
 import com.hamdan.forzenbook.compose.core.composewidgets.TitleText
 import com.hamdan.forzenbook.compose.core.composewidgets.UserRow
-import com.hamdan.forzenbook.core.GlobalConstants
+import com.hamdan.forzenbook.core.GlobalConstants.BASE_URL
 import com.hamdan.forzenbook.core.PostData
+import com.hamdan.forzenbook.core.StateException
 import com.hamdan.forzenbook.search.core.viewmodel.BaseSearchResultViewModel
 import com.hamdan.forzenbook.ui.core.R
 
 @Composable
 fun SearchResultContent(
     state: BaseSearchResultViewModel.SearchResultState,
+    onIconClick: (Int) -> Unit,
     onNameClick: (Int) -> Unit,
     bottomBar: @Composable () -> Unit,
     onErrorDismiss: () -> Unit,
@@ -37,6 +39,7 @@ fun SearchResultContent(
         is BaseSearchResultViewModel.SearchResultState.Content -> {
             MainContent(
                 state = state,
+                onIconClick = onIconClick,
                 onNameClick = onNameClick,
                 bottomBar = bottomBar
             )
@@ -54,9 +57,7 @@ fun SearchResultContent(
             kickBackToLogin()
         }
 
-        else -> {
-            throw Exception("Illegal unknown state")
-        }
+        else -> throw StateException()
     }
 }
 
@@ -85,22 +86,27 @@ private fun StandardContent(
 private fun ContentBody(
     padding: PaddingValues,
     items: List<PostData>,
+    searchType: BaseSearchResultViewModel.SearchResultType,
+    onIconClick: (Int) -> Unit,
     onNameClick: (Int) -> Unit,
 ) {
     FeedBackground(modifier = Modifier.padding(padding), hideLoadIndicator = true) {
         itemsIndexed(items) { index, item ->
             PostCard {
                 UserRow(
-                    item.posterIcon,
+                    BASE_URL + item.posterIcon,
                     item.posterFirstName,
                     item.posterLastName,
                     item.posterLocation,
                     item.date,
-                    { onNameClick(item.posterId) },
+                    onNameClick = if (searchType == BaseSearchResultViewModel.SearchResultType.QUERY) {
+                        { onNameClick(item.posterId) }
+                    } else null,
+                    onProfileIconClick = { onIconClick(item.posterId) },
                 )
                 Divider()
                 if (item.type == PostData.IMAGE_TYPE) {
-                    FeedImagePost(GlobalConstants.LOGIN_BASE_URL + item.body)
+                    FeedImagePost(BASE_URL + item.body)
                 } else {
                     FeedTextPost(item.body)
                 }
@@ -112,6 +118,7 @@ private fun ContentBody(
 @Composable
 private fun MainContent(
     state: BaseSearchResultViewModel.SearchResultState.Content,
+    onIconClick: (Int) -> Unit,
     onNameClick: (Int) -> Unit,
     bottomBar: @Composable () -> Unit,
 ) {
@@ -123,7 +130,9 @@ private fun MainContent(
     ) {
         ContentBody(
             padding = it,
+            searchType = state.type,
             items = state.posts,
+            onIconClick = onIconClick,
             onNameClick = onNameClick,
         )
     }

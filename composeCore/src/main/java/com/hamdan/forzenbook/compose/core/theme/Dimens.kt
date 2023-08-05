@@ -43,4 +43,11 @@ data class Dimens(
     val grid: GridDimensions,
     val borderGrid: BorderDimensions,
     val imageSizes: ImageSizes,
+    val sheetSizes: SheetSizes,
+)
+
+data class SheetSizes(
+    val small: Dp,
+    val normal: Dp,
+    val large: Dp,
 )

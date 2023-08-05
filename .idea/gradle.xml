@@ -38,6 +38,8 @@
             <option value="$PROJECT_DIR$/mainPageCore" />
             <option value="$PROJECT_DIR$/postCompose" />
             <option value="$PROJECT_DIR$/postCore" />
+            <option value="$PROJECT_DIR$/profileCompose" />
+            <option value="$PROJECT_DIR$/profileCore" />
             <option value="$PROJECT_DIR$/searchCompose" />
             <option value="$PROJECT_DIR$/searchCore" />
             <option value="$PROJECT_DIR$/searchResultsCompose" />

@@ -19,11 +19,18 @@ class FeedRepositoryImpl(
 ) : FeedRepository {
     override suspend fun getFeed(): List<Postable> {
         val token = getToken(context)
-        if (token.isNullOrEmpty()) throw InvalidTokenException()
+        if (token.isNullOrEmpty()) {
+            removeToken(context)
+            throw InvalidTokenException()
+        }
 
         val currentTime = System.currentTimeMillis()
-        feedDao.deleteOldPosts(currentTime)
-        userDao.deleteOldUsers(currentTime)
+        try {
+            feedDao.deleteOldPosts(currentTime)
+            userDao.deleteOldUsers(currentTime)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         val postables: MutableList<Postable> = mutableListOf()
         service.getFeed(token).body()?.apply {
             this.forEach {

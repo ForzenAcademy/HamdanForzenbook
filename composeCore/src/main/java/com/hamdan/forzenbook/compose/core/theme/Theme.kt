@@ -55,6 +55,18 @@ private val borderDimensionsStatic = BorderDimensions(
     1.dp, 2.dp, 3.dp, 4.dp,
 )
 
+private val SmallSheetSizes = SheetSizes(
+    small = 200.dp,
+    normal = 250.dp,
+    large = 300.dp,
+)
+
+private val NormalSheetSizes = SheetSizes(
+    small = 400.dp,
+    normal = 500.dp,
+    large = 600.dp,
+)
+
 private val NormalImages = ImageSizes(24.dp, 40.dp, 60.dp, 200.dp)
 private val SmallImages = ImageSizes(24.dp, 40.dp, 60.dp, 160.dp)
 
@@ -63,7 +75,8 @@ val MaterialTheme.staticDimens: Dimens
     get() = Dimens(
         NormalGrid,
         borderDimensionsStatic,
-        NormalImages
+        NormalImages,
+        NormalSheetSizes,
     )
 val MaterialTheme.dimens: Dimens
     @Composable
@@ -72,14 +85,16 @@ val MaterialTheme.dimens: Dimens
         Dimens(
             SmallGrid,
             borderDimensionsStatic,
-            SmallImages
+            SmallImages,
+            SmallSheetSizes,
         )
     } else {
         // average
         Dimens(
             NormalGrid,
             borderDimensionsStatic,
-            NormalImages
+            NormalImages,
+            NormalSheetSizes,
         )
     }
 
@@ -88,5 +103,13 @@ val MaterialTheme.additionalColors: AdditionalColors
     get() = AdditionalColors(
         inputFieldContainer = dayNightColor(light = Color(0xFFeeeeee), dark = Color(0xFFeeeeee)),
         onInputFieldContainer = dayNightColor(light = Color.Black, dark = Color.Black),
-        spacerColor = colorScheme.onSurface.copy(alpha = .15f)
+        spacerColor = colorScheme.onSurface.copy(alpha = .15f),
+        sheetColor = dayNightColor(light = Color.White, dark = Color(0xFF111111)),
+        sheetHandle = COLOR_LION_YELLOW,
+        onSheetBorder = dayNightColor(light = Color(0xFFaaaaaa), dark = Color(0xFFdddddd)),
+        onBackgroundBorder = dayNightColor(light = Color(0xFF444444), dark = Color(0xFFaaaaaa)),
+        onDisabledButton = Color.White,
     )
+
+val MaterialTheme.disabledAlpha: Float
+    get() = DISABLED_ALPHA

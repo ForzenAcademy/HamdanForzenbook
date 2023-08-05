@@ -57,12 +57,12 @@ val typographyDefault = Typography(
     titleMedium = TextStyle(
         fontFamily = defaultFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp
+        fontSize = 20.sp
     ),
     titleSmall = TextStyle(
         fontFamily = defaultFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 14.sp
+        fontSize = 18.sp
     ),
     bodyLarge = TextStyle(
         fontFamily = defaultFontFamily,

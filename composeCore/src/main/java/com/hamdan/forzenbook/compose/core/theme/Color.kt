@@ -14,8 +14,8 @@ val darkTheme = darkColorScheme(
     onBackground = Color.White,
     primary = COLOR_LION_YELLOW,
     onPrimary = Color.Black,
-    primaryContainer = Color(0xFF222222),
-    onPrimaryContainer = Color.White,
+    primaryContainer = COLOR_LION_YELLOW,
+    onPrimaryContainer = Color.Black,
     tertiary = Color(0xFF111111),
     onTertiary = Color.White,
     surface = Color(0xFF222222), // standard dark theme middle ground for cards
@@ -41,6 +41,11 @@ data class AdditionalColors(
     val inputFieldContainer: Color,
     val onInputFieldContainer: Color,
     val spacerColor: Color,
+    val sheetColor: Color,
+    val sheetHandle: Color,
+    val onSheetBorder: Color,
+    val onBackgroundBorder: Color,
+    val onDisabledButton: Color,
 )
 
 @Composable

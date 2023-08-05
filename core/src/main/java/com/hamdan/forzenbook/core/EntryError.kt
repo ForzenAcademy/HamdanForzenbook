@@ -55,6 +55,7 @@ sealed interface EntryError : Error {
     }
 }
 
+// Note this is purely for debugging not meant for user to see
 fun EntryError.stringForm(): String {
     val name = "Name"
     val email = "Email"

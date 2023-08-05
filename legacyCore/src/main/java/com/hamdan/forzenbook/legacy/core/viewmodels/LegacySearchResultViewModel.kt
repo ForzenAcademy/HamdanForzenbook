@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.core.InvalidTokenException
+import com.hamdan.forzenbook.core.StateException
 import com.hamdan.forzenbook.legacy.core.adapters.FeedAdapter
 import com.hamdan.forzenbook.legacy.core.adapters.toFeedItemViewModel
 import com.hamdan.forzenbook.legacy.core.view.Navigator
@@ -47,7 +48,7 @@ class LegacySearchResultViewModel @Inject constructor(
                 if (tempState is SearchResultState.Content) {
                     tempState.posts[it].toFeedItemViewModel()
                 } else {
-                    throw Exception("Illegal state")
+                    throw StateException()
                 }
             },
             getDataSize = {

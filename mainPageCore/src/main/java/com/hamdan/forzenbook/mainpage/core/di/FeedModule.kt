@@ -3,7 +3,7 @@ package com.hamdan.forzenbook.mainpage.core.di
 import android.content.Context
 import androidx.room.Room
 import com.google.gson.GsonBuilder
-import com.hamdan.forzenbook.core.GlobalConstants.LOGIN_BASE_URL
+import com.hamdan.forzenbook.core.GlobalConstants.BASE_URL
 import com.hamdan.forzenbook.data.daos.FeedDao
 import com.hamdan.forzenbook.data.daos.UserDao
 import com.hamdan.forzenbook.data.databases.FeedDatabase
@@ -33,7 +33,7 @@ object FeedModule {
             .setLenient()
             .create()
         return Retrofit.Builder()
-            .baseUrl(LOGIN_BASE_URL)
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }

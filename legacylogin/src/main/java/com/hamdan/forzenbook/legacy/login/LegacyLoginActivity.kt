@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.core.EntryError
+import com.hamdan.forzenbook.core.StateException
 import com.hamdan.forzenbook.legacy.core.view.utils.DialogUtils.standardAlertDialog
 import com.hamdan.forzenbook.legacy.core.view.utils.KeyboardUtils
 import com.hamdan.forzenbook.legacy.core.viewmodels.LegacyLoginViewModel
@@ -145,9 +146,7 @@ class LegacyLoginActivity : ComponentActivity() {
                                 loginModel.login(context)
                             }
 
-                            else -> {
-                                throw Exception("Illegal unknown state")
-                            }
+                            else -> throw StateException()
                         }
                     }
                 }
