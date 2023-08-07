@@ -67,7 +67,7 @@ class LegacyCreateAccountActivity : ComponentActivity() {
                     withContext(Dispatchers.Main) {
                         state.apply {
                             when (state) {
-                                BaseCreateAccountViewModel.CreateAccountState.AccountCreated -> {
+                                is BaseCreateAccountViewModel.CreateAccountState.AccountCreated -> {
                                     createAccountModel.navigateUpPressed()
                                 }
 
@@ -182,7 +182,7 @@ class LegacyCreateAccountActivity : ComponentActivity() {
                                     )
                                 }
 
-                                BaseCreateAccountViewModel.CreateAccountState.Loading -> {
+                                is BaseCreateAccountViewModel.CreateAccountState.Loading -> {
                                     createAccountClickBlocker.isVisible = true
                                     createAccountSubmitText.isVisible = false
                                     createAccountSubmitProgressIndicator.isVisible = true

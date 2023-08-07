@@ -26,6 +26,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -63,6 +64,11 @@ fun MaterialTheme.cardShape(rounding: Dp = MaterialTheme.dimens.grid.x3): Shape 
     return RoundedCornerShape(rounding)
 }
 
+/**
+ * Puts a surface in the full container this item is in, consumes any click interactions
+ *
+ * use content if you want to show anything while loading
+ */
 @Composable
 fun PreventScreenActionsDuringLoad(
     modifier: Modifier = Modifier,
@@ -84,6 +90,9 @@ fun PreventScreenActionsDuringLoad(
     }
 }
 
+/**
+ * if put outside of a container, will fill the screen with a surface and load indicator
+ */
 @Composable
 fun LoadingOverlay(
     modifier: Modifier = Modifier,
@@ -119,12 +128,19 @@ fun BackgroundColumn(
     }
 }
 
+/**
+ * custom alert dialog for the app
+ *
+ * title is not necessary
+ *
+ *
+ */
 @Composable
 fun ForzenbookDialog(
     modifier: Modifier = Modifier,
     title: String?,
     body: String,
-    buttonText: String,
+    confirmationText: String,
     onDismiss: () -> Unit,
 ) {
     AlertDialog(
@@ -147,7 +163,7 @@ fun ForzenbookDialog(
         },
         confirmButton = {
             Text(
-                text = buttonText,
+                text = confirmationText,
                 modifier = Modifier
                     .padding(
                         end = MaterialTheme.dimens.grid.x2,
@@ -205,6 +221,11 @@ fun FeedImagePost(url: String) {
     }
 }
 
+/**
+ * Intended to be inside of a post card
+ *
+ * Use this as a heading row or put sufficient padding around it
+ */
 @Composable
 fun UserRow(
     icon: String,
@@ -241,7 +262,11 @@ fun UserRow(
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.addIf(onNameClick != null) {
-                    Modifier.clickable { onNameClick?.invoke() }
+                    Modifier.clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = rememberRipple(bounded = false),
+                        onClick = { onNameClick?.invoke() }
+                    )
                 },
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -251,6 +276,13 @@ fun UserRow(
     }
 }
 
+/**
+ * Useing Coil, makes a call to the network with the provided URL to load in an image
+ *
+ * Uses the Forzenbook Logo in the case of an error
+ *
+ * Shows a circular progress indicator while loading
+ */
 @Composable
 fun CircularNetworkImage(
     modifier: Modifier = Modifier,
@@ -259,7 +291,10 @@ fun CircularNetworkImage(
     imageDescription: String,
     onClick: (() -> Unit)? = null,
     borderColor: Color? = null,
+    backgroundColor: Color? = MaterialTheme.colorScheme.tertiary,
 ) {
+    val rippleSource = remember { MutableInteractionSource() }
+    val ripple = rememberRipple(bounded = true)
     SubcomposeAsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
             .data(imageUrl)
@@ -269,15 +304,24 @@ fun CircularNetworkImage(
         modifier = modifier
             .size(imageSize)
             .clip(CircleShape)
+            .addIf(onClick != null) {
+                Modifier.clickable(
+                    interactionSource = rippleSource,
+                    indication = ripple,
+                    onClick = { onClick?.invoke() }
+                )
+            }
+            .addIf(backgroundColor != null) {
+                backgroundColor?.let {
+                    return@addIf Modifier.background(backgroundColor)
+                } ?: throw Exception()
+            }
             .addIf(borderColor != null) {
                 Modifier.border(
                     MaterialTheme.dimens.borderGrid.x2,
                     borderColor!!,
                     CircleShape,
                 )
-            }
-            .addIf(onClick != null) {
-                Modifier.clickable { onClick?.invoke() }
             },
         error = {
             Image(
@@ -292,7 +336,11 @@ fun CircularNetworkImage(
                         )
                     }
                     .addIf(onClick != null) {
-                        Modifier.clickable { onClick?.invoke() }
+                        Modifier.clickable(
+                            interactionSource = rippleSource,
+                            indication = ripple,
+                            onClick = { onClick?.invoke() }
+                        )
                     },
                 painter = painterResource(id = R.drawable.logo_render_full_notext),
                 contentDescription = stringResource(id = R.string.lion_icon),
@@ -301,6 +349,11 @@ fun CircularNetworkImage(
     )
 }
 
+/**
+ * Rounded card shape, slightly elevated
+ *
+ * intended to be used with posts
+ */
 @Composable
 fun PostCard(
     modifier: Modifier = Modifier,
@@ -325,6 +378,9 @@ fun PostCard(
     }
 }
 
+/**
+ * thin line used as a divider, provide padding if needed
+ */
 @Composable
 fun Divider(
     height: Dp = MaterialTheme.staticDimens.borderGrid.x1,
@@ -339,6 +395,15 @@ fun Divider(
     )
 }
 
+/**
+ * Band-aid fix to find if keyboard is open since no official one is available.
+ *
+ * Intended to put this in the bottom bar of a scaffold as it stickies to the bottom of the screen.
+ *
+ * When the bar moves from the keyboard opening we report that the keyboard is open.
+ *
+ * When the bar moves down to the bottom of the screen we report the keyboard is closed.
+ */
 @Composable
 fun KeyboardMonitor(
     onKeyboardVisibilityChanged: (Boolean) -> Unit,
@@ -358,6 +423,9 @@ fun KeyboardMonitor(
     )
 }
 
+/**
+ * addIf allows you to give a condition requirement, if the condition requirement is valid. the corresponding Modifier will be added
+ */
 @SuppressLint("UnnecessaryComposedModifier") // needed to pass composable state to [other]
 fun Modifier.addIf(condition: Boolean, other: @Composable () -> Modifier): Modifier = composed {
     then(if (condition) other() else Modifier)

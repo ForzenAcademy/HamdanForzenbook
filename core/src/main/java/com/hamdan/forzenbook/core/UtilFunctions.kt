@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import android.util.Log
 import android.widget.DatePicker
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.graphics.drawable.toBitmap
@@ -13,9 +14,14 @@ import com.hamdan.forzenbook.ui.core.R
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.regex.Pattern
 
+/**
+ * uses a email validation regex, may not be perfect and may need to be changed
+ */
 fun validateEmail(email: String): Boolean {
     val regex =
         "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}\\@[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}(\\.[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25})+"
@@ -23,10 +29,12 @@ fun validateEmail(email: String): Boolean {
     return pattern.matcher(email).matches()
 }
 
-fun stringDate(month: Int, day: Int, year: Int, context: Context): String {
-    val date = context.getString(R.string.create_account_date, month, day, year).split("-")
-    return date.joinToString("-") { it.leftPad() }
-}
+/**
+ * gets the date without the - separator and with appropriate 0's for padding
+ */
+fun stringDate(month: Int, day: Int, year: Int, context: Context) =
+    context.getString(R.string.create_account_date, month, day, year).split("-")
+        .joinToString("-") { it.leftPad() }
 
 fun String.leftPad(): String {
     return if (this.length < 2) {
@@ -70,6 +78,13 @@ fun datePickerDialog(
     }.show()
 }
 
+/**
+ * Uses a uri to try to get an image
+ *
+ * Saves the image bitmap as a local temporary file
+ *
+ * Use the File in image saved for access to that temporary file
+ */
 suspend fun saveBitmapFromUri(
     uri: Uri,
     context: Context,
@@ -91,13 +106,29 @@ suspend fun saveBitmapFromUri(
                         }
                         onImageSaved(tempFile)
                     } catch (e: IOException) {
-                        e.printStackTrace()
+                        Log.v("Exception", e.stackTraceToString())
                         onError()
                     }
                 }
             }
             .build()
     )
+}
+
+/**
+ * expects a date in the format yyyy-MM-dd HH:mm:ss and returns it in the format MMMM d yyyy h:mm a
+ */
+fun convertDate(dateString: String): String {
+    return try {
+        val inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val outputFormat = DateTimeFormatter.ofPattern("MMMM d yyyy h:mm a")
+
+        val dateTime = LocalDateTime.parse(dateString, inputFormat)
+        dateTime.format(outputFormat)
+    } catch (e: Exception) {
+        Log.v("Exception", e.stackTraceToString())
+        ""
+    }
 }
 
 private fun createTemporaryImageFile(): File =
@@ -107,15 +138,19 @@ fun launchGalleryImageGetter(contentLauncher: ActivityResultLauncher<String>) {
     contentLauncher.launch("image/*")
 }
 
+/**
+ * gets the token from shared preferences
+ */
 fun getToken(context: Context): String? {
-    // Todo remove this later
-    return "123"
-//    return context.getSharedPreferences(
-//        GlobalConstants.TOKEN_PREFERENCE_LOCATION,
-//        Context.MODE_PRIVATE
-//    ).getString(GlobalConstants.TOKEN_KEY, null)
+    return context.getSharedPreferences(
+        GlobalConstants.TOKEN_PREFERENCE_LOCATION,
+        Context.MODE_PRIVATE
+    ).getString(GlobalConstants.TOKEN_KEY, null)
 }
 
+/**
+ * removes the token from shared preferences
+ */
 fun removeToken(context: Context) {
     context.getSharedPreferences(
         GlobalConstants.TOKEN_PREFERENCE_LOCATION,

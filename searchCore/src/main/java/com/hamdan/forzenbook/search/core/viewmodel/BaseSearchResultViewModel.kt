@@ -15,6 +15,7 @@ abstract class BaseSearchResultViewModel(
     private val getPostByStringUseCase: GetPostByStringUseCase,
     private val getPostByUserIdUseCase: GetPostByUserIdUseCase
 ) : ViewModel() {
+
     enum class SearchResultType {
         QUERY, ID, NONE
     }
@@ -47,9 +48,10 @@ abstract class BaseSearchResultViewModel(
                         false
                     )
                 } catch (e: InvalidTokenException) {
+                    Log.v("Exception", e.stackTraceToString())
                     SearchResultState.InvalidLogin
                 } catch (e: Exception) {
-                    Log.v("Hamdan",e.stackTrace.toString())
+                    Log.v("Exception", e.stackTraceToString())
                     SearchResultState.Error
                 }
             }
@@ -70,10 +72,10 @@ abstract class BaseSearchResultViewModel(
                         false
                     )
                 } catch (e: InvalidTokenException) {
+                    Log.v("Exception", e.stackTraceToString())
                     SearchResultState.InvalidLogin
                 } catch (e: Exception) {
-                    Log.v("Hamdan","result by query")
-                    Log.v("Hamdan",e.stackTrace.toString())
+                    Log.v("Exception", e.stackTraceToString())
                     SearchResultState.Error
                 }
             }

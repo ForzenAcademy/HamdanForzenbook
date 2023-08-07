@@ -60,7 +60,7 @@ abstract class FeedItemViewModel(val type: Int) {
         const val IMAGE = 0
         const val TEXT = 1
         const val LOADING_MORE = 2
-        // don't believe theres a need for a loading item for the TextItem and ImageItem as coil can handle the loading situation
+        // No loading item for the TextItem and ImageItem as coil can handle the loading situation
     }
 }
 
@@ -105,7 +105,7 @@ class ImageViewHolder(
                 imageModel.lastName
             )
             feedUserName.setOnClickListener {
-                onNameClick(context,imageModel.posterId)
+                onNameClick(context, imageModel.posterId)
             }
             feedUserDate.text = imageModel.date
             feedUserLocation.text = imageModel.location
@@ -165,7 +165,7 @@ class TextViewHolder(
                 textModel.lastName
             )
             feedUserName.setOnClickListener {
-                onNameClick(context,textModel.posterId)
+                onNameClick(context, textModel.posterId)
             }
             feedUserDate.text = textModel.date
             feedUserLocation.text = textModel.location

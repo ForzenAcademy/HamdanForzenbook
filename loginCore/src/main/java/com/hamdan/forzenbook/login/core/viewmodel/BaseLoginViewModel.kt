@@ -1,6 +1,7 @@
 package com.hamdan.forzenbook.login.core.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.core.Entry
@@ -57,6 +58,7 @@ abstract class BaseLoginViewModel(
                 loginGetStoredCredentialsUseCase()
                 loginState = LoginState.LoggedIn
             } catch (e: Exception) {
+                Log.v("Exception", e.stackTraceToString())
                 LoginState.Content(LoginContent.Email())
             }
         }
@@ -146,6 +148,7 @@ abstract class BaseLoginViewModel(
                     loginGetCredentialsFromNetworkUseCase(email, code)
                     loginState = LoginState.LoggedIn
                 } catch (e: Exception) {
+                    Log.v("Exception", e.stackTraceToString())
                     loginState = LoginState.Error(LoginInputType.CODE, email)
                 }
             }
@@ -160,6 +163,7 @@ abstract class BaseLoginViewModel(
                     loginValidationUseCase(it.email.text)
                     LoginState.Content(LoginContent.Code(it.email.text, showInfoDialog = true))
                 } catch (e: Exception) {
+                    Log.v("Exception", e.stackTraceToString())
                     LoginState.Error(LoginInputType.EMAIL, it.email.text)
                 }
             }

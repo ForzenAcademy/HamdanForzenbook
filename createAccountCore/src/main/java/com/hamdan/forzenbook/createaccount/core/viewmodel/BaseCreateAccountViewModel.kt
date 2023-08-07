@@ -8,7 +8,7 @@ import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountEntrys
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountUseCase
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountValidationUseCase
 
-// the createAccountUseCase is used individualy in the correct legacy or current viewmodel
+// the createAccountUseCase is used individually in the correct legacy or current viewmodel
 abstract class BaseCreateAccountViewModel(
     private val createAccountValidationUseCase: CreateAccountValidationUseCase,
     private val createAccountUseCase: CreateAccountUseCase,

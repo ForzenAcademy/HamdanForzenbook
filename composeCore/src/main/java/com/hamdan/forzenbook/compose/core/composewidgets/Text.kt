@@ -105,9 +105,18 @@ fun FeedTextPost(text: String) {
     }
 }
 
+/**
+ * intended to be used in large container
+ *
+ * fills the container with a clickable column
+ *
+ * inside the column is the text field being typed in
+ *
+ * requestInitialFocus when true will pop open the keyboard as soon as the field enters the screen
+ */
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun FullScreenCickableTextField(
+fun FullScreenClickableTextField(
     modifier: Modifier = Modifier,
     text: String,
     label: String?,
@@ -144,6 +153,7 @@ fun FullScreenCickableTextField(
             textFieldColors = textFieldColors,
         )
     }
+    // pops up the keyboard if true, selects the field as well
     if (requestInitialFocus) {
         LaunchedEffect(Unit) {
             keyboard?.show()

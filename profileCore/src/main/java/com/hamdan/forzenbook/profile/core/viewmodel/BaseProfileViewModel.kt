@@ -1,5 +1,6 @@
 package com.hamdan.forzenbook.profile.core.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.core.GlobalConstants.PAGED_POSTS_SIZE
@@ -77,24 +78,27 @@ abstract class BaseProfileViewModel(
     protected abstract var profileState: ProfileState
 
     fun onPersonalProfilePress() {
-        profileState = ProfileState.Loading(null)
-        try {
+        if (profileState is ProfileState.Loading) {
             viewModelScope.launch {
-                profileState = ProfileState.Content(getPersonalProfileUseCase())
+                try {
+                    profileState = ProfileState.Content(getPersonalProfileUseCase())
+                } catch (e: Exception) {
+                    Log.v("Exception", e.stackTraceToString())
+                    profileState = ProfileState.Error(error = ProfileError.Loading)
+                }
             }
-        } catch (e: Exception) {
-            profileState = ProfileState.Error(error = ProfileError.Loading)
         }
     }
 
     fun onProfilePress(userId: Int) {
         profileState = ProfileState.Loading(null)
-        try {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            try {
                 profileState = ProfileState.Content(getProfileByUserUseCase(userId))
+            } catch (e: Exception) {
+                Log.v("Exception", e.stackTraceToString())
+                profileState = ProfileState.Error(error = ProfileError.Loading)
             }
-        } catch (e: Exception) {
-            profileState = ProfileState.Error(error = ProfileError.Loading)
         }
     }
 
@@ -132,18 +136,19 @@ abstract class BaseProfileViewModel(
         val currentState = profileState
         currentState.profileData?.let {
             if (currentState is ProfileState.Editing && currentState.editContent is EditingContent.About) {
-                try {
-                    profileState = currentState.copy(editContent = EditingContent.Loading)
-                    viewModelScope.launch {
+                viewModelScope.launch {
+                    try {
+                        profileState = currentState.copy(editContent = EditingContent.Loading)
                         sendAboutUpdateUseCase(it.userId, currentState.editContent.newAbout)
                         profileState = currentState.copy(
                             profileData = it.copy(aboutUser = currentState.editContent.newAbout),
                             editContent = EditingContent.None
                         )
+                    } catch (e: Exception) {
+                        Log.v("Exception", e.stackTraceToString())
+                        profileState =
+                            ProfileState.Error(profileData = it, error = ProfileError.NewAboutMe)
                     }
-                } catch (e: Exception) {
-                    profileState =
-                        ProfileState.Error(profileData = it, error = ProfileError.NewAboutMe)
                 }
             } else throw StateException()
         } ?: throw StateException()
@@ -168,9 +173,10 @@ abstract class BaseProfileViewModel(
         val currentState = profileState
         currentState.profileData?.let { data ->
             if (currentState is ProfileState.Editing && currentState.editContent is EditingContent.Image) {
-                try {
-                    profileState = currentState.copy(editContent = EditingContent.Loading)
-                    viewModelScope.launch {
+                viewModelScope.launch {
+                    try {
+                        profileState = currentState.copy(editContent = EditingContent.Loading)
+
                         currentState.editContent.newImagePath?.let {
                             profileState = currentState.copy(
                                 profileData = data.copy(
@@ -182,11 +188,11 @@ abstract class BaseProfileViewModel(
                                 editContent = EditingContent.None
                             )
                         } ?: throw Exception("Null image path")
+                    } catch (e: Exception) {
+                        Log.v("Exception", e.stackTraceToString())
+                        profileState =
+                            ProfileState.Error(profileData = data, error = ProfileError.NewIcon)
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    profileState =
-                        ProfileState.Error(profileData = data, error = ProfileError.NewIcon)
                 }
             } else throw StateException()
         } ?: throw StateException()
@@ -259,7 +265,7 @@ abstract class BaseProfileViewModel(
                         else -> throw StateException()
                     }
                 } catch (e: Exception) {
-                    e.printStackTrace()
+                    Log.v("Exception", e.stackTraceToString())
                     profileState = ProfileState.Error(
                         profileData = data.copy(postSet = emptyList()),
                         error = ProfileError.Posts
@@ -281,7 +287,7 @@ abstract class BaseProfileViewModel(
                     val newPosts: List<PostData> = getOlderPostsUseCase(
                         data.userId,
                         data.postSet.last().postId,
-                    )
+                    ).reversed() // to make sure posts are in the correct order
                     var lastPostId: Int? = null
                     if (newPosts.isEmpty()) {
                         lastPostId = data.postSet.last().postId
@@ -290,17 +296,27 @@ abstract class BaseProfileViewModel(
                     }
                     profileState = when (currentState) {
                         is ProfileState.Content -> {
-                            currentState.copy(profileData = data.copy(postSet = subList + newPosts, lastPostId = lastPostId,))
+                            currentState.copy(
+                                profileData = data.copy(
+                                    postSet = subList + newPosts,
+                                    lastPostId = lastPostId,
+                                )
+                            )
                         }
 
                         is ProfileState.Editing -> {
-                            currentState.copy(profileData = data.copy(postSet = subList + newPosts, lastPostId = lastPostId))
+                            currentState.copy(
+                                profileData = data.copy(
+                                    postSet = subList + newPosts,
+                                    lastPostId = lastPostId
+                                )
+                            )
                         }
 
                         else -> throw StateException()
                     }
                 } catch (e: Exception) {
-                    e.printStackTrace()
+                    Log.v("Exception", e.stackTraceToString())
                     profileState = ProfileState.Error(
                         profileData = data.copy(postSet = emptyList()),
                         error = ProfileError.Posts,
@@ -329,7 +345,6 @@ abstract class BaseProfileViewModel(
                     if (currentState.profileData != null) {
                         profileState = ProfileState.Content(currentState.profileData)
                     } else throw StateException()
-
                 }
 
                 is ProfileError.NewIcon -> {
@@ -366,6 +381,10 @@ abstract class BaseProfileViewModel(
         if (currentState is ProfileState.Editing) {
             profileState = ProfileState.Content(currentState.profileData)
         } else throw StateException()
+    }
+
+    fun kickToLogin() {
+        profileState = ProfileState.Loading()
     }
 
     companion object {

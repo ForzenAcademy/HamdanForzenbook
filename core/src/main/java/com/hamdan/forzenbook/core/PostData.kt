@@ -1,5 +1,6 @@
 package com.hamdan.forzenbook.core
 
+// used in several modules so it is available here
 data class PostData(
     val posterFirstName: String,
     val posterLastName: String,

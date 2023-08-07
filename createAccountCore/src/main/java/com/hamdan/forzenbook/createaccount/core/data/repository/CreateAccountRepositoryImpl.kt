@@ -28,7 +28,7 @@ class CreateAccountRepositoryImpl(
                     response.errorBody()?.charStream(),
                     CreateAccountErrorResponse::class.java
                 )
-                Log.e("CreateAccount", "${msg.reason}")
+                Log.e("Exception", "${msg.reason}")
                 throw InputException()
             } else throw (Exception("Unknown Error"))
         }

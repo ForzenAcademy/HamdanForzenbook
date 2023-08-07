@@ -16,9 +16,9 @@ class PostRepositoryImpl(
     private val service: PostService,
     private val context: Context,
 ) : PostRepository {
-    override suspend fun postText(message: String) {
+    override suspend fun sendTextPost(message: String) {
         val token = getToken(context)
-        if (token.isNullOrEmpty()){
+        if (token.isNullOrEmpty()) {
             removeToken(context)
             throw InvalidTokenException()
         }
@@ -34,9 +34,12 @@ class PostRepositoryImpl(
         }
     }
 
-    override suspend fun postImage(file: File) {
+    /**
+     * Image files must be sent as a multipart
+     */
+    override suspend fun sendTextPost(file: File) {
         val token = getToken(context)
-        if (token.isNullOrEmpty()){
+        if (token.isNullOrEmpty()) {
             removeToken(context)
             throw InvalidTokenException()
         }

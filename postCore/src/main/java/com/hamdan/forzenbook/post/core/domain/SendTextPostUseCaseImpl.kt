@@ -6,6 +6,6 @@ class SendTextPostUseCaseImpl(
     private val repository: PostRepository
 ) : SendTextPostUseCase {
     override suspend fun invoke(message: String) {
-        repository.postText(message)
+        repository.sendTextPost(message)
     }
 }

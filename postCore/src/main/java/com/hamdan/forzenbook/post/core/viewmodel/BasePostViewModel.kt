@@ -1,8 +1,10 @@
 package com.hamdan.forzenbook.post.core.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.core.InvalidTokenException
+import com.hamdan.forzenbook.core.StateException
 import com.hamdan.forzenbook.post.core.domain.SendImagePostUseCase
 import com.hamdan.forzenbook.post.core.domain.SendTextPostUseCase
 import kotlinx.coroutines.launch
@@ -36,64 +38,86 @@ abstract class BasePostViewModel(
 
     fun updateText(text: String) {
         val currentState = postState
+        // if the text isn't larger than the limit and the state is Text
         if (text.length <= POST_LENGTH_LIMIT && currentState is PostState.Content && currentState.content is PostContent.Text) {
             postState = PostState.Content(PostContent.Text(text))
         }
     }
 
-    fun sendPostClicked() {
-        when ((postState as PostState.Content).content) {
-            is PostContent.Image -> {
-                sendImage()
-            }
+    /**
+     * additionalAction is intended for if you want something to happen after a post has finished being sent
+     *
+     * if no additional action is needed don't add one
+     */
+    fun sendPostClicked(additionalAction: (() -> Unit)? = null) {
+        viewModelScope.launch {
+            val succeeded = when ((postState as PostState.Content).content) {
+                is PostContent.Image -> {
+                    sendImage()
+                }
 
-            is PostContent.Text -> {
-                sendText()
+                is PostContent.Text -> {
+                    sendText()
+                }
+            }
+            if (succeeded) {
+                additionalAction?.invoke()
             }
         }
     }
 
     fun updateImage(filePath: String?) {
-        // in the case the user immediately picks another image, delete the old temp file and create a new one
         postState = PostState.Content(PostContent.Image(filePath))
     }
 
-    private fun sendText() {
+    /**
+     * returns false if an error occured
+     */
+    private suspend fun sendText(): Boolean {
         val state = postState
         if (state is PostState.Content && state.content is PostContent.Text && state.content.text.isNotEmpty() && state.content.text.length <= POST_LENGTH_LIMIT) {
             postState = PostState.Loading
-            viewModelScope.launch {
-                try {
-                    sendTextPostUseCase(state.content.text)
-                    postState = PostState.Content(PostContent.Text())
-                } catch (e: InvalidTokenException) {
-                    postState = PostState.InvalidLogin
-                } catch (e: Exception) {
-                    postState = PostState.Error
-                }
+            return try {
+                sendTextPostUseCase(state.content.text)
+                postState = PostState.Content(PostContent.Text())
+                true
+            } catch (e: InvalidTokenException) {
+                Log.v("Exception", e.stackTraceToString())
+                postState = PostState.InvalidLogin
+                false
+            } catch (e: Exception) {
+                Log.v("Exception", e.stackTraceToString())
+                postState = PostState.Error
+                false
             }
-        }
+        } else throw StateException()
     }
 
-    private fun sendImage() {
+    /**
+     * returns true if an error occured
+     */
+    private suspend fun sendImage(): Boolean {
         val state = postState
         if (state is PostState.Content && state.content is PostContent.Image) {
             state.content.filePath?.let { path ->
-                viewModelScope.launch {
-                    try {
-                        sendImagePostUseCase(path)
-                        File(path).delete()
-                        postState = PostState.Content(PostContent.Image())
-                    } catch (e: InvalidTokenException) {
-                        File(path).delete()
-                        postState = PostState.InvalidLogin
-                    } catch (e: Exception) {
-                        File(path).delete()
-                        postState = PostState.Error
-                    }
+                return try {
+                    sendImagePostUseCase(path)
+                    File(path).delete()
+                    postState = PostState.Content(PostContent.Image())
+                    true
+                } catch (e: InvalidTokenException) {
+                    Log.v("Exception", e.stackTraceToString())
+                    File(path).delete()
+                    postState = PostState.InvalidLogin
+                    false
+                } catch (e: Exception) {
+                    Log.v("Exception", e.stackTraceToString())
+                    File(path).delete()
+                    postState = PostState.Error
+                    false
                 }
-            }
-        }
+            } ?: throw Exception("Image not found")
+        } else throw StateException()
     }
 
     fun kickBackToLogin() {

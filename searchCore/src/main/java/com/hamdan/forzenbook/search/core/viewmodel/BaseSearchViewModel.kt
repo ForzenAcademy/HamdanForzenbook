@@ -26,19 +26,15 @@ abstract class BaseSearchViewModel(
         onSuccess: () -> Unit,
         onError: () -> Unit,
     ) {
-        Log.v("Hamdan","Searching by name")
         viewModelScope.launch {
             try {
                 searchForPostByIdUseCase(id)
                 onSuccess()
-                Log.v("Hamdan","Success")
             } catch (e: InvalidTokenException) {
-//                Log.v("Hamdan", "Name clicked")
-                Log.v("Hamdan", e.message.toString())
+                Log.v("Exception",e.stackTraceToString())
                 searchState = SearchState.InvalidLogin
             } catch (e: Exception) {
-//                Log.v("Hamdan", "Name clicked")
-                Log.v("Hamdan", e.message.toString())
+                Log.v("Exception",e.stackTraceToString())
                 onError()
                 searchState = SearchState.Error
             }
@@ -49,7 +45,6 @@ abstract class BaseSearchViewModel(
         onSuccess: () -> Unit,
         onError: () -> Unit,
     ) {
-        Log.v("Hamdan","Searching")
         val state = searchState
         if (state is SearchState.Searching) {
             viewModelScope.launch {
@@ -57,10 +52,10 @@ abstract class BaseSearchViewModel(
                     searchForPostByStringUseCase(state.query)
                     onSuccess()
                 } catch (e: InvalidTokenException) {
-                    println(e.message.toString())
+                    Log.v("Exception",e.stackTraceToString())
                     searchState = SearchState.InvalidLogin
                 } catch (e: Exception) {
-                    println(e.message.toString())
+                    Log.v("Exception",e.stackTraceToString())
                     onError()
                     searchState = SearchState.Error
                 }
@@ -68,9 +63,14 @@ abstract class BaseSearchViewModel(
         }
     }
 
-    fun onUpdateSearch(text: String) = updateSearchText(text)
+    fun onUpdateSearch(text: String){
+        searchState = SearchState.Searching(text)
+    }
 
-    fun navigateQuery(): String {
+    /**
+     * the navigation query to append for navigating to the search result page, intended for string queries
+     */
+    fun navigationStringQuery(): String {
         val state = searchState
         return if (state is SearchState.Searching) {
             "/-1/${state.query}/"
@@ -79,13 +79,10 @@ abstract class BaseSearchViewModel(
         }
     }
 
-    fun navigateUser(id: Int): String = "/$id/%20/"
-
-    private fun updateSearchText(
-        text: String,
-    ) {
-        searchState = SearchState.Searching(text)
-    }
+    /**
+     * the navigation query to append for navigating to the search result page, intended for id searches
+     */
+    fun navigationStringUser(id: Int): String = "/$id/%20/"
 
     fun kickBackToLogin() {
         searchState = SearchState.Searching()

@@ -18,6 +18,8 @@
             <option value="$PROJECT_DIR$/createAccountCompose" />
             <option value="$PROJECT_DIR$/createAccountCore" />
             <option value="$PROJECT_DIR$/data" />
+            <option value="$PROJECT_DIR$/feedCompose" />
+            <option value="$PROJECT_DIR$/feedCore" />
             <option value="$PROJECT_DIR$/javaCore" />
             <option value="$PROJECT_DIR$/javaCreateAccount" />
             <option value="$PROJECT_DIR$/javaCreateAccountCore" />
@@ -34,8 +36,6 @@
             <option value="$PROJECT_DIR$/legacySearch" />
             <option value="$PROJECT_DIR$/loginCompose" />
             <option value="$PROJECT_DIR$/loginCore" />
-            <option value="$PROJECT_DIR$/mainPageCompose" />
-            <option value="$PROJECT_DIR$/mainPageCore" />
             <option value="$PROJECT_DIR$/postCompose" />
             <option value="$PROJECT_DIR$/postCore" />
             <option value="$PROJECT_DIR$/profileCompose" />

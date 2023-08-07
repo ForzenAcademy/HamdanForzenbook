@@ -20,6 +20,9 @@ interface PostService {
         @Field(BODY) body: String,
     ): Response<Void>
 
+    /**
+     * must be sent as a multipart or it will fail
+     */
     @Multipart
     @POST(POST)
     suspend fun sendImagePost(

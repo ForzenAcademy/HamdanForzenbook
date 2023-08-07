@@ -1,5 +1,6 @@
 package com.hamdan.forzenbook.createaccount.core.domain.mocks
 
+import android.util.Log
 import com.hamdan.forzenbook.core.AccountException
 import com.hamdan.forzenbook.createaccount.core.data.repository.CreateAccountRepository
 import com.hamdan.forzenbook.createaccount.core.domain.CreateAccountResult
@@ -22,8 +23,10 @@ class MockCreateAccountUseCaseBadData(
             repository.createUser(badFirst, badLast, birthDay, badEmail, location)
             CreateAccountResult.CREATE_SUCCESS
         } catch (e: AccountException) {
+            Log.v("Exception", e.stackTraceToString())
             CreateAccountResult.CREATE_EXISTS
         } catch (e: Exception) {
+            Log.v("Exception", e.stackTraceToString())
             CreateAccountResult.CREATE_FAILURE
         }
     }

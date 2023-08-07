@@ -1,6 +1,7 @@
 package com.hamdan.forzenbook.profile.core.data.repository
 
 import android.content.Context
+import android.util.Log
 import com.hamdan.forzenbook.core.GlobalConstants.PAGED_POSTS_SIZE
 import com.hamdan.forzenbook.core.GlobalConstants.POSTS_MAX_SIZE
 import com.hamdan.forzenbook.core.InvalidTokenException
@@ -73,7 +74,7 @@ class ProfileRepositoryImpl(
                 try {
                     userDao.insert(body.toUserEntity())
                 } catch (e: Exception) {
-                    e.printStackTrace()
+                    Log.v("Exception", e.stackTraceToString())
                 }
                 user = userDao.getUser(it.userId)
             }
@@ -104,16 +105,16 @@ class ProfileRepositoryImpl(
             val user = userDao.getUser(userId).first()
 
             if (pagingDirection == PagingDirection.DOWN) {
-                feedDao.getDownPagedPosts(postId, PAGED_POSTS_SIZE).map {
+                feedDao.getDownPagedPosts(postId, userId, PAGED_POSTS_SIZE).map {
                     Postable(it, user)
                 }
             } else {
-                feedDao.getUpPagedPosts(postId, PAGED_POSTS_SIZE).map {
+                feedDao.getUpPagedPosts(postId, userId, PAGED_POSTS_SIZE).map {
                     Postable(it, user)
                 }
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.v("Exception", e.stackTraceToString())
             emptyList()
         }
     }

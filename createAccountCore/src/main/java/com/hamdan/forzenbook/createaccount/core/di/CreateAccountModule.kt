@@ -31,7 +31,6 @@ object CreateAccountModule {
 
     @Provides
     fun providesCreateAccountService(@Named(MODULE_NAME) retrofit: Retrofit): CreateAccountService {
-        // return MockCreateAccountServiceError()
         return retrofit.create(CreateAccountService::class.java)
     }
 
@@ -40,14 +39,11 @@ object CreateAccountModule {
         accountRequestService: CreateAccountService
     ): CreateAccountRepository {
         return CreateAccountRepositoryImpl(accountRequestService)
-        // return MockCreateAccountRepositoryImplSucceeds(accountRequestService)
     }
 
     @Provides
     fun providesCreateAccountRequestUseCase(repository: CreateAccountRepository): CreateAccountUseCase {
-        // return MockCreateAccountRequestUseCaseFails()
         return CreateAccountUseCaseImpl(repository)
-        // return MockCreateAccountUseCaseBadData(repository)
     }
 
     @Provides

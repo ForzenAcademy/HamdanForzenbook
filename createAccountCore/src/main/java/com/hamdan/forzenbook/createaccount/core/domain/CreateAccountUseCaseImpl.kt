@@ -7,6 +7,9 @@ import com.hamdan.forzenbook.createaccount.core.data.repository.CreateAccountRep
 class CreateAccountUseCaseImpl(
     val repository: CreateAccountRepository
 ) : CreateAccountUseCase {
+    /**
+     * returns a success, exists, or failure, failure indicates a critical error
+     */
     override suspend fun invoke(
         firstName: String,
         lastName: String,
@@ -18,16 +21,11 @@ class CreateAccountUseCaseImpl(
             repository.createUser(firstName, lastName, birthDay, email, location)
             CreateAccountResult.CREATE_SUCCESS
         } catch (e: AccountException) {
+            Log.v("Exception", e.stackTraceToString())
             CreateAccountResult.CREATE_EXISTS
         } catch (e: Exception) {
-            Log.v("Hamdan", e.stackTraceToString())
+            Log.v("Exception", e.stackTraceToString())
             CreateAccountResult.CREATE_FAILURE
         }
     }
-}
-
-enum class CreateAccountResult {
-    CREATE_SUCCESS,
-    CREATE_EXISTS,
-    CREATE_FAILURE,
 }

@@ -13,7 +13,7 @@ object KeyboardUtils {
                 context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
             inputManager.hideSoftInputFromWindow(view.windowToken, 0)
         } catch (e: Exception) {
-            Log.v("Exception", e.message.toString())
+            Log.v("Exception", e.stackTraceToString())
         }
     }
 }

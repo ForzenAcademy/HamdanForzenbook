@@ -24,12 +24,17 @@ import com.hamdan.forzenbook.core.NavBarItem
 import com.hamdan.forzenbook.core.NavigationItem
 import com.hamdan.forzenbook.ui.core.R
 
+/**
+ * Standard top bar to use throughout the app
+ *
+ * title section is the content that would go in the title space of a top app bar
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ForzenbookTopAppBar(
     modifier: Modifier = Modifier,
     showBackIcon: Boolean = true,
-    additionalOnBack: (() -> Unit)? = null,
+    onBackPressed: () -> Unit,
     titleSection: @Composable () -> Unit,
     actions: @Composable (() -> Unit)? = null,
 ) {
@@ -45,10 +50,7 @@ fun ForzenbookTopAppBar(
         navigationIcon = if (showBackIcon) {
             {
                 IconButton(
-                    onClick = {
-                        additionalOnBack?.invoke()
-                        navigator?.navigateUp()
-                    }
+                    onClick = onBackPressed
                 ) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,

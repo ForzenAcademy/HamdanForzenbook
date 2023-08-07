@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+// Todo refactor with new state management practice
 @HiltViewModel
 class LegacyCreateAccountViewModel @Inject constructor(
     private val createAccountUseCase: CreateAccountUseCase,
@@ -46,7 +47,7 @@ class LegacyCreateAccountViewModel @Inject constructor(
     private fun createAccount(context: Context) {
         viewModelScope.launch {
             createAccountState.getContent().createAccountData.let {
-                createAccountState = CreateAccountState.Loading
+                createAccountState = CreateAccountState.Loading()
                 val split = it.birthDay.text.split("-")
                 // convert date back to a readable format for the sql on the server
                 val actualDate = "${split[2]}-${split[0]}-${split[1]}"
@@ -59,7 +60,7 @@ class LegacyCreateAccountViewModel @Inject constructor(
                 )
                 when (result) {
                     CreateAccountResult.CREATE_SUCCESS -> {
-                        createAccountState = CreateAccountState.AccountCreated
+                        createAccountState = CreateAccountState.AccountCreated()
                         navigator.navigateToLogin(context)
                         createAccountState = CreateAccountState.Content(CreateAccountData())
                         // send to login page
