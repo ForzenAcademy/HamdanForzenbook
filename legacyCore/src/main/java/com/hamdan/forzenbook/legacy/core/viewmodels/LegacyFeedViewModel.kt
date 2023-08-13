@@ -83,6 +83,7 @@ class LegacyFeedViewModel @Inject constructor(
                     adapter.notifyItemRangeChanged(initial, feedState.posts.size)
                 }
             } catch (e: Exception) {
+                Log.v("Exception", e.stackTraceToString())
                 feedState = FeedState.InvalidLogin()
             }
         }
@@ -111,10 +112,10 @@ class LegacyFeedViewModel @Inject constructor(
                 searchForPostByIdUseCase(id)
                 navigator.navigateToSearchResult(context, "", id, error = false)
             } catch (e: InvalidTokenException) {
-                Log.v("Hamdan", e.message.toString())
+                Log.v("Exception", e.stackTraceToString())
                 _state.value = FeedState.InvalidLogin()
             } catch (e: Exception) {
-                Log.v("Hamdan", e.message.toString())
+                Log.v("Exception", e.stackTraceToString())
                 navigator.navigateToSearchResult(context, "", id, error = true)
             }
         }

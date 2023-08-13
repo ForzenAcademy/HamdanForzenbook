@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+// Todo refactor with new state management practice
 @HiltViewModel
 class LegacyCreateAccountFragmentViewModel @Inject constructor(
     private val createAccountUseCase: CreateAccountUseCase,
@@ -25,7 +26,7 @@ class LegacyCreateAccountFragmentViewModel @Inject constructor(
     createAccountUseCase
 ) {
     private val _state: MutableStateFlow<CreateAccountState> =
-        MutableStateFlow(CreateAccountState.Content(CreateAccountContent()))
+        MutableStateFlow(CreateAccountState.Content(CreateAccountData()))
     val state: StateFlow<CreateAccountState>
         get() = _state
 
@@ -41,8 +42,8 @@ class LegacyCreateAccountFragmentViewModel @Inject constructor(
 
     private fun createAccount(fragmentManager: FragmentManager) {
         viewModelScope.launch {
-            createAccountState.getContent().createAccountContent.let {
-                createAccountState = CreateAccountState.Loading
+            createAccountState.getContent().createAccountData.let {
+                createAccountState = CreateAccountState.Loading()
                 val split = it.birthDay.text.split("-")
                 // convert date back to a readable format for the sql on the server
                 val actualDate = "${split[2]}-${split[0]}-${split[1]}"
@@ -55,9 +56,9 @@ class LegacyCreateAccountFragmentViewModel @Inject constructor(
                 )
                 when (result) {
                     CreateAccountResult.CREATE_SUCCESS -> {
-                        createAccountState = CreateAccountState.AccountCreated
+                        createAccountState = CreateAccountState.AccountCreated()
                         navigator.navigateToLogin(fragmentManager)
-                        createAccountState = CreateAccountState.Content(CreateAccountContent())
+                        createAccountState = CreateAccountState.Content(CreateAccountData())
                         // send to login page
                     }
                     CreateAccountResult.CREATE_EXISTS -> {

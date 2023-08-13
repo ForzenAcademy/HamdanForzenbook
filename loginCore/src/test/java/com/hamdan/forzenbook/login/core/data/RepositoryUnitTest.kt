@@ -66,15 +66,6 @@ class RepositoryUnitTest {
         coEvery { networkErrorService.getToken("", "") } throws NetworkErrorException()
 
         var repository = LoginRepositoryImpl(succeedsService, context)
-        runBlocking {
-            // not valid anymore
-//            try {
-//                if (repository.getToken("", "") != successToken) fail()
-//            } catch (e: Exception) {
-//                println(e)
-//                fail()
-//            }
-        }
 
         repository = LoginRepositoryImpl(nullBodyService, context)
         runBlocking {

@@ -1,6 +1,5 @@
 package com.hamdan.forzenbook.compose.core.composewidgets
 
-import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -23,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -31,38 +29,35 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import com.hamdan.forzenbook.compose.core.theme.dimens
+import com.hamdan.forzenbook.compose.core.theme.disabledAlpha
 import com.hamdan.forzenbook.compose.core.theme.staticDimens
 import com.hamdan.forzenbook.core.GlobalConstants.ONE_LINE
 
+/**
+ * standard button to use throughout the app
+ *
+ * will use disabled alpha if disabled
+ */
 @Composable
 fun SubmitButton(
     modifier: Modifier = Modifier,
-    label: String,
+    buttonText: String,
     enabled: Boolean,
-    style: TextStyle = MaterialTheme.typography.titleMedium,
-    containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
+    buttonTextStyle: TextStyle = MaterialTheme.typography.titleMedium,
+    buttonColor: Color = MaterialTheme.colorScheme.primaryContainer,
     textColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
     onSubmission: () -> Unit,
 ) {
-    val context = LocalContext.current
     Button(
         modifier = modifier
             .padding(horizontal = MaterialTheme.dimens.grid.x10)
             .fillMaxWidth(),
         onClick = {
-            if (enabled) {
-                onSubmission()
-            } else {
-                Toast.makeText(
-                    context,
-                    context.getString(com.hamdan.forzenbook.ui.core.R.string.submit_invalid_toast),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            onSubmission()
         },
         content = {
             Text(
-                text = label,
+                text = buttonText,
                 modifier = Modifier
                     .weight(1f)
                     .padding(MaterialTheme.dimens.grid.x2),
@@ -70,17 +65,17 @@ fun SubmitButton(
                 textAlign = TextAlign.Center,
                 maxLines = ONE_LINE,
                 overflow = TextOverflow.Ellipsis,
-                style = style,
+                style = buttonTextStyle,
                 fontWeight = FontWeight.Bold
             )
         },
         colors = ButtonDefaults.buttonColors(
-            containerColor = containerColor,
-            contentColor = containerColor,
-            disabledContainerColor = containerColor,
-            disabledContentColor = containerColor,
+            containerColor = buttonColor,
+            contentColor = buttonColor,
+            disabledContainerColor = buttonColor.copy(alpha = MaterialTheme.disabledAlpha),
+            disabledContentColor = buttonColor.copy(alpha = MaterialTheme.disabledAlpha),
         ),
-        enabled = true,
+        enabled = enabled,
     )
 }
 
@@ -104,14 +99,19 @@ fun LoadingButton(
     )
 }
 
+/**
+ * 2 image toggle pill
+ *
+ * the unselected item is disabled, the selected item is enabled
+ * selected being false indicates the left item is selected
+ */
 @Composable
-fun PillToggleSwitch(
+fun ToggleablePill(
     modifier: Modifier = Modifier,
     @DrawableRes imageLeftRes: Int,
     @StringRes leftDescriptionRes: Int,
     @DrawableRes imageRightRes: Int,
     @StringRes rightDescriptionRes: Int,
-    // false is the default, indicates left is the selected item
     selected: Boolean = false,
     enabledColor: Color = MaterialTheme.colorScheme.onBackground,
     disabledColor: Color = MaterialTheme.colorScheme.background,

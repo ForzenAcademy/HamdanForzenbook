@@ -34,8 +34,8 @@
     <string name="login_error_title">Error</string>
     <string name="login_error">There was an error trying to login</string>
     <string name="login_info_title">Success!</string>
-    <string name="login_info">You will receive an email with a validation code,
-        please enter it below</string>
+    <string name="login_info">If there is an account associated with the email, an email will be sent to it. You will receive a validation code,
+        please enter it below.</string>
     <string name="login_button_text">Login</string>
     <string name="login_email_prompt">Email</string>
     <string name="login_email_error_format">Invalid email format</string>
@@ -50,8 +50,8 @@
     <string name="post_warning_text">Posts can only be %1$d characters long</string>
     <string name="post_text_label">Enter your post!</string>
     <string name="post_error">There was an error when trying to create your post</string>
-    <string name="post_gallery_button_text">Choose image</string>
-    <string name="post_gallery_change_image">Change selection</string>
+    <string name="post_gallery_button_text">Choose Image</string>
+    <string name="post_gallery_change_image">Change Selection</string>
     <!--
     Feed Page
     -->
@@ -63,7 +63,7 @@
     SearchResult Page
     -->
     <string name="search_result_title_user">Posts by %1$s</string>
-    <string name="search_result_title_query">Search results</string>
+    <string name="search_result_title_query">Search Results</string>
     <string name="search_result_loading_title">Searching…</string>
     <string name="search_result_error">An error occurred</string>
     <!--

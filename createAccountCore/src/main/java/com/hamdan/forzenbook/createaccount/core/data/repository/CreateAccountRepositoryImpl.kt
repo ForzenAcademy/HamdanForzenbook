@@ -4,7 +4,7 @@ import android.util.Log
 import com.google.gson.Gson
 import com.hamdan.forzenbook.core.AccountException
 import com.hamdan.forzenbook.core.InputException
-import com.hamdan.forzenbook.createaccount.core.data.network.CreateAccountResponse
+import com.hamdan.forzenbook.createaccount.core.data.network.CreateAccountErrorResponse
 import com.hamdan.forzenbook.createaccount.core.data.network.CreateAccountService
 import java.sql.Date
 
@@ -26,9 +26,9 @@ class CreateAccountRepositoryImpl(
             if (response.code() == INPUT_ERROR) {
                 val msg = Gson().fromJson(
                     response.errorBody()?.charStream(),
-                    CreateAccountResponse::class.java
+                    CreateAccountErrorResponse::class.java
                 )
-                Log.e("CreateAccount", "${msg.reason}")
+                Log.e("Exception", "${msg.reason}")
                 throw InputException()
             } else throw (Exception("Unknown Error"))
         }

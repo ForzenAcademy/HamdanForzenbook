@@ -50,7 +50,7 @@
         <item name="legacyOnSurface">@color/white</item>
         <item name="legacyOnError">@color/red</item>
         <item name="legacyOnBackground">@color/black</item>
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
     </style>
 
     <style name="EditTextHint" parent="TextAppearance.AppCompat">

@@ -1,6 +1,7 @@
 package com.hamdan.forzenbook.login.core.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hamdan.forzenbook.core.Entry
@@ -8,6 +9,7 @@ import com.hamdan.forzenbook.core.EntryError
 import com.hamdan.forzenbook.core.GlobalConstants
 import com.hamdan.forzenbook.core.GlobalConstants.TOKEN_KEY
 import com.hamdan.forzenbook.core.GlobalConstants.TOKEN_PREFERENCE_LOCATION
+import com.hamdan.forzenbook.core.StateException
 import com.hamdan.forzenbook.core.validateEmail
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetCredentialsFromNetworkUseCase
 import com.hamdan.forzenbook.login.core.domain.usecase.LoginGetStoredCredentialsUseCase
@@ -56,12 +58,13 @@ abstract class BaseLoginViewModel(
                 loginGetStoredCredentialsUseCase()
                 loginState = LoginState.LoggedIn
             } catch (e: Exception) {
+                Log.v("Exception", e.stackTraceToString())
                 LoginState.Content(LoginContent.Email())
             }
         }
     }
 
-    fun updateText(
+    fun onTextChange(
         entry: Entry,
     ) {
         if (loginState.getContent() is LoginContent.Email) {
@@ -106,7 +109,7 @@ abstract class BaseLoginViewModel(
         code: Entry,
     ) {
         val newCode = code.copy(
-            error = if (code.text.length > CODE_LENGTH_MAX) {
+            error = if (code.text.length != CODE_LENGTH_MAX) {
                 EntryError.CodeError.Length
             } else EntryError.CodeError.Valid
         )
@@ -145,6 +148,7 @@ abstract class BaseLoginViewModel(
                     loginGetCredentialsFromNetworkUseCase(email, code)
                     loginState = LoginState.LoggedIn
                 } catch (e: Exception) {
+                    Log.v("Exception", e.stackTraceToString())
                     loginState = LoginState.Error(LoginInputType.CODE, email)
                 }
             }
@@ -159,6 +163,7 @@ abstract class BaseLoginViewModel(
                     loginValidationUseCase(it.email.text)
                     LoginState.Content(LoginContent.Code(it.email.text, showInfoDialog = true))
                 } catch (e: Exception) {
+                    Log.v("Exception", e.stackTraceToString())
                     LoginState.Error(LoginInputType.EMAIL, it.email.text)
                 }
             }
@@ -171,6 +176,12 @@ abstract class BaseLoginViewModel(
         } else {
             requestLoginValidationCode()
         }
+    }
+
+    fun backPressed() {
+        if (loginState.getContent() is LoginContent.Code) {
+            loginState = LoginState.Content(LoginContent.Email())
+        } else throw StateException()
     }
 
     companion object {

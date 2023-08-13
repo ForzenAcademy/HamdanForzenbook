@@ -163,7 +163,7 @@ class LegacyLoginFragment : Fragment() {
             }
             inputEmailText.addTextChangedListener {
                 if (loginModel.state.value.getContent() is BaseLoginViewModel.LoginContent.Email) {
-                    loginModel.updateText(
+                    loginModel.onTextChange(
                         entry = (loginModel.state.value.getContent() as BaseLoginViewModel.LoginContent.Email).email.copy(
                             text = it.toString()
                         ),
@@ -172,7 +172,7 @@ class LegacyLoginFragment : Fragment() {
             }
             inputCodeText.addTextChangedListener {
                 if (loginModel.state.value.getContent() is BaseLoginViewModel.LoginContent.Code) {
-                    loginModel.updateText(
+                    loginModel.onTextChange(
                         entry = (loginModel.state.value.getContent() as BaseLoginViewModel.LoginContent.Code).code.copy(
                             text = it.toString()
                         ),

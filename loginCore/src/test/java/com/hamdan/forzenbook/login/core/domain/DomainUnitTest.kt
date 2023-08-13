@@ -33,8 +33,8 @@ class DomainUnitTest {
         val successResponse = "itsatoken"
         val errorResponse = Exception()
 
-        coEvery { loggedInRepo.getToken() } returns "itsatoken"
-        coEvery { notLoggedInRepo.getToken() } returns null
+        coEvery { loggedInRepo.getToken() }
+        coEvery { notLoggedInRepo.getToken() }
 
         var useCase =
             LoginGetStoredCredentialsUseCaseImpl(

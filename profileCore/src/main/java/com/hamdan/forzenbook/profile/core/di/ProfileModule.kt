@@ -10,10 +10,10 @@ import com.hamdan.forzenbook.data.databases.UserDatabase
 import com.hamdan.forzenbook.profile.core.data.network.ProfileService
 import com.hamdan.forzenbook.profile.core.data.repository.ProfileRepository
 import com.hamdan.forzenbook.profile.core.data.repository.ProfileRepositoryImpl
-import com.hamdan.forzenbook.profile.core.domain.GetBackwardPostsUseCase
-import com.hamdan.forzenbook.profile.core.domain.GetBackwardPostsUseCaseImpl
-import com.hamdan.forzenbook.profile.core.domain.GetForwardPostsUseCase
-import com.hamdan.forzenbook.profile.core.domain.GetForwardPostsUseCaseImpl
+import com.hamdan.forzenbook.profile.core.domain.GetNewerPostsUseCase
+import com.hamdan.forzenbook.profile.core.domain.GetNewerPostsUseCaseImpl
+import com.hamdan.forzenbook.profile.core.domain.GetOlderPostsUseCase
+import com.hamdan.forzenbook.profile.core.domain.GetOlderPostsUseCaseImpl
 import com.hamdan.forzenbook.profile.core.domain.GetPersonalProfileUseCase
 import com.hamdan.forzenbook.profile.core.domain.GetPersonalProfileUseCaseImpl
 import com.hamdan.forzenbook.profile.core.domain.GetProfileByUserUseCase
@@ -87,15 +87,15 @@ object ProfileModule {
     @Provides
     fun providesGetBackwardPostsUseCase(
         repository: ProfileRepository
-    ): GetBackwardPostsUseCase {
-        return GetBackwardPostsUseCaseImpl(repository)
+    ): GetNewerPostsUseCase {
+        return GetNewerPostsUseCaseImpl(repository)
     }
 
     @Provides
     fun providesGetForwardPostsUseCase(
         repository: ProfileRepository
-    ): GetForwardPostsUseCase {
-        return GetForwardPostsUseCaseImpl(repository)
+    ): GetOlderPostsUseCase {
+        return GetOlderPostsUseCaseImpl(repository)
     }
 
     @Provides

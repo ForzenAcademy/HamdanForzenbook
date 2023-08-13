@@ -12,13 +12,9 @@ interface FeedDao {
     @Insert
     suspend fun insert(postEntity: PostEntity)
 
-    @Query(
-        """
-            SELECT * FROM ${PostEntity.TABLE_NAME}
-        """
-    )
-    suspend fun getCachedFeed(): List<PostEntity>
-
+    /**
+     * gets a specified post
+     */
     @Query(
         """
             SELECT * FROM ${PostEntity.TABLE_NAME} WHERE ${PostEntity.POST_ID} = :postId
@@ -26,20 +22,29 @@ interface FeedDao {
     )
     suspend fun getSpecificPostId(postId: Int): List<PostEntity>
 
+    /**
+     * gets posts with ids smaller than the post id, gets an amount limited to the size specified
+     */
     @Query(
         """
-            SELECT * FROM ${PostEntity.TABLE_NAME} WHERE ${PostEntity.POST_ID} > :postId ORDER BY ${PostEntity.POST_ID} ASC LIMIT :size
+            SELECT * FROM ${PostEntity.TABLE_NAME} WHERE ${PostEntity.POST_ID} < :postId AND ${PostEntity.USER_ID} = :userId ORDER BY ${PostEntity.POST_ID} ASC LIMIT :size
         """
     )
-    suspend fun getForwardPagedPosts(postId: Int, size: Int): List<PostEntity>
+    suspend fun getDownPagedPosts(postId: Int, userId: Int, size: Int): List<PostEntity>
 
+    /**
+     * gets posts with ids larger than the post id, gets an amount limited to the size specified
+     */
     @Query(
         """
-            SELECT * FROM ${PostEntity.TABLE_NAME} WHERE ${PostEntity.POST_ID} < :postId ORDER BY ${PostEntity.POST_ID} DESC LIMIT :size
+            SELECT * FROM ${PostEntity.TABLE_NAME} WHERE ${PostEntity.POST_ID} > :postId AND ${PostEntity.USER_ID} = :userId ORDER BY ${PostEntity.POST_ID} DESC LIMIT :size
         """
     )
-    suspend fun getBackwardPagedPosts(postId: Int, size: Int): List<PostEntity>
+    suspend fun getUpPagedPosts(postId: Int, userId: Int, size: Int): List<PostEntity>
 
+    /**
+     * delete a specified post
+     */
     @Query(
         """
             DELETE FROM ${PostEntity.TABLE_NAME} WHERE ${PostEntity.POST_ID} = :postId 
@@ -47,6 +52,9 @@ interface FeedDao {
     )
     suspend fun deleteSpecificPost(postId: Int)
 
+    /**
+     * delete all posts older than the set interval
+     */
     @Query(
         """
             DELETE FROM ${PostEntity.TABLE_NAME} WHERE ${PostEntity.ENTRY_DATE} <= (:currentTime - ${GlobalConstants.DAY_IN_MILLIS})

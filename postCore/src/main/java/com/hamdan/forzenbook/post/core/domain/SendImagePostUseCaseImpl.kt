@@ -10,7 +10,7 @@ class SendImagePostUseCaseImpl(
     override suspend fun invoke(filePath: String) {
         val file = File(filePath)
         if (file.exists()) {
-            repository.postImage(file)
+            repository.sendTextPost(file)
         } else {
             throw PostException("File attempted to post does not exist")
         }

@@ -2,8 +2,8 @@ package com.hamdan.forzenbook.viewmodels
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import com.hamdan.forzenbook.profile.core.domain.GetBackwardPostsUseCase
-import com.hamdan.forzenbook.profile.core.domain.GetForwardPostsUseCase
+import com.hamdan.forzenbook.profile.core.domain.GetNewerPostsUseCase
+import com.hamdan.forzenbook.profile.core.domain.GetOlderPostsUseCase
 import com.hamdan.forzenbook.profile.core.domain.GetPersonalProfileUseCase
 import com.hamdan.forzenbook.profile.core.domain.GetProfileByUserUseCase
 import com.hamdan.forzenbook.profile.core.domain.SendAboutUpdateUseCase
@@ -14,8 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val backwardPostsUseCase: GetBackwardPostsUseCase,
-    private val forwardPostsUseCase: GetForwardPostsUseCase,
+    private val backwardPostsUseCase: GetNewerPostsUseCase,
+    private val forwardPostsUseCase: GetOlderPostsUseCase,
     private val profileByUserUseCase: GetProfileByUserUseCase,
     private val personalProfileUseCase: GetPersonalProfileUseCase,
     private val aboutUpdateUseCase: SendAboutUpdateUseCase,

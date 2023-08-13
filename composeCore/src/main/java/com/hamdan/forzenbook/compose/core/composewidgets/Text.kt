@@ -8,13 +8,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -39,12 +39,12 @@ fun ErrorText(
 ) {
     Text(
         text = error,
-        style = MaterialTheme.typography.bodyMedium,
+        style = MaterialTheme.typography.bodyLarge,
         textAlign = TextAlign.Center,
         modifier = modifier
             .padding(
                 horizontal = MaterialTheme.dimens.grid.x5,
-                vertical = MaterialTheme.dimens.grid.x3,
+                vertical = MaterialTheme.dimens.grid.x2,
             ),
         color = MaterialTheme.colorScheme.onBackground
     )
@@ -105,9 +105,18 @@ fun FeedTextPost(text: String) {
     }
 }
 
+/**
+ * intended to be used in large container
+ *
+ * fills the container with a clickable column
+ *
+ * inside the column is the text field being typed in
+ *
+ * requestInitialFocus when true will pop open the keyboard as soon as the field enters the screen
+ */
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun FullScreenCickableTextField(
+fun FullScreenClickableTextField(
     modifier: Modifier = Modifier,
     text: String,
     label: String?,
@@ -119,11 +128,15 @@ fun FullScreenCickableTextField(
         focusedContainerColor = Color.Transparent,
         unfocusedContainerColor = Color.Transparent,
         focusedLabelColor = Color.Transparent,
+        focusedBorderColor = Color.Transparent,
+        unfocusedBorderColor = Color.Transparent
     ),
+    requestInitialFocus: Boolean = false,
     onTextChange: (String) -> Unit,
 ) {
     val focusRequester = remember { FocusRequester() }
     val keyboard = LocalSoftwareKeyboardController.current
+
     BackgroundColumn(
         modifier = modifier
             .clickable {
@@ -139,6 +152,13 @@ fun FullScreenCickableTextField(
             onValueChange = onTextChange,
             textFieldColors = textFieldColors,
         )
+    }
+    // pops up the keyboard if true, selects the field as well
+    if (requestInitialFocus) {
+        LaunchedEffect(Unit) {
+            keyboard?.show()
+            focusRequester.requestFocus()
+        }
     }
 }
 

@@ -41,7 +41,7 @@ dependencies {
     implementation project(':uiCore')
     api project(':loginCore')
     api project(":postCore")
-    api project(":mainPageCore")
+    api project(':feedCore')
     api project(":searchCore")
 
     // Coil

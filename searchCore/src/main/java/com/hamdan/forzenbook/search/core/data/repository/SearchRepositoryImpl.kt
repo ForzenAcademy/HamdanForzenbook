@@ -18,24 +18,31 @@ class SearchRepositoryImpl(
     private val service: SearchService,
     private val context: Context,
 ) : SearchRepository {
+    /**
+     * For searching all of an individual users posts
+     */
     override suspend fun getPostByUserId(id: Int): List<Postable> {
         val token = getToken(context)
         if (token.isNullOrEmpty()) {
             removeToken(context)
             throw InvalidTokenException()
         }
-
         val postable = mutableListOf<Postable>()
         service.getPosts(id = id, token = token).body()?.forEach {
+            // both Daos should be updated with correct data so we can just go to straight receive them
             val user = userDao.getUser(it.userId)
             val post = feedDao.getSpecificPostId(it.postId)
             if (post.isNotEmpty() && user.isNotEmpty()) {
+                // only receives the data one user at a time
                 postable.add(Postable(post[0], user[0]))
             }
         }
         return postable
     }
 
+    /**
+     * For searching for any posts with the matching string in them
+     */
     override suspend fun getPostByQuery(query: String): List<Postable> {
         val token = getToken(context)
         if (token.isNullOrEmpty()) {
@@ -45,6 +52,7 @@ class SearchRepositoryImpl(
 
         val postable = mutableListOf<Postable>()
         service.getPosts(query = query, token = token).body()?.forEach {
+            // both Daos should be updated with correct data so we can just go to straight receive them
             val user = userDao.getUser(it.userId)
             val post = feedDao.getSpecificPostId(it.postId)
             if (post.isNotEmpty() && user.isNotEmpty()) {
@@ -54,6 +62,9 @@ class SearchRepositoryImpl(
         return postable
     }
 
+    /**
+     * Update the local database with post data for that Id
+     */
     override suspend fun searchPostByUserId(id: Int) {
         val token = getToken(context)
         if (token.isNullOrEmpty()) {
@@ -61,13 +72,17 @@ class SearchRepositoryImpl(
             throw InvalidTokenException()
         }
 
-        deletePostsAndUsers()
+        deleteOutdatedPostsAndUsers()
+        // update Dao
         service.getPosts(id = id, token = token).body()?.forEach {
             updateUserEntity(it.userId)
             updatePostEntity(it)
         }
     }
 
+    /**
+     * Update the local database with post data for that query
+     */
     override suspend fun searchPostByQuery(query: String) {
         val token = getToken(context)
         if (token.isNullOrEmpty()) {
@@ -75,7 +90,7 @@ class SearchRepositoryImpl(
             throw InvalidTokenException()
         }
 
-        deletePostsAndUsers()
+        deleteOutdatedPostsAndUsers()
         service.getPosts(query = query, token = token).body()?.forEach {
             updateUserEntity(it.userId)
             updatePostEntity(it)
@@ -90,7 +105,10 @@ class SearchRepositoryImpl(
         userDao.deleteOldUsers(time)
     }
 
-    private suspend fun deletePostsAndUsers() {
+    /**
+     * Deletes posts and users that are older than the constant set for the time interval in GlobalConstants
+     */
+    private suspend fun deleteOutdatedPostsAndUsers() {
         val currentTime = System.currentTimeMillis()
         deleteOldPosts(currentTime)
         deleteOldUsers(currentTime)
@@ -99,6 +117,7 @@ class SearchRepositoryImpl(
     private suspend fun updatePostEntity(response: SearchResponse) {
         feedDao.getSpecificPostId(response.postId).apply {
             if (isEmpty() || size > 1) {
+                // make sure there is not duplicate values in the local data base
                 feedDao.deleteSpecificPost(response.postId)
                 feedDao.insert(response.toFeedEntity())
             }
@@ -109,6 +128,7 @@ class SearchRepositoryImpl(
         userDao.getUser(id).apply {
             if (isEmpty() || size > 1) {
                 service.getUser(id).body()?.apply {
+                    // make sure there is not duplicate values in the local data base
                     userDao.deleteUser(id)
                     userDao.insert(toUserEntity())
                 }
